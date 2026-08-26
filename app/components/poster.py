@@ -91,12 +91,8 @@ def _logo_mark() -> rx.Component:
 def _title_block() -> rx.Component:
     return rx.el.div(
         rx.el.h1(
-            rx.el.span("Fresh ", class_name="text-white"),
-            rx.el.span(
-                "Faces 4",
-                class_name="bg-gradient-to-r from-amber-200 via-amber-300 to-sky-300 bg-clip-text text-transparent",
-            ),
-            class_name="ff-title-font text-center text-5xl font-bold leading-[1.05] tracking-tight drop-shadow-[0_0_28px_rgba(56,189,248,0.35)] sm:text-6xl lg:text-7xl",
+            "Fresh Faces 4",
+            class_name="ff-title-font ff-title-gradient block w-full whitespace-nowrap text-center text-[9vw] font-bold leading-[1.08] tracking-tight drop-shadow-[0_0_28px_rgba(56,189,248,0.35)] sm:text-[7.5vw] md:text-[3.1vw] lg:text-[3.4vw] xl:text-6xl",
         ),
         rx.el.p(
             EventState.tagline,
