@@ -1,0 +1,185 @@
+{
+  "version": 4,
+  "app_title": "Fresh Faces 4 Charity Website Plan",
+  "nav": {
+    "placement": "none",
+    "items": []
+  },
+  "pages": [
+    {
+      "id": "page-b4033a1c",
+      "name": "Home",
+      "route": "/",
+      "item_ref": {
+        "index": 0,
+        "text": "Create a Kingdom Hearts-inspired startup-style landing page for Fresh Faces 4 with a Ukrainian flag art motif, front-and-center event messaging, and clear sections for collaborators, endorsers, and sponsors."
+      },
+      "blocks": [
+        {
+          "id": "nav-main",
+          "type": "nav",
+          "label": "Top navigation",
+          "hint": "Home, About, Calendar, Tools, Credits links with event branding",
+          "x": 0,
+          "y": 0,
+          "w": 12,
+          "h": 1,
+          "item_ref": {
+            "index": 0,
+            "text": "Create a Kingdom Hearts-inspired startup-style landing page for Fresh Faces 4 with a Ukrainian flag art motif, front-and-center event messaging, and clear sections for collaborators, endorsers, and sponsors."
+          },
+          "type_source": "palette"
+        },
+        {
+          "id": "hero-ff4",
+          "type": "hero",
+          "label": "Fresh Faces 4 hero",
+          "hint": "Centered charity event headline with Kingdom Hearts-inspired crown/heart/key visual language and Ukrainian blue-yellow accents",
+          "x": 0,
+          "y": 1,
+          "w": 12,
+          "h": 5,
+          "item_ref": {
+            "index": 0,
+            "text": "Create a Kingdom Hearts-inspired startup-style landing page for Fresh Faces 4 with a Ukrainian flag art motif, front-and-center event messaging, and clear sections for collaborators, endorsers, and sponsors."
+          },
+          "type_source": "palette"
+        },
+        {
+          "id": "subtitle-collaborators",
+          "type": "section",
+          "label": "Collaborators subtitle section",
+          "hint": "Prominent subtitle and short supporting copy for collaborators",
+          "x": 0,
+          "y": 6,
+          "w": 4,
+          "h": 3,
+          "item_ref": {
+            "index": 0,
+            "text": "Create a Kingdom Hearts-inspired startup-style landing page for Fresh Faces 4 with a Ukrainian flag art motif, front-and-center event messaging, and clear sections for collaborators, endorsers, and sponsors."
+          },
+          "type_source": "palette"
+        },
+        {
+          "id": "subtitle-endorsers",
+          "type": "section",
+          "label": "Endorsers subtitle section",
+          "hint": "Prominent subtitle and short supporting copy for endorsers",
+          "x": 4,
+          "y": 6,
+          "w": 4,
+          "h": 3,
+          "item_ref": {
+            "index": 0,
+            "text": "Create a Kingdom Hearts-inspired startup-style landing page for Fresh Faces 4 with a Ukrainian flag art motif, front-and-center event messaging, and clear sections for collaborators, endorsers, and sponsors."
+          },
+          "type_source": "palette"
+        },
+        {
+          "id": "subtitle-sponsors",
+          "type": "section",
+          "label": "Sponsors subtitle section",
+          "hint": "Prominent subtitle and short supporting copy for sponsors",
+          "x": 8,
+          "y": 6,
+          "w": 4,
+          "h": 3,
+          "item_ref": {
+            "index": 0,
+            "text": "Create a Kingdom Hearts-inspired startup-style landing page for Fresh Faces 4 with a Ukrainian flag art motif, front-and-center event messaging, and clear sections for collaborators, endorsers, and sponsors."
+          },
+          "type_source": "palette"
+        }
+      ],
+      "deleted_ids": []
+    },
+    {
+      "id": "page-b348afd2",
+      "name": "About, Calendar, Tools, Credits",
+      "route": "/",
+      "item_ref": {
+        "index": 2,
+        "text": "Add fully designed About, Calendar, Tools, and Credits sections with charity context, event schedule highlights, useful participant resources, and attribution space."
+      },
+      "blocks": [
+        {
+          "id": "nav-sections",
+          "type": "nav",
+          "label": "Top navigation",
+          "hint": "Persistent section navigation for Home, About, Calendar, Tools, Credits",
+          "x": 0,
+          "y": 0,
+          "w": 12,
+          "h": 1,
+          "item_ref": {
+            "index": 2,
+            "text": "Add fully designed About, Calendar, Tools, and Credits sections with charity context, event schedule highlights, useful participant resources, and attribution space."
+          },
+          "type_source": "palette"
+        },
+        {
+          "id": "about-mission",
+          "type": "section",
+          "label": "About charity mission",
+          "hint": "Fresh Faces 4 event purpose and support for Ukrainian victims",
+          "x": 0,
+          "y": 1,
+          "w": 12,
+          "h": 3,
+          "item_ref": {
+            "index": 2,
+            "text": "Add fully designed About, Calendar, Tools, and Credits sections with charity context, event schedule highlights, useful participant resources, and attribution space."
+          },
+          "type_source": "palette"
+        },
+        {
+          "id": "calendar-highlights",
+          "type": "section",
+          "label": "Calendar highlights",
+          "hint": "Event timeline cards and key dates",
+          "x": 0,
+          "y": 4,
+          "w": 6,
+          "h": 4,
+          "item_ref": {
+            "index": 2,
+            "text": "Add fully designed About, Calendar, Tools, and Credits sections with charity context, event schedule highlights, useful participant resources, and attribution space."
+          },
+          "type_source": "palette"
+        },
+        {
+          "id": "tools-resources",
+          "type": "section",
+          "label": "Tools resources",
+          "hint": "Participant and donor resource cards",
+          "x": 6,
+          "y": 4,
+          "w": 6,
+          "h": 4,
+          "item_ref": {
+            "index": 2,
+            "text": "Add fully designed About, Calendar, Tools, and Credits sections with charity context, event schedule highlights, useful participant resources, and attribution space."
+          },
+          "type_source": "palette"
+        },
+        {
+          "id": "credits-acknowledgements",
+          "type": "section",
+          "label": "Credits and acknowledgements",
+          "hint": "Attribution and thanks area for organizers, artists, and supporters",
+          "x": 0,
+          "y": 8,
+          "w": 12,
+          "h": 3,
+          "item_ref": {
+            "index": 2,
+            "text": "Add fully designed About, Calendar, Tools, and Credits sections with charity context, event schedule highlights, useful participant resources, and attribution space."
+          },
+          "type_source": "palette"
+        }
+      ],
+      "deleted_ids": []
+    }
+  ],
+  "attached_to_plan": false
+}

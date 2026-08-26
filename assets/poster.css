@@ -1,0 +1,362 @@
+@font-face {
+  font-family: "KHTitle";
+  src: url("/KHTitle.woff2") format("woff2");
+  font-weight: 400 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "KHGummi";
+  src: url("/KHGummi.woff2") format("woff2");
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "KHMenu";
+  src: url("/KHMenu.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "KHMenu";
+  src: url("/KHMenuItalic.woff2") format("woff2");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "KHMenu";
+  src: url("/KHMenuBold.woff2") format("woff2");
+  font-weight: 600 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "KHMenu";
+  src: url("/KHMenuBoldItalic.woff2") format("woff2");
+  font-weight: 600 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "KHMenuBold";
+  src: url("/KHMenuBold.woff2") format("woff2");
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "KHData";
+  src: url("/KHData.woff2") format("woff2");
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "KHScala";
+  src: url("/KHScala.woff2") format("woff2");
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "KHScalaScript";
+  src: url("/KHScalaScript.woff2") format("woff2");
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --ff-font-menu: "KHMenu", "KHScala", system-ui, sans-serif;
+  --ff-font-title: "KHTitle", "KHScala", serif;
+  --ff-font-data: "KHData", "KHMenu", monospace;
+}
+
+.ff-body {
+  font-family: var(--ff-font-menu);
+}
+
+.ff-title-font {
+  font-family: var(--ff-font-title);
+}
+
+.ff-menu-font {
+  font-family: var(--ff-font-menu);
+}
+
+.ff-menu-bold-font {
+  font-family: "KHMenuBold", var(--ff-font-menu);
+}
+
+.ff-data-font {
+  font-family: var(--ff-font-data);
+}
+
+.ff-scala-font {
+  font-family: "KHScala", var(--ff-font-menu);
+}
+
+.ff-script-font {
+  font-family: "KHScalaScript", "KHScala", cursive;
+}
+
+@keyframes ff-wave-drift {
+  0% {
+    transform: translate3d(-12%, 0, 0) scaleY(1);
+  }
+  50% {
+    transform: translate3d(0%, -2%, 0) scaleY(1.18);
+  }
+  100% {
+    transform: translate3d(-12%, 0, 0) scaleY(1);
+  }
+}
+
+@keyframes ff-wave-drift-alt {
+  0% {
+    transform: translate3d(0%, 1%, 0) scaleY(1.1);
+  }
+  50% {
+    transform: translate3d(-10%, -1%, 0) scaleY(0.92);
+  }
+  100% {
+    transform: translate3d(0%, 1%, 0) scaleY(1.1);
+  }
+}
+
+@keyframes ff-pulse-glow {
+  0%,
+  100% {
+    opacity: 0.35;
+    filter: blur(48px);
+  }
+  50% {
+    opacity: 0.8;
+    filter: blur(64px);
+  }
+}
+
+@keyframes ff-shimmer {
+  0% {
+    transform: translateX(-140%) skewX(-18deg);
+  }
+  100% {
+    transform: translateX(240%) skewX(-18deg);
+  }
+}
+
+@keyframes ff-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6.9px);
+  }
+}
+
+.ff-wave {
+  animation: ff-wave-drift 11s ease-in-out infinite;
+  transform-origin: bottom center;
+}
+
+.ff-wave-alt {
+  animation: ff-wave-drift-alt 14s ease-in-out infinite;
+  transform-origin: bottom center;
+}
+
+.ff-glow {
+  animation: ff-pulse-glow 7s ease-in-out infinite;
+}
+
+.ff-float {
+  animation: ff-float 6s ease-in-out infinite;
+}
+
+@keyframes ff-pane-in {
+  0% {
+    opacity: 0;
+    transform: translateX(-58%) rotate(-24deg) scale(0.92);
+    filter: blur(4px);
+  }
+  18% {
+    opacity: 1;
+    filter: blur(2px);
+  }
+  70% {
+    transform: translateX(-14%) rotate(-6deg) scale(0.97);
+    filter: blur(0.5px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) rotate(0deg) scale(1);
+    filter: blur(0);
+  }
+}
+
+.ff-pane-in {
+  transform-origin: left center;
+  /* near-linear travel, easing out only at the very end */
+  animation: ff-pane-in 0.9s cubic-bezier(0.12, 0.28, 0.3, 1) both;
+  will-change: transform, opacity, filter;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ff-pane-in {
+    animation-duration: 0.35s;
+    animation-timing-function: ease-out;
+  }
+}
+
+.ff-glass-window {
+  box-shadow: inset 0 0 24px rgba(56, 189, 248, 0.12),
+    0 0 26px rgba(15, 23, 42, 0.6);
+  transition: box-shadow 0.5s ease;
+}
+
+.ff-glass-window:hover {
+  box-shadow: inset 0 0 30px rgba(250, 204, 21, 0.18),
+    0 0 44px rgba(56, 189, 248, 0.35);
+}
+
+.ff-shimmer::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 45%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.22),
+    transparent
+  );
+  transform: translateX(-140%) skewX(-18deg);
+  pointer-events: none;
+  opacity: 0;
+}
+
+.ff-shimmer:hover::after {
+  opacity: 1;
+  animation: ff-shimmer 0.9s ease-out;
+}
+
+.ff-portal-chip {
+  backdrop-filter: blur(6px);
+  background-image: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.07) 0%,
+    rgba(255, 255, 255, 0) 45%,
+    rgba(56, 189, 248, 0.08) 100%
+  );
+}
+
+.ff-portal-chip::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    120% 140% at 12% 0%,
+    rgba(250, 204, 21, 0.16),
+    transparent 60%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.ff-portal-chip:hover::before {
+  opacity: 1;
+}
+
+.ff-portal-orb {
+  box-shadow: inset 0 0 8px rgba(255, 255, 255, 0.12);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.ff-portal-chip:hover .ff-portal-orb {
+  transform: rotate(-8deg) scale(1.08);
+  box-shadow: inset 0 0 12px rgba(255, 255, 255, 0.22);
+}
+
+.ff-portal-chip--twitch {
+  background-image: linear-gradient(
+    145deg,
+    rgba(145, 70, 255, 0.22) 0%,
+    rgba(145, 70, 255, 0.06) 55%,
+    rgba(255, 255, 255, 0.03) 100%
+  );
+}
+
+.ff-portal-chip--youtube {
+  background-image: linear-gradient(
+    145deg,
+    rgba(255, 0, 0, 0.22) 0%,
+    rgba(255, 0, 0, 0.06) 55%,
+    rgba(255, 255, 255, 0.03) 100%
+  );
+}
+
+.ff-brand-badge {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.ff-brand-badge--twitch {
+  box-shadow: 0 0 10px rgba(145, 70, 255, 0.55),
+    inset 0 0 6px rgba(255, 255, 255, 0.25);
+}
+
+.ff-brand-badge--youtube {
+  box-shadow: 0 0 10px rgba(255, 0, 0, 0.5),
+    inset 0 0 6px rgba(255, 255, 255, 0.25);
+}
+
+.ff-portal-chip:hover .ff-brand-badge {
+  transform: translateY(-1px) scale(1.06);
+}
+
+.ff-portal-chip:hover .ff-brand-badge--twitch {
+  box-shadow: 0 0 16px rgba(145, 70, 255, 0.85),
+    inset 0 0 8px rgba(255, 255, 255, 0.35);
+}
+
+.ff-portal-chip:hover .ff-brand-badge--youtube {
+  box-shadow: 0 0 16px rgba(255, 0, 0, 0.8),
+    inset 0 0 8px rgba(255, 255, 255, 0.35);
+}
+
+.ff-portal-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(148, 163, 184, 0.4) transparent;
+}
+
+.ff-portal-scroll::-webkit-scrollbar {
+  height: 4px;
+}
+
+.ff-portal-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.ff-portal-scroll::-webkit-scrollbar-thumb {
+  background: linear-gradient(
+    90deg,
+    rgba(56, 189, 248, 0.5),
+    rgba(250, 204, 21, 0.5)
+  );
+  border-radius: 9999px;
+}
