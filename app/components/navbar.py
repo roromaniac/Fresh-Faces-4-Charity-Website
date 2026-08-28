@@ -62,19 +62,10 @@ def _mobile_link(link: NavLink) -> rx.Component:
 
 def brand_mark() -> rx.Component:
     return rx.el.div(
-        rx.el.div(
-            rx.icon("heart", class_name="h-4 w-4 text-slate-900"),
-            class_name="flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-br from-amber-200 to-amber-400 ring-2 ring-sky-400/50",
-        ),
-        rx.el.div(
-            rx.el.span(
-                "Fresh Faces 4",
-                class_name="ff-title-font block text-sm font-semibold tracking-tight text-white",
-            ),
-            rx.el.span(
-                "for Charity",
-                class_name="ff-script-font block text-[11px] tracking-[0.14em] text-amber-200/80",
-            ),
+        rx.image(
+            src="/FF4LogoIntegrated2Transparent.png",
+            alt="Fresh Faces 4 Logo",
+            class_name="h-14 w-auto object-contain",
         ),
         class_name="flex items-center gap-2.5",
     )
@@ -111,13 +102,21 @@ def navbar() -> rx.Component:
         rx.el.div(
             rx.el.a(
                 brand_mark(),
-                href="#home",
-                on_click=lambda: NavState.select_link("#home"),
+                href="/",
+                on_click=lambda: NavState.select_link("/"),
                 class_name="shrink-0 rounded-xl transition-transform duration-300 hover:scale-105",
             ),
             rx.el.nav(
                 rx.foreach(NavState.links, _desktop_link),
                 class_name="hidden md:flex ml-auto items-center gap-1",
+            ),
+            rx.el.button(
+                rx.link("DONATE HERE", href="https://tiltify.com/@roromaniac8/fresh-faces-4", class_name="text-white"),
+                class_name="bg-gradient-to-b from-blue-500 to-yellow-500 text-white !text-white text-xs font-bold py-2 px-4 rounded-md hover:from-blue-600 hover:to-yellow-600 transition-colors duration-200 [text-shadow:_1px_1px_2px_black,_0_0_1px_black]",
+            ),
+            rx.el.button(
+                rx.link("RSVP TO FF4", href="https://docs.google.com/forms/d/e/1FAIpQLScC0O1uNJnGnCoe7lMz4bCrZdrDUvXsboHZmjsMCSPWj-GY5g/viewform?usp=sharing&ouid=104590086266811208664", class_name="text-white"),
+                class_name="bg-gradient-to-b from-blue-500 to-yellow-500 text-white !text-white text-xs font-bold py-2 px-4 rounded-md hover:from-blue-600 hover:to-yellow-600 transition-colors duration-200 [text-shadow:_1px_1px_2px_black,_0_0_1px_black]",
             ),
             rx.el.div(
                 rx.el.button(
@@ -133,7 +132,7 @@ def navbar() -> rx.Component:
                 ),
                 class_name="ml-auto flex items-center gap-3 md:ml-0",
             ),
-            class_name="mx-auto flex h-14 w-full max-w-7xl items-center gap-4 px-5 lg:px-8",
+            class_name="flex h-14 w-full items-center gap-4 px-5 lg:px-8",  # UPDATED: removed mx-auto and max-w-7xl
         ),
         rx.cond(NavState.mobile_open, _mobile_menu(), rx.fragment()),
         class_name="sticky top-0 z-50 w-full border-b border-white/10 bg-slate-950/70 backdrop-blur-xl",

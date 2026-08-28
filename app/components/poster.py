@@ -7,6 +7,7 @@ from app.components.stained_windows import (
 )
 from app.components.supporters import supporter_wall
 from app.states.event_state import EventState
+from app.states.visit_state import VisitState
 
 
 def _ukraine_waves() -> rx.Component:
@@ -88,6 +89,32 @@ def _logo_mark() -> rx.Component:
     )
 
 
+def _visitor_seal() -> rx.Component:
+    return rx.el.div(
+        rx.image(
+            src="/KH-heart.webp",
+            alt="",
+            class_name="h-8 w-8 object-contain drop-shadow-[0_0_12px_rgba(250,204,21,0.55)]",
+        ),
+        rx.el.div(
+            rx.el.p(
+                VisitState.visitor_count_label,
+                class_name="ff-data-font text-2xl font-bold leading-none tracking-wide text-amber-200 drop-shadow-[0_0_16px_rgba(250,204,21,0.45)] sm:text-3xl",
+            ),
+            rx.el.p(
+                "hearts gathered",
+                class_name="ff-script-font text-sm tracking-[0.06em] text-sky-100/80",
+            ),
+        ),
+        rx.image(
+            src="/ukraine_heart.webp",
+            alt="",
+            class_name="h-8 w-8 object-contain drop-shadow-[0_0_12px_rgba(56,189,248,0.55)]",
+        ),
+        class_name="ff-float mt-3 flex items-center gap-3 rounded-2xl border border-white/15 bg-slate-900/50 px-4 py-2 backdrop-blur-md",
+    )
+
+
 def _title_block() -> rx.Component:
     return rx.el.div(
         rx.el.h1(
@@ -107,6 +134,7 @@ def _title_block() -> rx.Component:
             ),
             class_name="group mx-auto flex w-fit cursor-pointer flex-col gap-1",
         ),
+        _visitor_seal(),
         class_name="flex flex-col items-center gap-2",
     )
 
@@ -124,18 +152,24 @@ def poster() -> rx.Component:
         _ukraine_waves(),
         window_rotation_timer(),
         rx.el.div(
+            # Desktop layout: grid with [1fr auto 1fr] so sides get extra space.
             rx.el.div(
                 rx.el.div(
                     left_window(),
-                    class_name="hidden min-w-0 items-center justify-center md:flex",
+                    class_name="hidden w-full min-w-0 items-center justify-center md:flex",
                 ),
                 _hero_shrine(),
                 rx.el.div(
                     right_window(),
-                    class_name="hidden min-w-0 items-center justify-center md:flex",
+                    class_name="hidden w-full min-w-0 items-center justify-center md:flex",
                 ),
-                class_name="hidden w-full items-center md:grid md:grid-cols-3",
+                # Main change: grid-cols-[1fr_auto_1fr] instead of [auto_1fr_auto]
+                class_name=(
+                    "hidden w-full items-center "
+                    "md:grid md:grid-cols-[1fr_auto_1fr]"
+                ),
             ),
+            # Mobile stays unchanged
             rx.el.div(
                 _hero_shrine(),
                 rx.el.div(
@@ -149,7 +183,8 @@ def poster() -> rx.Component:
                 supporter_wall(),
                 class_name="flex w-full justify-center",
             ),
-            class_name="relative mx-auto flex w-full max-w-6xl flex-col items-center gap-4 px-5 py-3 lg:gap-6 lg:px-10",
+            # Remove max-w-6xl, mx-auto, reduce px-5/lg:px-10 for edge-to-edge
+            class_name="relative flex w-full flex-col items-center gap-4 py-3 lg:gap-6 px-2 lg:px-4",
         ),
         id="home",
         custom_attrs={"aria-label": EventState.event_name},

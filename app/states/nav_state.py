@@ -11,13 +11,14 @@ class NavLink(TypedDict):
 
 class NavState(rx.State):
     mobile_open: bool = False
-    active_href: str = "#home"
+    active_href: str = "/"
     links: list[NavLink] = [
-        {"label": "Home", "href": "#home", "icon": "house"},
-        {"label": "About", "href": "#about", "icon": "heart"},
-        {"label": "Calendar", "href": "#calendar", "icon": "calendar-heart"},
-        {"label": "Tools", "href": "#tools", "icon": "key-round"},
-        {"label": "Credits", "href": "#credits", "icon": "crown"},
+        {"label": "Home", "href": "/", "icon": "house"},
+        {"label": "About", "href": "/about", "icon": "heart"},
+        {"label": "Calendar", "href": "/calendar", "icon": "calendar-heart"},
+        {"label": "Tools", "href": "/tools", "icon": "key-round"},
+        {"label": "Help", "href": "/help", "icon": "question-mark"},
+        {"label": "Credits", "href": "/credits", "icon": "crown"},
     ]
 
     @rx.event
@@ -29,6 +30,12 @@ class NavState(rx.State):
         self.mobile_open = False
 
     @rx.event
+    def mark_active(self, href: str):
+        self.active_href = href
+        self.mobile_open = False
+
+    @rx.event
     def select_link(self, href: str):
         self.active_href = href
         self.mobile_open = False
+        return rx.redirect(href)

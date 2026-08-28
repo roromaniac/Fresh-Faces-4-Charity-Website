@@ -23,7 +23,7 @@ class StreamState(rx.State):
         {
             "label": "Fresh Faces",
             "caption": "Main Bracket",
-            "href": "https://www.twitch.tv/directory",
+            "href": "https://www.twitch.tv/roromaniac8",
             "platform": "twitch",
             "icon": "twitch",
             "wordmark": "Twitch",
@@ -31,7 +31,7 @@ class StreamState(rx.State):
         {
             "label": "Graduated Faces",
             "caption": "Alumni Stage",
-            "href": "https://www.twitch.tv/directory",
+            "href": "https://www.twitch.tv/WallpeSH",
             "platform": "twitch",
             "icon": "twitch",
             "wordmark": "Twitch",
@@ -39,7 +39,7 @@ class StreamState(rx.State):
         {
             "label": "Veterans Division",
             "caption": "Masters Arena",
-            "href": "https://www.twitch.tv/directory",
+            "href": "https://www.twitch.tv/KH2FMRando",
             "platform": "twitch",
             "icon": "twitch",
             "wordmark": "Twitch",
@@ -47,7 +47,7 @@ class StreamState(rx.State):
         {
             "label": "Full Matches",
             "caption": "Archive VODs",
-            "href": "https://www.youtube.com",
+            "href": "https://www.youtube.com/@roroKH2FMR",
             "platform": "youtube",
             "icon": "youtube",
             "wordmark": "YouTube",

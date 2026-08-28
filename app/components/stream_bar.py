@@ -86,7 +86,8 @@ def stream_bar() -> rx.Component:
                 rx.foreach(StreamState.links, _chip),
                 class_name="ff-portal-scroll flex min-w-0 flex-1 items-center gap-2 overflow-x-auto py-0.5",
             ),
-            class_name="mx-auto flex h-12 w-full max-w-7xl items-center gap-3 px-5 lg:px-8",
+            # Removed 'mx-auto' and 'max-w-7xl'
+            class_name="flex h-12 w-full items-center gap-3 px-5 lg:px-8",
         ),
         class_name="relative z-40 w-full shrink-0 border-b border-white/10 bg-slate-950/60 backdrop-blur-xl",
     )
