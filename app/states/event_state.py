@@ -20,7 +20,7 @@ class EventState(rx.State):
     event_name: str = "Fresh Faces 4"
     logo_image: str = ""
     logo_icon: str = "heart"
-    tagline: str = "A Charity Showcase for Ukraine"
+    tagline: str = "A KH2 Rando Charity Production for Project Hope (Ukraine)"
     date_line: str = "Saturday, June 14 · 5:00 PM"
     venue_line: str = "The Lumen Hall · Livestreamed worldwide"
 

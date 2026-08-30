@@ -115,7 +115,7 @@ def navbar() -> rx.Component:
                 class_name="bg-gradient-to-b from-blue-500 to-yellow-500 text-white !text-white text-xs font-bold py-2 px-4 rounded-md hover:from-blue-600 hover:to-yellow-600 transition-colors duration-200 [text-shadow:_1px_1px_2px_black,_0_0_1px_black]",
             ),
             rx.el.button(
-                rx.link("RSVP TO FF4", href="https://docs.google.com/forms/d/e/1FAIpQLScC0O1uNJnGnCoe7lMz4bCrZdrDUvXsboHZmjsMCSPWj-GY5g/viewform?usp=sharing&ouid=104590086266811208664", class_name="text-white"),
+                rx.link("RSVP TO FF4", href="https://docs.google.com/forms/d/e/1FAIpQLSeajRfsMMfNPaQdOEPPm7LjlP6Unzic2ehwbokVVxvgho5Yig/viewform?usp=header", class_name="text-white"),
                 class_name="bg-gradient-to-b from-blue-500 to-yellow-500 text-white !text-white text-xs font-bold py-2 px-4 rounded-md hover:from-blue-600 hover:to-yellow-600 transition-colors duration-200 [text-shadow:_1px_1px_2px_black,_0_0_1px_black]",
             ),
             rx.el.div(

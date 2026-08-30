@@ -31,7 +31,7 @@ def tool_card(title: str, description: str, content: rx.Component) -> rx.Compone
         ),
         rx.el.p(
             description,
-            class_name="ff-script-font px-5 pt-4 text-sm text-sky-100/80",
+            class_name="ff-menu-font px-5 pt-4 text-sm text-sky-100/80",
         ),
         rx.el.div(content, class_name="p-5"),
         class_name="overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] shadow-[0_0_30px_rgba(56,189,248,0.10)] backdrop-blur-md",
@@ -108,7 +108,7 @@ def _lookup() -> rx.Component:
                     LookUpState.found_players.length() == 0,
                     rx.el.p(
                         "No results found.",
-                        class_name="ff-script-font mt-3 text-sky-200/70",
+                        class_name="ff-menu-font mt-3 text-sky-200/70",
                     ),
                     rx.el.div(
                         rx.foreach(
@@ -147,7 +147,7 @@ def _loadless() -> rx.Component:
             rx.el.div(
                 rx.upload(
                     rx.el.p(
-                        "Drop a .asl file here or click to select",
+                        "Drop a .asl file here or click to upload.",
                         class_name="text-sky-100/80",
                     ),
                     id="upload",

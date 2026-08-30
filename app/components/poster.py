@@ -103,7 +103,7 @@ def _visitor_seal() -> rx.Component:
             ),
             rx.el.p(
                 "hearts gathered",
-                class_name="ff-script-font text-sm tracking-[0.06em] text-sky-100/80",
+                class_name="ff-menu-font text-sm tracking-[0.06em] text-sky-100/80",
             ),
         ),
         rx.image(
@@ -122,8 +122,10 @@ def _title_block() -> rx.Component:
             class_name="ff-title-font ff-title-gradient block w-full whitespace-nowrap text-center text-[9vw] font-bold leading-[1.08] tracking-tight drop-shadow-[0_0_28px_rgba(56,189,248,0.35)] sm:text-[7.5vw] md:text-[3.1vw] lg:text-[3.4vw] xl:text-6xl",
         ),
         rx.el.p(
-            EventState.tagline,
-            class_name="ff-script-font text-center text-base tracking-[0.08em] text-sky-100/80 sm:text-lg",
+            "A KH2 Rando Charity Production",
+            rx.el.br(),
+            "for Project Hope",
+            class_name="ff-gummi-font text-center text-base tracking-[0.08em] text-sky-100/80 uppercase sm:text-lg",
         ),
         rx.el.div(
             rx.el.div(

@@ -2,6 +2,7 @@
 
 from typing import TypedDict
 
+import requests
 import reflex as rx
 
 
@@ -54,30 +55,63 @@ class LookUpState(rx.State):
             or query in player["twitch_name"].lower()
         ]
 
-
 class LoadlessCheckerState(rx.State):
     loadless_status: str = ""
+    uploaded_loadless_file: str = ""
+    has_uploaded: bool = False
 
     @rx.event
     def reset_status(self):
         self.loadless_status = ""
+        self.has_uploaded = False
 
     @rx.event
     async def handle_upload(self, files: list[rx.UploadFile]):
+        self.loadless_status = ""
+        self.has_uploaded = False
+
         if not files:
             self.loadless_status = "No file uploaded."
             return
-        upload = files[0]
-        name = upload.filename or "uploaded file"
-        data = await upload.read()
-        text = data.decode("utf-8", errors="ignore")
-        looks_like_asl = name.lower().endswith(".asl") or "state" in text.lower()
-        if looks_like_asl:
-            self.loadless_status = (
-                f"Received {name}. Compare it with the latest KH2FM Load Remover "
-                "for Randomizer release to confirm you are up to date."
-            )
-        else:
-            self.loadless_status = (
-                f"Received {name}, but it does not look like a .asl timer file."
-            )
+        
+        loadless_file = files[0]
+        # Save uploaded file to disk
+        upload_data = await loadless_file.read()
+        outfile = rx.get_upload_dir() / loadless_file.filename
+        with outfile.open("wb") as file_object:
+            file_object.write(upload_data)
+        
+        self.uploaded_loadless_file = str(outfile)
+
+        # Now compare with the official template
+        reference_url = "https://github.com/aliosgaming/KH2FM_Load_Remover-FOR-RANDOMIZER/releases/latest/download/LiveSplit.KH2Randomizer.asl"
+        try:
+            response = requests.get(reference_url)
+            response.raise_for_status()
+            reference_text = response.text.strip()
+
+            # Read the uploaded file as text (ignore errors)
+            with open(outfile, "r", encoding="utf-8", errors="ignore") as uploaded_file:
+                uploaded_text = uploaded_file.read().strip()
+
+            self.has_uploaded = True
+
+            # Actually compare the files: allow minor whitespace differences by stripping
+            if uploaded_text == reference_text:
+                self.loadless_status = "✅ Valid KH2 Randomizer loadless timer file! Your file matches the official template."
+            else:
+                # Optionally, be more sophisticated and compare ignoring line endings or excess empty lines
+                from difflib import SequenceMatcher
+                matcher = SequenceMatcher(None, uploaded_text, reference_text)
+                similarity = matcher.ratio()
+                if similarity > 0.98:
+                    self.loadless_status = "✅ Your .asl file closely matches the official template (98%+ similar)."
+                else:
+                    self.loadless_status = (
+                        "❌ Invalid KH2 Randomizer loadless timer file. Your file does not match the official template. "
+                        "Please download the correct, most recent version using the link above."
+                    )
+        except FileNotFoundError:
+            self.loadless_status = "❌ Reference file not found. Please ensure your file is valid and of .asl format."
+        except Exception as e:
+            self.loadless_status = f"❌ Error processing file: {str(e)}. Double check your file and try again."

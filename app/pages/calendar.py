@@ -7,11 +7,11 @@ def calendar() -> rx.Component:
     return page_shell(
         page_heading(
             "Tournament Calendar",
-            "Races, qualifiers, incentives, and community nights",
+            "The Full Calendar of Upcoming Events for Fresh Faces 4",
         ),
         rx.el.p(
             "Stay up to date with all Fresh Faces 4 activities. This calendar includes tournament races, qualifiers, incentives, community nights, and Q&A sessions.",
-            class_name="ff-script-font mb-6 text-center text-sky-100/80",
+            class_name="ff-menu-font mb-6 text-center text-sky-100/80",
         ),
         rx.el.div(
             rx.el.iframe(

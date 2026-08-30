@@ -45,7 +45,7 @@ def page_heading(title: str, subtitle: str) -> rx.Component:
         ),
         rx.el.p(
             subtitle,
-            class_name="ff-script-font mt-2 text-center text-base text-sky-100/80 sm:text-lg",
+            class_name="ff-menu-font mt-2 text-center text-base text-sky-100/80 sm:text-lg",
         ),
         rx.el.div(
             rx.el.div(class_name="h-1.5 w-24 rounded-full bg-sky-400/80"),

@@ -14,6 +14,14 @@
   font-display: swap;
 }
 
+/* Explicit variable for Gummi font stack */
+:root {
+  --ff-font-gummi: "KHGummi", "KHMenu", "KHScala", system-ui, sans-serif;
+  --ff-font-menu: "KHMenu", "KHScala", system-ui, sans-serif;
+  --ff-font-title: "KHTitle", "KHScala", serif;
+  --ff-font-data: "KHData", "KHMenu", monospace;
+}
+
 @font-face {
   font-family: "KHMenu";
   src: url("/KHMenu.woff2") format("woff2");
@@ -78,12 +86,6 @@
   font-display: swap;
 }
 
-:root {
-  --ff-font-menu: "KHMenu", "KHScala", system-ui, sans-serif;
-  --ff-font-title: "KHTitle", "KHScala", serif;
-  --ff-font-data: "KHData", "KHMenu", monospace;
-}
-
 .ff-body {
   font-family: var(--ff-font-menu);
 }
@@ -127,6 +129,12 @@
 .ff-script-font {
   font-family: "KHScalaScript", "KHScala", cursive;
 }
+
+.ff-gummi-font {
+  font-family: var(--ff-font-gummi);
+}
+
+/* ----- Rest of the code unchanged ----- */
 
 @keyframes ff-wave-drift {
   0% {

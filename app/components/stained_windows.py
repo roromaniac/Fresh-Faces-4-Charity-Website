@@ -50,7 +50,7 @@ def _pane(item: WindowItem, index: int) -> rx.Component:
         ),
         rx.el.p(
             item["caption"],
-            class_name="ff-script-font text-center text-[11px] leading-snug text-sky-100/70 lg:text-xs",
+            class_name="ff-menu-font text-center text-[11px] leading-snug text-sky-100/70 lg:text-xs",
         ),
         key=index,
         class_name="ff-pane-in flex h-full w-full flex-col items-center justify-center gap-2 px-4 pb-5",
