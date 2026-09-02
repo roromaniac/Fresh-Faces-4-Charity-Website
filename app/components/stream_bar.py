@@ -17,7 +17,7 @@ def _brand_badge(link: StreamLink) -> rx.Component:
         ),
         rx.el.span(
             link["wordmark"],
-            class_name="ff-menu-bold-font hidden text-[9px] font-bold uppercase leading-none tracking-[0.14em] text-white sm:block",
+            class_name="ff-menu-bold-font hidden text-[9px] font-bold uppercase leading-none tracking-[0.14em] text-white lg:inline",
         ),
         class_name=rx.cond(
             link["platform"] == "twitch",
@@ -33,7 +33,7 @@ def _chip(link: StreamLink) -> rx.Component:
         rx.el.span(
             rx.el.span(
                 link["label"],
-                class_name="ff-menu-bold-font block text-[11px] font-semibold uppercase leading-none tracking-[0.1em] text-sky-50",
+                class_name="ff-menu-bold-font block truncate text-[11px] font-semibold uppercase leading-none tracking-[0.1em] text-sky-50",
             ),
             rx.el.span(
                 rx.el.span(
@@ -52,9 +52,9 @@ def _chip(link: StreamLink) -> rx.Component:
                         "ff-data-font text-[#ff9b9b]",
                     ),
                 ),
-                class_name="ff-data-font mt-0.5 flex items-center gap-1 text-[9px] uppercase leading-none tracking-[0.22em] text-amber-200/70",
+                class_name="ff-data-font mt-0.5 flex min-w-0 items-center gap-1 truncate text-[9px] uppercase leading-none tracking-[0.22em] text-amber-200/70",
             ),
-            class_name="flex flex-col",
+            class_name="flex min-w-0 flex-col",
         ),
         href=link["href"],
         target="_blank",
@@ -62,8 +62,8 @@ def _chip(link: StreamLink) -> rx.Component:
         aria_label=f"{link['label']} on {link['wordmark']}",
         class_name=rx.cond(
             link["platform"] == "twitch",
-            "ff-shimmer ff-portal-chip ff-portal-chip--twitch group relative flex shrink-0 items-center gap-2 overflow-hidden rounded-xl border border-[#9146ff]/45 bg-[#9146ff]/10 px-2.5 py-1.5 transition-all duration-300 hover:scale-[1.06] hover:border-[#b98cff]/80 hover:bg-[#9146ff]/20 hover:shadow-[0_0_22px_rgba(145,70,255,0.5)]",
-            "ff-shimmer ff-portal-chip ff-portal-chip--youtube group relative flex shrink-0 items-center gap-2 overflow-hidden rounded-xl border border-[#ff0000]/45 bg-[#ff0000]/10 px-2.5 py-1.5 transition-all duration-300 hover:scale-[1.06] hover:border-[#ff5b5b]/80 hover:bg-[#ff0000]/20 hover:shadow-[0_0_22px_rgba(255,0,0,0.45)]",
+            "ff-shimmer ff-portal-chip ff-portal-chip--twitch group relative flex w-full min-w-0 items-center gap-2 overflow-hidden rounded-xl border border-[#9146ff]/45 bg-[#9146ff]/10 px-2.5 py-1.5 transition-all duration-300 hover:scale-[1.03] hover:border-[#b98cff]/80 hover:bg-[#9146ff]/20 hover:shadow-[0_0_22px_rgba(145,70,255,0.5)] lg:w-auto lg:shrink-0",
+            "ff-shimmer ff-portal-chip ff-portal-chip--youtube group relative flex w-full min-w-0 items-center gap-2 overflow-hidden rounded-xl border border-[#ff0000]/45 bg-[#ff0000]/10 px-2.5 py-1.5 transition-all duration-300 hover:scale-[1.03] hover:border-[#ff5b5b]/80 hover:bg-[#ff0000]/20 hover:shadow-[0_0_22px_rgba(255,0,0,0.45)] lg:w-auto lg:shrink-0",
         ),
     )
 
@@ -80,14 +80,13 @@ def stream_bar() -> rx.Component:
                     "Watch",
                     class_name="ff-data-font text-[9px] font-bold uppercase tracking-[0.3em] text-amber-200/80",
                 ),
-                class_name="hidden sm:flex shrink-0 items-center gap-1.5 border-r border-white/10 pr-3",
+                class_name="hidden shrink-0 items-center gap-1.5 border-r border-white/10 pr-3 lg:flex",
             ),
             rx.el.div(
                 rx.foreach(StreamState.links, _chip),
-                class_name="ff-portal-scroll flex min-w-0 flex-1 items-center gap-2 overflow-x-auto py-0.5",
+                class_name="grid w-full min-w-0 grid-cols-2 gap-2 lg:flex lg:flex-1 lg:flex-wrap lg:items-center",
             ),
-            # Removed 'mx-auto' and 'max-w-7xl'
-            class_name="flex h-12 w-full items-center gap-3 px-5 lg:px-8",
+            class_name="flex w-full flex-col gap-2 px-5 py-2.5 lg:flex-row lg:items-center lg:gap-3 lg:px-8",
         ),
         class_name="relative z-40 w-full shrink-0 border-b border-white/10 bg-slate-950/60 backdrop-blur-xl",
     )

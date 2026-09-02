@@ -3,7 +3,8 @@ import os
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
 from app.pages.credits import RAW_CREDITS_LIST
-
+from dotenv import load_dotenv
+load_dotenv()
 import requests
 import os
 

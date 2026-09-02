@@ -2,6 +2,9 @@
 .web
 assets/external/
 *.db
+*.db-wal
+*.db-shm
+*.db-journal
 *.py[cod]
 __pycache__/
 .web/
@@ -12,3 +15,5 @@ __pycache__/
 site-packages/
 node_modules/
 assets/xy/
+.env
+scratch/

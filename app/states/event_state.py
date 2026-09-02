@@ -18,7 +18,7 @@ class Stat(TypedDict):
 
 class EventState(rx.State):
     event_name: str = "Fresh Faces 4"
-    logo_image: str = ""
+    logo_image: str = "/kh2rando.png"
     logo_icon: str = "heart"
     tagline: str = "A KH2 Rando Charity Production for Project Hope (Ukraine)"
     date_line: str = "Saturday, June 14 · 5:00 PM"

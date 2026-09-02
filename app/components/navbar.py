@@ -4,6 +4,7 @@ from app.states.nav_state import NavLink, NavState
 
 
 def _desktop_link(link: NavLink) -> rx.Component:
+    # Keep all element sizes the same as before (icons, text) for right-side consistency.
     return rx.el.a(
         rx.icon(
             link["icon"],
@@ -32,6 +33,7 @@ def _desktop_link(link: NavLink) -> rx.Component:
 
 
 def _mobile_link(link: NavLink) -> rx.Component:
+    # Keep all element sizes the same for mobile links
     return rx.el.a(
         rx.el.span(
             rx.icon(
@@ -61,17 +63,19 @@ def _mobile_link(link: NavLink) -> rx.Component:
 
 
 def brand_mark() -> rx.Component:
+    # The logo should fully cover the nav bar height: set h-full and object-contain.
     return rx.el.div(
         rx.image(
             src="/FF4LogoIntegrated2Transparent.png",
             alt="Fresh Faces 4 Logo",
-            class_name="h-14 w-auto object-contain",
+            class_name="h-full w-auto object-contain",  # Take full navbar height
         ),
-        class_name="flex items-center gap-2.5",
+        class_name="flex items-center gap-2.5 h-full",  # h-full to inherit the height of its parent
     )
 
 
 def _mobile_menu() -> rx.Component:
+    # No size changes here; keep as before.
     return rx.el.div(
         rx.el.div(
             rx.el.p(
@@ -98,13 +102,16 @@ def _mobile_menu() -> rx.Component:
 
 
 def navbar() -> rx.Component:
+    # Navbar height is 1.75x larger: h-14 * 1.75 ~ h-24.5, Tailwind rounds to h-24 (6rem = 96px) for simplicity.
+    # We use h-24 for the header container. This lets the logo be h-full.
+    # On the right: keep all elements at their original size (via unchanged classes), but vertically center with the larger bar (items-center).
     return rx.el.header(
         rx.el.div(
             rx.el.a(
                 brand_mark(),
                 href="/",
                 on_click=lambda: NavState.select_link("/"),
-                class_name="shrink-0 rounded-xl transition-transform duration-300 hover:scale-105",
+                class_name="shrink-0 rounded-xl transition-transform duration-300 hover:scale-105 h-full flex items-center",  # h-full to match parent, center logo
             ),
             rx.el.nav(
                 rx.foreach(NavState.links, _desktop_link),
@@ -132,7 +139,7 @@ def navbar() -> rx.Component:
                 ),
                 class_name="ml-auto flex items-center gap-3 md:ml-0",
             ),
-            class_name="flex h-14 w-full items-center gap-4 px-5 lg:px-8",  # UPDATED: removed mx-auto and max-w-7xl
+            class_name="flex h-24 w-full items-center gap-4 px-5 lg:px-8",  # h-24 (1.75x), items-center for vertical centering
         ),
         rx.cond(NavState.mobile_open, _mobile_menu(), rx.fragment()),
         class_name="sticky top-0 z-50 w-full border-b border-white/10 bg-slate-950/70 backdrop-blur-xl",

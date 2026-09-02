@@ -22,7 +22,7 @@ class StreamState(rx.State):
     links: list[StreamLink] = [
         {
             "label": "Fresh Faces",
-            "caption": "Main Bracket",
+            "caption": "Main Tournament",
             "href": "https://www.twitch.tv/roromaniac8",
             "platform": "twitch",
             "icon": "twitch",

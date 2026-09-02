@@ -79,7 +79,7 @@ def _lookup() -> rx.Component:
     return rx.el.div(
         tool_card(
             "FF4 Eligibility Lookup",
-            "Search a Discord ID or Twitch username to check Fresh Faces 4 eligibility. Contact roro on Discord for corrections.",
+            "Search a Discord ID or Twitch username to check Fresh Faces 4 eligibility. People belonging to the Veterans division will not be flagged by this search. If you have qualified in critical tournaments before or regularly play critical difficulty tournaments, please join the Veterans division. Contact roro on Discord for corrections.",
             rx.el.div(
                 rx.el.form(
                     rx.el.div(
@@ -110,27 +110,88 @@ def _lookup() -> rx.Component:
                         "No results found.",
                         class_name="ff-menu-font mt-3 text-sky-200/70",
                     ),
-                    rx.el.div(
+                    rx.vstack(
                         rx.foreach(
                             LookUpState.found_players,
-                            lambda player: rx.el.div(
-                                rx.el.p(
-                                    player["discord_name"],
-                                    class_name="ff-menu-bold-font text-white",
+                            lambda player: rx.hstack(
+                                # Eligible
+                                rx.box(
+                                    rx.text(
+                                        "Eligible: ",
+                                        class_name="font-bold",
+                                        style={"color": "black", "marginRight": "0.3em"}
+                                    ),
+                                    rx.cond(
+                                        player["is_eligible"],
+                                        rx.icon("check", color="#22c55e"),  # Remove fixed size
+                                        rx.icon("x", color="#ef4444")
+                                    ),
+                                    class_name="flex items-center"
                                 ),
-                                rx.el.p(
-                                    player["twitch_name"],
-                                    class_name="text-sm text-sky-100/80",
+                                # Discord Name
+                                rx.box(
+                                    rx.image(
+                                        "/discord.png",
+                                        style={
+                                            "marginRight": "0.3em",
+                                            "height": "2.2em",
+                                            "display": "inline-block",
+                                            "verticalAlign": "middle",
+                                            "filter": "drop-shadow(0 0 2px #8da4fa) brightness(1.4) contrast(1.2)"
+                                        }
+                                    ),
+                                    rx.text(player["discord_name"], class_name="font-bold", style={"color": "black"}),
+                                    class_name="flex items-center"
                                 ),
-                                rx.el.p(
-                                    player["reason"],
-                                    class_name="mt-2 text-sm text-amber-100/90",
+                                # Twitch name
+                                rx.box(
+                                    rx.image(
+                                        "/twitch.png",
+                                        style={
+                                            "marginRight": "0.3em",
+                                            "height": "2.2em",
+                                            "display": "inline-block",
+                                            "verticalAlign": "middle",
+                                            "filter": "drop-shadow(0 0 2px #b794f4) brightness(1.3) contrast(1.1)"
+                                        }
+                                    ),
+                                    rx.text(player["twitch_name"], class_name="font-bold", style={"color": "black"}),
+                                    class_name="flex items-center"
                                 ),
-                                class_name="rounded-xl border border-white/10 bg-slate-950/40 p-4",
-                            ),
+                                # Reason
+                                rx.box(
+                                    rx.icon(
+                                        "info",
+                                        color="#1e3a8a",
+                                        style={
+                                            "marginRight": "0.2em",
+                                            "filter": "drop-shadow(0 0 3px #3b82f6) brightness(1.1) contrast(1.2)"
+                                        }
+                                    ),
+                                    rx.text(player["reason"], class_name="font-bold", style={"color": "black"}),
+                                    class_name="flex items-center"
+                                ),
+                                spacing="4",
+                                align="center",
+                                class_name="px-4 py-2 border border-indigo-400 rounded-lg shadow-inner grow",
+                                style={
+                                    "background": "linear-gradient(90deg, #e0e7ff 0%, #f3f4f6 100%)",
+                                    "whiteSpace": "nowrap",
+                                    "display": "flex",
+                                    "flexWrap": "nowrap",
+                                    "width": "100%",
+                                }
+                            )
                         ),
-                        class_name="mt-3 flex flex-col gap-3",
-                    ),
+                        spacing="3",
+                        align_items="left",
+                        width="100%",
+                        style={
+                            "minWidth": "0",
+                            "maxWidth": "100%",
+                            "width": "100%",
+                        }
+                    )
                 ),
                 class_name="flex flex-col",
             ),

@@ -27,6 +27,10 @@ RAW_CREDITS_LIST: list[dict] = [
     {"name": "Kallat", "twitch_name": "kallat11", "role": "Async Manager", "role_class": "Tournament Organizer", "image": "/ukraine_heart.webp"},
     {"name": "IBA_ALLDAY", "twitch_name": "ibaallday", "role": "Community Outreach", "role_class": "Tournament Organizer", "image": "/ukraine_heart.webp"},
     {"name": "WarehouseJesus", "twitch_name": "warehousejesus", "role": "Production Lead", "role_class": "Tournament Organizer", "image": "/ukraine_heart.webp"},
+    {"name": "bahb", "twitch_name": "bahb", "role": "Tournament Organizer", "role_class": "Tournament Organizer", "image": "/ukraine_heart.webp"},
+    {"name": "Uki", "twitch_name": "UkiMiyoshi", "role": "Tournament Organizer", "role_class": "Tournament Organizer", "image": "/ukraine_heart.webp"},
+    {"name": "moko", "twitch_name": "mokonasakaidono", "role": "Tournament Organizer", "role_class": "Tournament Organizer", "image": "/ukraine_heart.webp"},
+    {"name": "tippyturner", "twitch_name": "tippyturner", "role": "Tournament Organizer", "role_class": "Tournament Organizer", "image": "/ukraine_heart.webp"},
     {"name": "Codename_Geek", "twitch_name": "codename_geek", "role": "Layout Designer and Tournament Designer", "role_class": "Production", "image": "/ukraine_heart.webp"},
     # {"name": "CoreySG9", "twitch_name": "coreysg9", "role": "Video Editor", "role_class": "Production", "image": "/ukraine_heart.webp"},
     # {"name": "DoubleADewi", "twitch_name": "doubleadewi", "role": "Video Editor", "role_class": "Production", "image": "/ukraine_heart.webp"},
@@ -39,13 +43,14 @@ RAW_CREDITS_LIST: list[dict] = [
     {"name": "S0nzero", "twitch_name": "s0nzero", "role": "Caster (FR)", "role_class": "Caster", "image": "/ukraine_heart.webp"},
     {"name": "c3pown", "twitch_name": "c3pown", "role": "Caster (DE)", "role_class": "Caster", "image": "/ukraine_heart.webp"},
     {"name": "Flowleyd", "twitch_name": "flowleyd", "role": "Caster (DE)", "role_class": "Caster", "image": "/ukraine_heart.webp"},
-    {"name": "NobodyDaxian", "twitch_name": "nobodydaxian", "role": "Event Sponsor (code: 'dax')", "role_class": "Production", "image": "/ukraine_heart.webp"},
-    {"name": "LanzTheMaster", "twitch_name": "lanzthemaster", "role": "Event Sponsor (code: 'lanz')", "role_class": "Production", "image": "/ukraine_heart.webp"},
-    {"name": "KeyOfTime15", "twitch_name": "keyoftime15", "role": "Event Sponsor (code: 'key')", "role_class": "Production", "image": "/ukraine_heart.webp"},
-    {"name": "BioRoxas", "twitch_name": "bioroxas", "role": "Event Sponsor (code: 'bio')", "role_class": "Production", "image": "/ukraine_heart.webp"},
-    {"name": "Skraxx", "twitch_name": "OG_Skraxx", "role": "Event Sponsor (code: 'skraxx')", "role_class": "Production", "image": "/ukraine_heart.webp"},
-    # {"name": "RegularPat", "twitch_name": "regularpatyt", "role": "Event Sponsor (code: 'regularpat')", "role_class": "Production", "image": "/ukraine_heart.webp"},
-    {"name": "RadiantGardeners", "twitch_name": "radiantgardeners", "role": "Event Sponsor (code: 'rg')", "role_class": "Production", "image": "/ukraine_heart.webp"},
+    {"name": "NobodyDaxian", "twitch_name": "nobodydaxian", "role": "Event Endorser (code: 'dax')", "role_class": "Production", "image": "/ukraine_heart.webp"},
+    {"name": "LanzTheMaster", "twitch_name": "lanzthemaster", "role": "Event Endorser (code: 'lanz')", "role_class": "Production", "image": "/ukraine_heart.webp"},
+    {"name": "KeyOfTime15", "twitch_name": "keyoftime15", "role": "Event Endorser (code: 'key')", "role_class": "Production", "image": "/ukraine_heart.webp"},
+    {"name": "BioRoxas", "twitch_name": "bioroxas", "role": "Event Endorser (code: 'bio')", "role_class": "Production", "image": "/ukraine_heart.webp"},
+    {"name": "Skraxx", "twitch_name": "OG_Skraxx", "role": "Event Endorser (code: 'skraxx')", "role_class": "Production", "image": "/ukraine_heart.webp"},
+    {"name": "KHGuides", "twitch_name": "KHGuides", "role": "Event Endorser (code: 'guides')", "role_class": "Production", "image": "/ukraine_heart.webp"},
+    # {"name": "RegularPat", "twitch_name": "regularpatyt", "role": "Event Endorser (code: 'regularpat')", "role_class": "Production", "image": "/ukraine_heart.webp"},
+    {"name": "RadiantGardeners", "twitch_name": "radiantgardeners", "role": "Event Endorser (code: 'rg')", "role_class": "Production", "image": "/ukraine_heart.webp"},
     {"name": "Lindsey", "twitch_name": "projecthopeorg", "role": "Project Hope Fundraising Lead", "role_class": "Charity", "image": "/ukraine_heart.webp"},
 ]
 
@@ -53,12 +58,15 @@ RAW_CREDITS_LIST: list[dict] = [
 CREDITS: list[Credit] = []
 
 for entry in RAW_CREDITS_LIST:
-    # If a custom asset exists for this person in "assets", use it
-    all_names_in_assets = [os.path.splitext(name)[0].lower() for name in os.listdir("assets")]
-    all_extensions_in_assets = [os.path.splitext(name)[1] for name in os.listdir("assets")]
-    if entry["twitch_name"].lower() in all_names_in_assets:
+    # If a custom asset exists for this person in "assets", use the real filename
+    asset_files = os.listdir("assets")
+    all_names_in_assets = [os.path.splitext(name)[0].lower() for name in asset_files]
+    if entry["name"].lower() in all_names_in_assets:
+        match_idx = all_names_in_assets.index(entry["name"].lower())
+        asset_icon = f"/{asset_files[match_idx]}"
+    elif entry["twitch_name"].lower() in all_names_in_assets:
         match_idx = all_names_in_assets.index(entry["twitch_name"].lower())
-        asset_icon = f"/{entry['twitch_name']}{all_extensions_in_assets[match_idx]}"
+        asset_icon = f"/{asset_files[match_idx]}"
     else:
         asset_icon = entry.get("image", "/ukraine_heart.webp")
 
@@ -150,11 +158,21 @@ def credits() -> rx.Component:
         ),
         rx.el.div(
             rx.foreach(CREDITS, _credit_card),
-            class_name="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 items-stretch justify-center",
+            # Large screens: 6 columns. Progressively break down at lower breakpoints.
+            class_name=(
+                "grid grid-cols-1 gap-6 "
+                "sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 "
+                "items-stretch justify-center"
+            ),
             style={
                 "alignItems": "center",
                 "justifyItems": "center",
-                "width": "100%",
+                "width": "100vw",   # Take up as much horizontal space as possible
+                "maxWidth": "100vw",
+                "marginLeft": "calc(-50vw + 50%)",  # Center the full-width grid within a fixed-width parent
+                "paddingLeft": "2vw",
+                "paddingRight": "2vw",
+                "boxSizing": "border-box",
             }
         ),
     )

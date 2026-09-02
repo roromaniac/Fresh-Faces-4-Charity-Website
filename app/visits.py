@@ -12,7 +12,7 @@ from pathlib import Path
 from threading import Lock
 
 # visits.db lives in the project folder. *.db is already gitignored.
-DB_PATH = Path(__file__).resolve().parent.parent / "visits.db"
+DB_PATH = Path(__file__).resolve().parent.parent / "data" /"visits.db"
 
 # SQLite connections are not always safe to share across threads, so we
 # take a lock around each read or write.
@@ -20,9 +20,25 @@ _LOCK = Lock()
 
 
 def _connect() -> sqlite3.Connection:
+    """Connect to the visits.db SQLite database, ensuring the file and parent directory exist."""
+    # Ensure the parent directory for the DB file exists
+    DB_PATH.parent.mkdir(parents=True, exist_ok=True)
     # timeout lets one request wait briefly if another is writing
     connection = sqlite3.connect(DB_PATH, timeout=5)
-    connection.execute("PRAGMA journal_mode=WAL")
+    # MEMORY journal avoids .db-wal / .db-shm files. Granian watches those and
+    # would restart the app on every visit if we used WAL.
+    connection.execute("PRAGMA journal_mode=MEMORY")
+    # Ensure table exists (idempotent)
+    connection.execute(
+        """
+        CREATE TABLE IF NOT EXISTS visits (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            page TEXT NOT NULL,
+            session_id TEXT NOT NULL DEFAULT '',
+            visited_at TEXT NOT NULL
+        )
+        """
+    )
     return connection
 
 
