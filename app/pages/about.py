@@ -19,7 +19,7 @@ def about() -> rx.Component:
                 class_name="ff-menu-font mb-6 text-lg leading-relaxed text-sky-50/90",
             ),
             rx.el.p(
-                "While the world discusses the big picture (e.g., military support, global politics, trade), many Ukrainian citizens have lost their life or the quality of it. For the Ukrainian civilians who have lost their families and homes, big-picture discussions and assistance do not provide appropriate aid. The actions of entities like Project Hope that focus on ",
+                "While the world discusses the big picture (e.g., military support, global politics, trade), many Ukrainian civilians have lost their lives. For many more still living, the quality of their lives has considerably worsened. For the Ukrainian civilians who have lost their families and homes, big picture discussions and weaponry assistance do not provide appropriate aid for the common person. The actions of entities like Project Hope that focus on ",
                 rx.el.span("humanitarian", class_name="italic text-amber-200"),
                 " aid are the actions that ",
                 rx.el.span("actually", class_name="italic text-amber-200"),

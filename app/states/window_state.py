@@ -16,25 +16,25 @@ LEFT_ITEMS: list[WindowItem] = [
         image="/og_skraxx.png",
         label="FF4 Partner",
         highlight="OG_Skraxx",
-        bottom_text="Click to check out Skraxx's latest project: [INSERT HERE].",
+        bottom_text='New Video: "The Worst Trophy in EVERY Kingdom Hearts Game", Releasing 9/30!',
     ),
     WindowItem(
         image="/bioroxas.png",
         label="FF4 Partner",
         highlight="Bioroxas",
-        bottom_text="Click to check out Bioroxas's latest project: [INSERT HERE].",
+        bottom_text='New Entry in "The Psychology Of Series" Breaking into FFXIV!',
     ),
     WindowItem(
         image="/khguides.png",
         label="FF4 Partner",
         highlight="KHGGuides",
-        bottom_text="Click to check out KHGGuides's latest project: [INSERT HERE].",
+        bottom_text="Attend ReConnect 2027! The largest KH community event!",
     ),
     WindowItem(
         image="/radiantgardeners.png",
         label="FF4 Partner",
         highlight="RadiantGardeners",
-        bottom_text="Click to check out RadiantGardeners's latest project: [INSERT HERE].",
+        bottom_text="Play their game: The Hallowed Garden!",
     ),
     WindowItem(
         image="/nobodydaxian.png",
@@ -46,7 +46,7 @@ LEFT_ITEMS: list[WindowItem] = [
         image="/lanzthemaster.jpg",
         label="FF4 Partner",
         highlight="LanzTheMaster",
-        bottom_text="Click to check out LanzTheMaster's latest project: [INSERT HERE].",
+        bottom_text="Click to check out LanzTheMaster's FULL KH2 Superboss No Damage w/ Restrictions Series!",
     ),
 ]
 

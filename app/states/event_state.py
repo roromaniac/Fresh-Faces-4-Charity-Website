@@ -6,6 +6,7 @@ import reflex as rx
 class Partner(TypedDict):
     name: str
     image: str
+    url: str = ""
 
 
 class Stat(TypedDict):
@@ -32,22 +33,27 @@ class EventState(rx.State):
         {
             "name": "Project Hope",
             "image": "/project_hope.svg",
+            "url": "https://www.projecthope.org/region/europe/ukraine/",
         },
         {
             "name": "Randomizer Brasil",
             "image": "/RBR.png",
+            "url": "https://rbr.watch/",
         },
         {
             "name": "KHDE",
             "image": "/KHDE.png",
+            "url": "https://www.twitch.tv/kingdomheartsde"
         },
         {
             "name": "Speedrun Kingdom Hearts Francophone",
             "image": "/SKHF.gif",
+            "url": "https://www.twitch.tv/S0nzero"
         },
         {
             "name": "SpeedrunsEspanol",
             "image": "/SRE.png",
+            "url": "https://linktr.ee/SpeedrunsEspanol"
         },
     ]
 
@@ -56,9 +62,11 @@ class EventState(rx.State):
         {
             "name": "Square Enix",
             "image": "/square_enix.png",
+            "url": "https://www.square-enix.com/",
         },
         {
             "name": "Floating Grip",
             "image": "/floating_grip.webp",
+            "url": "https://floatinggrip.com/",
         },
     ]

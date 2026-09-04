@@ -4,8 +4,18 @@ from app.components.brand_glyphs import twitch_glyph, youtube_glyph
 from app.states.stream_state import StreamLink, StreamState
 
 
+def _live_dot() -> rx.Component:
+    return rx.el.span(
+        rx.el.span(class_name="ff-live-dot__core"),
+        aria_hidden="true",
+        title="Live",
+        class_name="ff-live-dot",
+    )
+
+
 def _brand_badge(link: StreamLink) -> rx.Component:
     return rx.el.span(
+        rx.cond(link["is_live"], _live_dot()),
         rx.cond(
             link["platform"] == "twitch",
             twitch_glyph(
@@ -15,14 +25,21 @@ def _brand_badge(link: StreamLink) -> rx.Component:
                 "h-3.5 w-3.5 shrink-0 text-white drop-shadow-[0_0_6px_rgba(255,0,0,0.9)]"
             ),
         ),
-        rx.el.span(
-            link["wordmark"],
-            class_name="ff-menu-bold-font hidden text-[9px] font-bold uppercase leading-none tracking-[0.14em] text-white lg:inline",
+        rx.cond(
+            link["is_live"],
+            rx.el.span(
+                "LIVE NOW",
+                class_name="ff-live-now ff-data-font text-[8px] font-bold uppercase leading-none tracking-[0.14em]",
+            ),
+            rx.el.span(
+                link["wordmark"],
+                class_name="ff-menu-bold-font hidden text-[9px] font-bold uppercase leading-none tracking-[0.14em] text-white lg:inline",
+            ),
         ),
         class_name=rx.cond(
             link["platform"] == "twitch",
-            "ff-brand-badge ff-brand-badge--twitch flex shrink-0 items-center gap-1 rounded-md border border-[#b98cff]/60 bg-[#9146ff] px-1.5 py-1",
-            "ff-brand-badge ff-brand-badge--youtube flex shrink-0 items-center gap-1 rounded-md border border-[#ff5b5b]/60 bg-[#ff0000] px-1.5 py-1",
+            "ff-brand-badge ff-brand-badge--twitch relative flex shrink-0 items-center gap-1 rounded-md border border-[#b98cff]/60 bg-[#9146ff] px-1.5 py-1",
+            "ff-brand-badge ff-brand-badge--youtube relative flex shrink-0 items-center gap-1 rounded-md border border-[#ff5b5b]/60 bg-[#ff0000] px-1.5 py-1",
         ),
     )
 
@@ -59,11 +76,15 @@ def _chip(link: StreamLink) -> rx.Component:
         href=link["href"],
         target="_blank",
         rel="noopener noreferrer",
-        aria_label=f"{link['label']} on {link['wordmark']}",
+        aria_label=rx.cond(
+            link["is_live"],
+            f"{link['label']} on {link['wordmark']} (live)",
+            f"{link['label']} on {link['wordmark']}",
+        ),
         class_name=rx.cond(
             link["platform"] == "twitch",
-            "ff-shimmer ff-portal-chip ff-portal-chip--twitch group relative flex w-full min-w-0 items-center gap-2 overflow-hidden rounded-xl border border-[#9146ff]/45 bg-[#9146ff]/10 px-2.5 py-1.5 transition-all duration-300 hover:scale-[1.03] hover:border-[#b98cff]/80 hover:bg-[#9146ff]/20 hover:shadow-[0_0_22px_rgba(145,70,255,0.5)] lg:w-auto lg:shrink-0",
-            "ff-shimmer ff-portal-chip ff-portal-chip--youtube group relative flex w-full min-w-0 items-center gap-2 overflow-hidden rounded-xl border border-[#ff0000]/45 bg-[#ff0000]/10 px-2.5 py-1.5 transition-all duration-300 hover:scale-[1.03] hover:border-[#ff5b5b]/80 hover:bg-[#ff0000]/20 hover:shadow-[0_0_22px_rgba(255,0,0,0.45)] lg:w-auto lg:shrink-0",
+            "ff-shimmer ff-portal-chip ff-portal-chip--twitch group relative flex min-w-0 items-center gap-2 overflow-visible rounded-xl border border-[#9146ff]/45 bg-[#9146ff]/10 px-2.5 py-1.5 transition-all duration-300 hover:scale-[1.03] hover:border-[#b98cff]/80 hover:bg-[#9146ff]/20 hover:shadow-[0_0_22px_rgba(145,70,255,0.5)] lg:shrink-0",
+            "ff-shimmer ff-portal-chip ff-portal-chip--youtube group relative flex min-w-0 items-center gap-2 overflow-visible rounded-xl border border-[#ff0000]/45 bg-[#ff0000]/10 px-2.5 py-1.5 transition-all duration-300 hover:scale-[1.03] hover:border-[#ff5b5b]/80 hover:bg-[#ff0000]/20 hover:shadow-[0_0_22px_rgba(255,0,0,0.45)] lg:shrink-0",
         ),
     )
 
@@ -82,11 +103,37 @@ def stream_bar() -> rx.Component:
                 ),
                 class_name="hidden shrink-0 items-center gap-1.5 border-r border-white/10 pr-3 lg:flex",
             ),
+            # Live cards sit on the left, still in their rest order.
+            rx.cond(
+                StreamState.any_live,
+                rx.el.div(
+                    rx.foreach(StreamState.live_links, _chip),
+                    class_name="flex w-full min-w-0 flex-wrap justify-start gap-2 lg:hidden",
+                ),
+            ),
+            # Offline cards always sit on the right, in their original order.
             rx.el.div(
-                rx.foreach(StreamState.links, _chip),
-                class_name="grid w-full min-w-0 grid-cols-2 gap-2 lg:flex lg:flex-1 lg:flex-wrap lg:items-center",
+                rx.foreach(StreamState.rest_links, _chip),
+                class_name="flex w-full min-w-0 flex-wrap justify-end gap-2 lg:hidden",
+            ),
+            rx.el.div(
+                rx.el.div(
+                    rx.foreach(StreamState.live_links, _chip),
+                    class_name="flex shrink-0 flex-wrap items-center gap-2",
+                ),
+                rx.el.div(
+                    rx.foreach(StreamState.rest_links, _chip),
+                    class_name="ml-auto flex min-w-0 flex-wrap items-center justify-end gap-2",
+                ),
+                class_name="hidden min-w-0 w-full flex-1 items-center gap-3 lg:flex",
             ),
             class_name="flex w-full flex-col gap-2 px-5 py-2.5 lg:flex-row lg:items-center lg:gap-3 lg:px-8",
         ),
+        rx.moment(
+            interval=StreamState.poll_ms,
+            on_change=StreamState.refresh_live_status,
+            class_name="hidden",
+        ),
+        on_mount=StreamState.refresh_live_status,
         class_name="relative z-40 w-full shrink-0 border-b border-white/10 bg-slate-950/60 backdrop-blur-xl",
     )
