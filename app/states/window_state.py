@@ -4,11 +4,78 @@ import reflex as rx
 
 
 class WindowItem(TypedDict):
-    icon: str
+    image: str
     label: str
-    division: str
-    caption: str
-    accent: str
+    highlight: str
+    bottom_text: str
+
+
+# Note: Changed 'icon' to 'image' and replaced the values with corresponding image paths (assumes images exist in 'assets' or public directory).
+LEFT_ITEMS: list[WindowItem] = [
+    WindowItem(
+        image="/og_skraxx.png",
+        label="FF4 Partner",
+        highlight="OG_Skraxx",
+        bottom_text="Click to check out Skraxx's latest project: [INSERT HERE].",
+    ),
+    WindowItem(
+        image="/bioroxas.png",
+        label="FF4 Partner",
+        highlight="Bioroxas",
+        bottom_text="Click to check out Bioroxas's latest project: [INSERT HERE].",
+    ),
+    WindowItem(
+        image="/khguides.png",
+        label="FF4 Partner",
+        highlight="KHGGuides",
+        bottom_text="Click to check out KHGGuides's latest project: [INSERT HERE].",
+    ),
+    WindowItem(
+        image="/radiantgardeners.png",
+        label="FF4 Partner",
+        highlight="RadiantGardeners",
+        bottom_text="Click to check out RadiantGardeners's latest project: [INSERT HERE].",
+    ),
+    WindowItem(
+        image="/nobodydaxian.png",
+        label="FF4 Partner",
+        highlight="NobodyDaxian",
+        bottom_text="Click to check out NobodyDaxian's latest project: [INSERT HERE].",
+    ),
+    WindowItem(
+        image="/lanzthemaster.jpg",
+        label="FF4 Partner",
+        highlight="LanzTheMaster",
+        bottom_text="Click to check out LanzTheMaster's latest project: [INSERT HERE].",
+    ),
+]
+
+RIGHT_ITEMS: list[WindowItem] = [
+    WindowItem(
+        image="/coming_soon.png",
+        label="Merch Showcase",
+        highlight="T-Shirt",
+        bottom_text="ALL profits go to Project Hope's Ukraine relief fund.",
+    ),
+    WindowItem(
+        image="/coming_soon.png",
+        label="Merch Showcase",
+        highlight="Hoodie",
+        bottom_text="ALL profits go to Project Hope's Ukraine relief fund.",
+    ),
+    WindowItem(
+        image="/coming_soon.png",
+        label="Merch Showcase",
+        highlight="Cap",
+        bottom_text="ALL profits go to Project Hope's Ukraine relief fund.",
+    ),
+    WindowItem(
+        image="/coming_soon.png",
+        label="Merch Showcase",
+        highlight="Playing Cards",
+        bottom_text="ALL profits go to Project Hope's Ukraine relief fund.",
+    ),
+]
 
 
 class WindowState(rx.State):
@@ -16,85 +83,24 @@ class WindowState(rx.State):
     left_index: int = 0
     right_index: int = 0
 
-    left_items: list[WindowItem] = [
-        {
-            "icon": "mic-vocal",
-            "label": "Vocal Division",
-            "division": "Division I",
-            "caption": "Eight new voices open the stage.",
-            "accent": "sky",
-        },
-        {
-            "icon": "guitar",
-            "label": "Strings & Bands",
-            "division": "Division II",
-            "caption": "Live sets mixed by Sunflower Sound.",
-            "accent": "amber",
-        },
-        {
-            "icon": "palette",
-            "label": "Stained Glass Art",
-            "division": "Division III",
-            "caption": "Ribbon arcs painted for Ukraine.",
-            "accent": "sky",
-        },
-        {
-            "icon": "sparkles",
-            "label": "Fresh Debuts",
-            "division": "Spotlight",
-            "caption": "Twenty-four first-time performers.",
-            "accent": "amber",
-        },
-    ]
-
-    right_items: list[WindowItem] = [
-        {
-            "icon": "heart-handshake",
-            "label": "100% Donated",
-            "division": "Relief",
-            "caption": "Every ticket becomes aid.",
-            "accent": "amber",
-        },
-        {
-            "icon": "calendar-days",
-            "label": "June 14 · 5 PM",
-            "division": "Showtime",
-            "caption": "Doors open one hour early.",
-            "accent": "sky",
-        },
-        {
-            "icon": "radio",
-            "label": "Livestreamed",
-            "division": "Worldwide",
-            "caption": "Six cameras, Twitch & YouTube.",
-            "accent": "amber",
-        },
-        {
-            "icon": "landmark",
-            "label": "The Lumen Hall",
-            "division": "Venue",
-            "caption": "Costs covered by Harbor Bank.",
-            "accent": "sky",
-        },
-    ]
-
     @rx.var
     def left_item(self) -> WindowItem:
-        return self.left_items[self.left_index % len(self.left_items)]
+        return LEFT_ITEMS[self.left_index % len(LEFT_ITEMS)]
 
     @rx.var
     def right_item(self) -> WindowItem:
-        return self.right_items[self.right_index % len(self.right_items)]
+        return RIGHT_ITEMS[self.right_index % len(RIGHT_ITEMS)]
 
     @rx.event
     def rotate_windows(self):
-        self.left_index = (self.left_index + 1) % len(self.left_items)
-        self.right_index = (self.right_index + 1) % len(self.right_items)
+        self.left_index = (self.left_index + 1) % len(LEFT_ITEMS)
+        self.right_index = (self.right_index + 1) % len(RIGHT_ITEMS)
 
     @rx.event
     def next_left(self):
-        self.left_index = (self.left_index + 1) % len(self.left_items)
+        self.left_index = (self.left_index + 1) % len(LEFT_ITEMS)
 
     @rx.event
     def next_right(self):
-        self.right_index = (self.right_index + 1) % len(self.right_items)
+        self.right_index = (self.right_index + 1) % len(RIGHT_ITEMS)
+   

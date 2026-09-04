@@ -1,6 +1,77 @@
 import reflex as rx
 
-from app.states.window_state import WindowItem, WindowState
+from app.states.window_state import LEFT_ITEMS, RIGHT_ITEMS, WindowItem, WindowState
+
+# Shrink each pane title until the whole line fits inside the square.
+_FIT_PANE_LABEL_JS = """
+(() => {
+  if (window.__ffPaneFit) return;
+  window.__ffPaneFit = true;
+
+  const MIN_PX = 7;
+  let timer = 0;
+
+  function fitOne(label) {
+    const avail = label.clientWidth;
+    const key = (label.textContent || "") + "@" + avail;
+    if (label.dataset.ffFit === key) return;
+    label.style.fontSize = "";
+    const need = label.scrollWidth;
+    if (avail && need > avail + 1) {
+      const current = parseFloat(getComputedStyle(label).fontSize);
+      label.style.fontSize = Math.max(MIN_PX, current * (avail / need) * 0.97) + "px";
+    }
+    label.dataset.ffFit = key;
+  }
+
+  function watchSlots() {
+    document.querySelectorAll(".ff-pane-fit-slot").forEach((slot) => {
+      const label = slot.querySelector(".ff-pane-fit-label");
+      if (label) fitOne(label);
+      if (!slot.__ffFitObs) {
+        slot.__ffFitObs = true;
+        ro.observe(slot);
+      }
+    });
+  }
+
+  function requestFit() {
+    if (timer) return;
+    timer = window.setTimeout(() => {
+      timer = 0;
+      watchSlots();
+    }, 16);
+  }
+
+  const lastWidth = new WeakMap();
+  const ro = new ResizeObserver((entries) => {
+    for (const entry of entries) {
+      const width = entry.contentRect.width;
+      if (lastWidth.get(entry.target) === width) continue;
+      lastWidth.set(entry.target, width);
+      const label = entry.target.querySelector(".ff-pane-fit-label");
+      if (label) fitOne(label);
+    }
+  });
+
+  const start = () => {
+    watchSlots();
+    new MutationObserver(requestFit).observe(document.body, {
+      childList: true,
+      subtree: true,
+    });
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(watchSlots);
+    }
+  };
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", start);
+  } else {
+    start();
+  }
+})();
+"""
 
 
 def _dots(count: int, active: int) -> rx.Component:
@@ -20,40 +91,44 @@ def _dots(count: int, active: int) -> rx.Component:
 
 
 def _pane(item: WindowItem, index: int) -> rx.Component:
+    # Title stays on one line; CSS/JS shrink the font so it never clips.
+    # To make the image 30% bigger: 151px * 1.3 = 196.3px
     return rx.el.div(
-        rx.el.span(
-            item["division"],
-            class_name=rx.cond(
-                item["accent"] == "amber",
-                "ff-data-font text-[10px] uppercase tracking-[0.22em] text-amber-200/90",
-                "ff-data-font text-[10px] uppercase tracking-[0.22em] text-sky-200/90",
+        rx.el.div(
+            rx.el.span(
+                rx.el.span(item["label"] + ": "),
+                rx.el.span(
+                    item["highlight"],
+                    class_name="italic underline text-orange-500",
+                ),
+                class_name="ff-pane-fit-label ff-menu-font uppercase text-amber-200/90",
             ),
+            class_name="ff-pane-fit-slot",
         ),
         rx.el.div(
-            rx.icon(
-                item["icon"],
-                class_name=rx.cond(
-                    item["accent"] == "amber",
-                    "h-9 w-9 text-amber-200 drop-shadow-[0_0_18px_rgba(250,204,21,0.75)] lg:h-10 lg:w-10",
-                    "h-9 w-9 text-sky-200 drop-shadow-[0_0_18px_rgba(125,211,252,0.75)] lg:h-10 lg:w-10",
+            rx.image(
+                src=item["image"],
+                alt=item["label"],
+                class_name=(
+                    "h-[196.3px] w-[196.3px] object-cover rounded-xl "
+                    "border border-amber-200/40 bg-amber-300/20 "
+                    "drop-shadow-[0_0_33.6px_rgba(250,204,21,0.45)]"
                 ),
             ),
-            class_name=rx.cond(
-                item["accent"] == "amber",
-                "flex h-16 w-16 items-center justify-center rounded-xl border border-amber-200/30 bg-amber-300/10 lg:h-18 lg:w-18",
-                "flex h-16 w-16 items-center justify-center rounded-xl border border-sky-200/30 bg-sky-400/10 lg:h-18 lg:w-18",
+            class_name=(
+                "flex h-[196.3px] w-[196.3px] items-center justify-center "
+                "rounded-xl border border-amber-200/30 bg-amber-300/10"
             ),
         ),
-        rx.el.p(
-            item["label"],
-            class_name="ff-title-font text-center text-base leading-tight text-white lg:text-lg",
-        ),
-        rx.el.p(
-            item["caption"],
-            class_name="ff-menu-font text-center text-[11px] leading-snug text-sky-100/70 lg:text-xs",
+        rx.el.span(
+            item["bottom_text"],
+            class_name="ff-menu-font text-[13.65px] uppercase tracking-[0.231em] text-amber-200/70 w-full text-center",
         ),
         key=index,
-        class_name="ff-pane-in flex h-full w-full flex-col items-center justify-center gap-2 px-4 pb-5",
+        class_name=(
+            "ff-pane-in flex h-full w-full min-w-0 flex-col items-center "
+            "justify-center gap-3 px-3 pb-8 pt-3"
+        ),
     )
 
 
@@ -65,11 +140,11 @@ def stained_window(
 ) -> rx.Component:
     return rx.el.div(
         rx.el.div(
-            class_name="pointer-events-none absolute -inset-2 rounded-3xl bg-[conic-gradient(from_0deg,rgba(56,189,248,0.30),rgba(250,204,21,0.30),rgba(99,102,241,0.30),rgba(56,189,248,0.30))] blur-[10px] opacity-60 transition-opacity duration-500 group-hover:opacity-95"
+            class_name="pointer-events-none absolute -inset-[3.15px] rounded-3xl bg-[conic-gradient(from_0deg,rgba(56,189,248,0.30),rgba(250,204,21,0.30),rgba(99,102,241,0.30),rgba(56,189,248,0.30))] blur-[13.65px] opacity-60 transition-opacity duration-500 group-hover:opacity-95"
         ),
         rx.el.div(
             rx.el.div(
-                class_name="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:22px_22px] opacity-50"
+                class_name="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.05)_1.365px,transparent_1.365px),linear-gradient(90deg,rgba(255,255,255,0.05)_1.365px,transparent_1.365px)] bg-[size:29.4px_29.4px] opacity-50"
             ),
             rx.el.div(
                 class_name="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(255,255,255,0.14),transparent_60%)]"
@@ -85,7 +160,12 @@ def stained_window(
             class_name="ff-glass-window relative h-full w-full overflow-hidden rounded-2xl border border-white/15 bg-slate-900/60 backdrop-blur-md",
         ),
         on_click=on_click,
-        class_name="group relative aspect-square w-40 shrink-0 cursor-pointer p-1 transition-transform duration-500 hover:scale-[1.04] sm:w-44 md:w-48 lg:w-60 xl:w-[17rem]",
+        # 35% bigger: w-52 * 1.05 ≈ w-54.5, sm:w-58 * 1.05 ≈ sm:w-60.9, etc.
+        class_name=(
+            "group relative aspect-square w-[13.625rem] shrink-0 cursor-pointer p-[0.079rem] "  # w-52*1.05=54.6rem/4=13.65rem, but tailwind non std, so w-[13.625rem]
+            "transition-transform duration-500 hover:scale-[1.04] "
+            "sm:w-[15.225rem] md:w-[16.275rem] lg:w-[20.475rem] xl:w-[23.205rem]"
+        ),
         style={"max_width": "100%"},
     )
 
@@ -94,7 +174,7 @@ def left_window() -> rx.Component:
     return stained_window(
         WindowState.left_item,
         WindowState.left_index,
-        4,
+        len(LEFT_ITEMS),
         WindowState.next_left,
     )
 
@@ -103,14 +183,17 @@ def right_window() -> rx.Component:
     return stained_window(
         WindowState.right_item,
         WindowState.right_index,
-        4,
+        len(RIGHT_ITEMS),
         WindowState.next_right,
     )
 
 
 def window_rotation_timer() -> rx.Component:
-    return rx.moment(
-        interval=WindowState.rotate_ms,
-        on_change=WindowState.rotate_windows,
-        class_name="hidden",
+    return rx.fragment(
+        rx.script(_FIT_PANE_LABEL_JS),
+        rx.moment(
+            interval=WindowState.rotate_ms,
+            on_change=WindowState.rotate_windows,
+            class_name="hidden",
+        ),
     )

@@ -63,7 +63,7 @@ app = rx.App(
 app.add_page(
     index,
     route="/",
-    title="Fresh Faces 4 · Charity Showcase for Ukraine",
+    title="Fresh Faces 4 · A Project Hope Production",
     on_load=[VisitState.log_visit, NavState.mark_active("/")],
 )
 app.add_page(

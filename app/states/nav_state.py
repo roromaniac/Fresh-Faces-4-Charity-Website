@@ -17,7 +17,7 @@ class NavState(rx.State):
         {"label": "About", "href": "/about", "icon": "heart"},
         {"label": "Calendar", "href": "/calendar", "icon": "calendar-heart"},
         {"label": "Tools", "href": "/tools", "icon": "key-round"},
-        {"label": "Help", "href": "/help", "icon": "question-mark"},
+        {"label": "Help", "href": "/help", "icon": "circle-help"},
         {"label": "Credits", "href": "/credits", "icon": "crown"},
     ]
 
