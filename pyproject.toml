@@ -5,6 +5,11 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
+    "google-api-core>=2.36.0",
+    "google-api-python-client>=2.200.0",
+    "google-auth>=2.57.1",
+    "google-auth-httplib2>=0.4.2",
+    "google-auth-oauthlib>=1.4.1",
     "python-dotenv>=1.2.3",
     "reflex-base>=0.9.8",
     "reflex[db]==0.9.8",

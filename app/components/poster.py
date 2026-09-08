@@ -173,6 +173,17 @@ def _visitor_seal() -> rx.Component:
                 class_name="ff-menu-font text-sm tracking-[0.06em] text-sky-100/80",
             ),
         ),
+        rx.el.div(
+            rx.el.p(
+                VisitState.rsvp_responses,
+                class_name="ff-data-font text-2xl font-bold leading-none tracking-wide text-sky-200 drop-shadow-[0_0_16px_rgba(56,189,248,0.45)] sm:text-3xl",
+            ),
+            rx.el.p(
+                "RSVPs",
+                class_name="ff-menu-font text-sm tracking-[0.06em] text-sky-100/80",
+            ),
+        ),
+   
         rx.image(
             src="/ukraine_heart.webp",
             alt="",
