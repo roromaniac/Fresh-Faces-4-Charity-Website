@@ -90,6 +90,40 @@ def _dots(count: int, active: int) -> rx.Component:
     )
 
 
+def _nav_arrow(
+    icon: str,
+    on_click: rx.event.EventType,
+    label: str,
+) -> rx.Component:
+    # type=button so the control never acts like a submit.
+    return rx.el.button(
+        rx.icon(icon, class_name="h-3.5 w-3.5"),
+        type="button",
+        on_click=on_click,
+        aria_label=label,
+        class_name=(
+            "flex h-6 w-6 items-center justify-center rounded-full "
+            "border border-white/20 bg-slate-950/55 text-amber-200/90 "
+            "transition-colors hover:border-amber-200/60 hover:bg-amber-200/15 "
+            "cursor-pointer"
+        ),
+    )
+
+
+def _card_nav(
+    count: int,
+    active: int,
+    on_prev: rx.event.EventType,
+    on_next: rx.event.EventType,
+) -> rx.Component:
+    return rx.el.div(
+        _nav_arrow("chevron-left", on_prev, "Previous card"),
+        _dots(count, active),
+        _nav_arrow("chevron-right", on_next, "Next card"),
+        class_name="flex items-center justify-center gap-2",
+    )
+
+
 def _pane(item: WindowItem, index: int) -> rx.Component:
     # Title stays on one line; CSS/JS shrink the font so it never clips.
     # To make the image 30% bigger: 151px * 1.3 = 196.3px
@@ -132,11 +166,28 @@ def _pane(item: WindowItem, index: int) -> rx.Component:
     )
 
 
+def _pane_link(item: WindowItem, index: int) -> rx.Component:
+    # Merch cards can leave href blank until a shop page exists.
+    link_class = "flex h-full w-full min-w-0 cursor-pointer no-underline"
+    return rx.cond(
+        item["href"] != "",
+        rx.el.a(
+            _pane(item, index),
+            href=item["href"],
+            target="_blank",
+            rel="noopener noreferrer",
+            class_name=link_class,
+        ),
+        _pane(item, index),
+    )
+
+
 def stained_window(
     item: WindowItem,
     index: int,
     count: int,
-    on_click: rx.event.EventType,
+    on_prev: rx.event.EventType,
+    on_next: rx.event.EventType,
 ) -> rx.Component:
     return rx.el.div(
         rx.el.div(
@@ -150,19 +201,18 @@ def stained_window(
                 class_name="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(255,255,255,0.14),transparent_60%)]"
             ),
             rx.el.div(
-                _pane(item, index),
+                _pane_link(item, index),
                 rx.el.div(
-                    _dots(count, index),
-                    class_name="absolute inset-x-0 bottom-2 flex justify-center",
+                    _card_nav(count, index, on_prev, on_next),
+                    class_name="absolute inset-x-0 bottom-2 z-10 flex justify-center pointer-events-auto",
                 ),
                 class_name="relative h-full w-full",
             ),
             class_name="ff-glass-window relative h-full w-full overflow-hidden rounded-2xl border border-white/15 bg-slate-900/60 backdrop-blur-md",
         ),
-        on_click=on_click,
         # 35% bigger: w-52 * 1.05 ≈ w-54.5, sm:w-58 * 1.05 ≈ sm:w-60.9, etc.
         class_name=(
-            "group relative aspect-square w-[13.625rem] shrink-0 cursor-pointer p-[0.079rem] "  # w-52*1.05=54.6rem/4=13.65rem, but tailwind non std, so w-[13.625rem]
+            "group relative aspect-square w-[13.625rem] shrink-0 p-[0.079rem] "  # w-52*1.05=54.6rem/4=13.65rem, but tailwind non std, so w-[13.625rem]
             "transition-transform duration-500 hover:scale-[1.04] "
             "sm:w-[15.225rem] md:w-[16.275rem] lg:w-[20.475rem] xl:w-[23.205rem]"
         ),
@@ -175,6 +225,7 @@ def left_window() -> rx.Component:
         WindowState.left_item,
         WindowState.left_index,
         len(LEFT_ITEMS),
+        WindowState.prev_left,
         WindowState.next_left,
     )
 
@@ -184,6 +235,7 @@ def right_window() -> rx.Component:
         WindowState.right_item,
         WindowState.right_index,
         len(RIGHT_ITEMS),
+        WindowState.prev_right,
         WindowState.next_right,
     )
 
@@ -191,9 +243,8 @@ def right_window() -> rx.Component:
 def window_rotation_timer() -> rx.Component:
     return rx.fragment(
         rx.script(_FIT_PANE_LABEL_JS),
-        rx.moment(
-            interval=WindowState.rotate_ms,
-            on_change=WindowState.rotate_windows,
+        rx.el.span(
+            on_mount=WindowState.start_rotator,
             class_name="hidden",
         ),
     )
