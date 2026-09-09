@@ -31,11 +31,20 @@ def about() -> rx.Component:
                 class_name="ff-menu-font mb-6 text-lg leading-relaxed text-sky-50/90",
             ),
             rx.el.p(
-                "Fresh Faces has been a series that has allowed me to plug into Project Hope's mission in Ukraine while staying involved and growing in the KH2 randomizer community. I am incredibly grateful for the continued support we have received, and we thank you all in advance for taking the time to read about our mission and continue the support through our fourth event. We continue to raise money ",
+                "Fresh Faces has been a series that has allowed me to plug into Project Hope's mission in Ukraine while staying involved and growing in the KH2 randomizer community. To date, we have raised ",
+                rx.el.span("$25,000+", class_name="font-bold text-amber-200"),
+                " for Project Hope's Ukraine Relief Fund, with over ",
+                rx.el.span("$22,000", class_name="font-bold text-amber-200"),
+                " of it coming from the Fresh Faces tournament series.",
+                class_name="ff-menu-font mb-2 text-lg leading-relaxed text-sky-50/90",
+            ),
+            rx.el.p(
+                "I am incredibly grateful for the continued support we have received, and we thank you all in advance for taking the time to read about our mission and continue the support through our fourth event. We continue to raise money ",
                 rx.el.span("and", class_name="font-bold italic text-amber-200"),
                 " welcome hundreds of new KH2 rando enthusiasts independent of politics and violence. So, on behalf of the entire Fresh Faces 4 team, we hope that you consider joining us as a racer, donor, viewer, incentive runner, supporter, or any combination thereof as we embark on the fourth iteration of Fresh Faces.",
                 class_name="ff-menu-font mb-8 text-lg leading-relaxed text-sky-50/90",
             ),
+       
             rx.el.div(
                 rx.el.p(
                     "Slava Ukraini,", 

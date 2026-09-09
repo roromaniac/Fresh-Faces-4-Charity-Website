@@ -264,7 +264,7 @@ def tools() -> rx.Component:
     return page_shell(
         page_heading(
             "Tools",
-            "Prep the keyblade, then join the night",
+            "Everything you need to prepare for Fresh Faces 4!",
         ),
         rx.el.div(
             _checklist(),

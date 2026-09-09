@@ -161,8 +161,9 @@ def _visitor_seal() -> rx.Component:
         rx.image(
             src="/KH-heart.webp",
             alt="",
-            class_name="h-8 w-8 object-contain drop-shadow-[0_0_12px_rgba(250,204,21,0.55)]",
+            class_name="h-8 w-8 object-contain drop-shadow-[0_0_12px_rgba(250,204,21,0.55)] invert",
         ),
+   
         rx.el.div(
             rx.el.p(
                 VisitState.visitor_count_label,

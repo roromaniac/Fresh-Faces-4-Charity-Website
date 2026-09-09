@@ -9,7 +9,6 @@ UPDATE "FF4 Eligibility"
 SET
     eligible =
         CASE
-            -- Not eligible if Top 12 in *any* previous FF event
             WHEN
                 ("FF1 Placing" > 0 AND "FF1 Placing" < 17)
                 OR ("FF2 Placing" > 0 AND "FF2 Placing" < 17)
@@ -17,6 +16,13 @@ SET
                 OR ("BB1 Placing" > 0 AND "BB1 Placing" < 9)
                 OR ("BB2 Placing" > 0 AND "BB2 Placing" < 9)
                 OR ("FF1 Placing" != -1 AND "FF2 Placing" != -1 AND "FF3 Placing" != -1)
+                OR
+                (
+                    (("FF1 Placing" > 0 AND "FF1 Placing" < 33)  +
+                     ("FF2 Placing" > 0 AND "FF2 Placing" < 33)  +
+                     ("FF3 Placing" > 0 AND "FF3 Placing" < 33))
+                ) > 1
+           
             THEN 'No'
             ELSE 'Yes'
         END,
@@ -34,6 +40,12 @@ SET
                 THEN 'Bracket finalist in BB2 (Placed #' || "BB2 Placing" || ')'
             WHEN "FF1 Placing" != -1 AND "FF2 Placing" != -1 AND "FF3 Placing" != -1
                 THEN 'Played in FF1, FF2, and FF3'
+            WHEN (
+                (("FF1 Placing" > 0 AND "FF1 Placing" < 33)  +
+                    ("FF2 Placing" > 0 AND "FF2 Placing" < 33)  +
+                    ("FF3 Placing" > 0 AND "FF3 Placing" < 33))
+            ) > 1
+                THEN 'Made Top 32 in 2 FF Events'
             ELSE 'Eligible for FF4'
         END
 ;

@@ -48,7 +48,7 @@ class EventState(rx.State):
         {
             "name": "Speedrun Kingdom Hearts Francophone",
             "image": "/SKHF.gif",
-            "url": "https://www.twitch.tv/S0nzero"
+            "url": "https://discord.gg/HPu2YjNMeA"
         },
         {
             "name": "SpeedrunsEspanol",

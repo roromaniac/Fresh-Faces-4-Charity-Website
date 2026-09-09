@@ -40,7 +40,7 @@ LEFT_ITEMS: list[WindowItem] = [
         image="/nobodydaxian.png",
         label="FF4 Partner",
         highlight="NobodyDaxian",
-        bottom_text="Click to check out NobodyDaxian's latest project: [INSERT HERE].",
+        bottom_text="NobodyDaxian has supported Fresh Faces from inception. Check him out here!",
     ),
     WindowItem(
         image="/lanzthemaster.jpg",
