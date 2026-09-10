@@ -40,16 +40,16 @@ def _partner_banner(title: str, partners: list[Partner], mark_class: str) -> rx.
         rx.el.h2(
             title,
             class_name=(
-                "ff-menu-bold-font text-center text-xl font-bold tracking-wide "
+                "ff-menu-bold-font text-center text-lg font-bold tracking-wide "
                 "text-yellow-300 drop-shadow-[0_2px_10px_rgba(250,204,21,0.35)] "
-                "sm:text-2xl md:text-3xl"
+                "sm:text-xl md:text-2xl lg:text-3xl"
             ),
         ),
         rx.el.div(
             rx.foreach(partners, partner_logo_with_link),
             class_name=(
                 "flex w-full flex-wrap items-center justify-center "
-                "gap-x-8 gap-y-5 sm:gap-x-12 md:gap-x-16"
+                "gap-x-5 gap-y-4 sm:gap-x-10 md:gap-x-16"
             ),
        
         ),

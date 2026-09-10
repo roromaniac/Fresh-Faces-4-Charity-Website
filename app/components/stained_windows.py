@@ -126,7 +126,6 @@ def _card_nav(
 
 def _pane(item: WindowItem, index: int) -> rx.Component:
     # Title stays on one line; CSS/JS shrink the font so it never clips.
-    # To make the image 30% bigger: 151px * 1.3 = 196.3px
     return rx.el.div(
         rx.el.div(
             rx.el.span(
@@ -144,24 +143,23 @@ def _pane(item: WindowItem, index: int) -> rx.Component:
                 src=item["image"],
                 alt=item["label"],
                 class_name=(
-                    "h-[196.3px] w-[196.3px] object-cover rounded-xl "
-                    "border border-amber-200/40 bg-amber-300/20 "
-                    "drop-shadow-[0_0_33.6px_rgba(250,204,21,0.45)]"
+                    "ff-pane-art rounded-xl border border-amber-200/40 "
+                    "bg-amber-300/20 drop-shadow-[0_0_33.6px_rgba(250,204,21,0.45)]"
                 ),
             ),
             class_name=(
-                "flex h-[196.3px] w-[196.3px] items-center justify-center "
-                "rounded-xl border border-amber-200/30 bg-amber-300/10"
+                "ff-pane-art-frame rounded-xl border border-amber-200/30 "
+                "bg-amber-300/10"
             ),
         ),
         rx.el.span(
             item["bottom_text"],
-            class_name="ff-menu-font text-[13.65px] uppercase tracking-[0.231em] text-amber-200/70 w-full text-center",
+            class_name="ff-pane-bottom ff-menu-font text-amber-200/70",
         ),
         key=index,
         class_name=(
             "ff-pane-in flex h-full w-full min-w-0 flex-col items-center "
-            "justify-center gap-3 px-3 pb-8 pt-3"
+            "justify-center"
         ),
     )
 
@@ -210,13 +208,7 @@ def stained_window(
             ),
             class_name="ff-glass-window relative h-full w-full overflow-hidden rounded-2xl border border-white/15 bg-slate-900/60 backdrop-blur-md",
         ),
-        # 35% bigger: w-52 * 1.05 ≈ w-54.5, sm:w-58 * 1.05 ≈ sm:w-60.9, etc.
-        class_name=(
-            "group relative aspect-square w-[13.625rem] shrink-0 p-[0.079rem] "  # w-52*1.05=54.6rem/4=13.65rem, but tailwind non std, so w-[13.625rem]
-            "transition-transform duration-500 hover:scale-[1.04] "
-            "sm:w-[15.225rem] md:w-[16.275rem] lg:w-[20.475rem] xl:w-[23.205rem]"
-        ),
-        style={"max_width": "100%"},
+        class_name="ff-stained-window group",
     )
 
 

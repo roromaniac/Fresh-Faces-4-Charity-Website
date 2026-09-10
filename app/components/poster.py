@@ -114,7 +114,7 @@ def _logo_image() -> rx.Component:
             alt=EventState.event_name,
             class_name="relative h-full w-full rounded-full object-contain transition-transform duration-500 group-hover:scale-105",
         ),
-        class_name="ff-float group relative h-28 w-28 shrink-0 cursor-pointer rounded-full border border-white/15 bg-slate-900/50 p-1.5 backdrop-blur-md transition-all duration-500 hover:scale-105 hover:shadow-[0_0_60px_rgba(56,189,248,0.35)] sm:h-36 sm:w-36 md:h-28 md:w-28 lg:h-36 lg:w-36 xl:h-44 xl:w-44",
+        class_name="ff-hero-logo ff-float group relative shrink-0 cursor-pointer rounded-full border border-white/15 bg-slate-900/50 p-1.5 backdrop-blur-md transition-all duration-500 hover:scale-105 hover:shadow-[0_0_60px_rgba(56,189,248,0.35)]",
     )
 
 
@@ -144,7 +144,7 @@ def _logo_artwork() -> rx.Component:
             ),
             class_name="absolute inset-0 flex flex-col items-center justify-center",
         ),
-        class_name="ff-float group relative h-28 w-28 shrink-0 cursor-pointer rounded-full border border-dashed border-white/15 bg-slate-900/50 backdrop-blur-md transition-all duration-500 hover:scale-105 hover:shadow-[0_0_60px_rgba(56,189,248,0.35)] sm:h-36 sm:w-36 md:h-28 md:w-28 lg:h-36 lg:w-36 xl:h-44 xl:w-44",
+        class_name="ff-hero-logo ff-float group relative shrink-0 cursor-pointer rounded-full border border-dashed border-white/15 bg-slate-900/50 backdrop-blur-md transition-all duration-500 hover:scale-105 hover:shadow-[0_0_60px_rgba(56,189,248,0.35)]",
     )
 
 
@@ -161,36 +161,34 @@ def _visitor_seal() -> rx.Component:
         rx.image(
             src="/KH-heart.webp",
             alt="",
-            class_name="h-8 w-8 object-contain drop-shadow-[0_0_12px_rgba(250,204,21,0.55)] invert",
+            class_name="object-contain drop-shadow-[0_0_12px_rgba(250,204,21,0.55)] invert",
         ),
-   
         rx.el.div(
             rx.el.p(
                 VisitState.visitor_count_label,
-                class_name="ff-data-font text-2xl font-bold leading-none tracking-wide text-amber-200 drop-shadow-[0_0_16px_rgba(250,204,21,0.45)] sm:text-3xl",
+                class_name="ff-visitor-count ff-data-font font-bold leading-none tracking-wide text-amber-200 drop-shadow-[0_0_16px_rgba(250,204,21,0.45)]",
             ),
             rx.el.p(
                 "lights visited",
-                class_name="ff-menu-font text-sm tracking-[0.06em] text-sky-100/80",
+                class_name="ff-menu-font text-xs tracking-[0.06em] text-sky-100/80 sm:text-sm",
             ),
         ),
         rx.el.div(
             rx.el.p(
                 VisitState.rsvp_responses,
-                class_name="ff-data-font text-2xl font-bold leading-none tracking-wide text-sky-200 drop-shadow-[0_0_16px_rgba(56,189,248,0.45)] sm:text-3xl",
+                class_name="ff-visitor-count ff-data-font font-bold leading-none tracking-wide text-sky-200 drop-shadow-[0_0_16px_rgba(56,189,248,0.45)]",
             ),
             rx.el.p(
                 "RSVPs",
-                class_name="ff-menu-font text-sm tracking-[0.06em] text-sky-100/80",
+                class_name="ff-menu-font text-xs tracking-[0.06em] text-sky-100/80 sm:text-sm",
             ),
         ),
-   
         rx.image(
             src="/ukraine_heart.webp",
             alt="",
-            class_name="h-8 w-8 object-contain drop-shadow-[0_0_12px_rgba(56,189,248,0.55)]",
+            class_name="object-contain drop-shadow-[0_0_12px_rgba(56,189,248,0.55)]",
         ),
-        class_name="ff-float mt-3 flex items-center gap-3 rounded-2xl border border-white/15 bg-slate-900/50 px-4 py-2 backdrop-blur-md",
+        class_name="ff-visitor-seal ff-float rounded-2xl border border-white/15 bg-slate-900/50 backdrop-blur-md",
     )
 
 
@@ -198,13 +196,13 @@ def _title_block() -> rx.Component:
     return rx.el.div(
         rx.el.h1(
             "Fresh Faces 4",
-            class_name="ff-title-font ff-title-gradient block w-full whitespace-nowrap text-center text-[9vw] font-bold leading-[1.08] tracking-tight drop-shadow-[0_0_28px_rgba(56,189,248,0.35)] sm:text-[7.5vw] md:text-[3.1vw] lg:text-[3.4vw] xl:text-6xl",
+            class_name="ff-hero-title ff-title-font ff-title-gradient drop-shadow-[0_0_28px_rgba(56,189,248,0.35)]",
         ),
         rx.el.p(
             "A KH2 Rando Charity Production",
             rx.el.br(),
             "for Project Hope",
-            class_name="ff-gummi-font text-center text-base tracking-[0.08em] text-sky-100/80 uppercase sm:text-lg",
+            class_name="ff-hero-tagline ff-gummi-font text-sky-100/80",
         ),
         rx.el.div(
             rx.el.div(
@@ -216,7 +214,7 @@ def _title_block() -> rx.Component:
             class_name="group mx-auto flex w-fit cursor-pointer flex-col gap-1",
         ),
         _visitor_seal(),
-        class_name="flex flex-col items-center gap-2",
+        class_name="ff-hero-title-block",
     )
 
 
@@ -224,7 +222,7 @@ def _hero_shrine() -> rx.Component:
     return rx.el.div(
         _logo_mark(),
         _title_block(),
-        class_name="flex min-w-0 flex-col items-center justify-center gap-3 text-center",
+        class_name="ff-hero-shrine",
     )
 
 
@@ -233,41 +231,28 @@ def poster() -> rx.Component:
         _ukraine_waves(),
         window_rotation_timer(),
         rx.el.div(
-            # Desktop layout: grid with [1fr auto 1fr] so sides get extra space.
             rx.el.div(
                 rx.el.div(
                     left_window(),
-                    class_name="hidden w-full min-w-0 items-center justify-center md:flex",
+                    class_name="ff-hero-left",
                 ),
-                _hero_shrine(),
+                rx.el.div(
+                    _hero_shrine(),
+                    class_name="ff-hero-center",
+                ),
                 rx.el.div(
                     right_window(),
-                    class_name="hidden w-full min-w-0 items-center justify-center md:flex",
+                    class_name="ff-hero-right",
                 ),
-                # Main change: grid-cols-[1fr_auto_1fr] instead of [auto_1fr_auto]
-                class_name=(
-                    "hidden w-full items-center "
-                    "md:grid md:grid-cols-[1fr_auto_1fr]"
-                ),
-            ),
-            # Mobile stays unchanged
-            rx.el.div(
-                _hero_shrine(),
-                rx.el.div(
-                    left_window(),
-                    right_window(),
-                    class_name="flex w-full items-start justify-center gap-4 sm:gap-6",
-                ),
-                class_name="flex w-full flex-col items-center gap-4 md:hidden",
+                class_name="ff-hero-stage",
             ),
             rx.el.div(
                 supporter_wall(),
                 class_name="flex w-full justify-center",
             ),
-            # Remove max-w-6xl, mx-auto, reduce px-5/lg:px-10 for edge-to-edge
-            class_name="relative flex w-full flex-col items-center gap-4 py-3 lg:gap-6 px-2 lg:px-4",
+            class_name="ff-poster-inner relative",
         ),
         id="home",
         custom_attrs={"aria-label": EventState.event_name},
-        class_name="relative flex w-full flex-1 items-center overflow-hidden bg-slate-950",
+        class_name="ff-poster relative flex w-full flex-1 bg-slate-950",
     )

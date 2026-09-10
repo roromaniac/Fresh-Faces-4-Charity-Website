@@ -91,10 +91,10 @@ RIGHT_ITEMS: list[WindowItem] = [
 
 
 class WindowState(rx.State):
-    rotate_ms: int = 10000
+    rotate_ms: int = 7500
     left_index: int = 0
     right_index: int = 0
-    # Bumps on each arrow click so the background rotator restarts its 10s wait.
+    # Bumps on each arrow click so the background rotator restarts its wait.
     pause_token: int = 0
     rotator_running: bool = False
 

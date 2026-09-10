@@ -46,6 +46,10 @@ def _brand_badge(link: StreamLink) -> rx.Component:
 
 def _chip(link: StreamLink) -> rx.Component:
     return rx.el.a(
+        rx.el.span(
+            aria_hidden="true",
+            class_name="ff-portal-chip__shine ff-shimmer",
+        ),
         _brand_badge(link),
         rx.el.span(
             rx.el.span(
@@ -83,8 +87,8 @@ def _chip(link: StreamLink) -> rx.Component:
         ),
         class_name=rx.cond(
             link["platform"] == "twitch",
-            "ff-shimmer ff-portal-chip ff-portal-chip--twitch group relative flex min-w-0 items-center gap-2 overflow-visible rounded-xl border border-[#9146ff]/45 bg-[#9146ff]/10 px-2.5 py-1.5 transition-all duration-300 hover:scale-[1.03] hover:border-[#b98cff]/80 hover:bg-[#9146ff]/20 hover:shadow-[0_0_22px_rgba(145,70,255,0.5)] lg:shrink-0",
-            "ff-shimmer ff-portal-chip ff-portal-chip--youtube group relative flex min-w-0 items-center gap-2 overflow-visible rounded-xl border border-[#ff0000]/45 bg-[#ff0000]/10 px-2.5 py-1.5 transition-all duration-300 hover:scale-[1.03] hover:border-[#ff5b5b]/80 hover:bg-[#ff0000]/20 hover:shadow-[0_0_22px_rgba(255,0,0,0.45)] lg:shrink-0",
+            "ff-portal-chip ff-portal-chip--twitch group relative flex min-w-0 items-center gap-2 overflow-visible rounded-xl border border-[#9146ff]/45 bg-[#9146ff]/10 px-2.5 py-1.5 transition-all duration-300 hover:scale-[1.03] hover:border-[#b98cff]/80 hover:bg-[#9146ff]/20 hover:shadow-[0_0_22px_rgba(145,70,255,0.5)] lg:shrink-0",
+            "ff-portal-chip ff-portal-chip--youtube group relative flex min-w-0 items-center gap-2 overflow-visible rounded-xl border border-[#ff0000]/45 bg-[#ff0000]/10 px-2.5 py-1.5 transition-all duration-300 hover:scale-[1.03] hover:border-[#ff5b5b]/80 hover:bg-[#ff0000]/20 hover:shadow-[0_0_22px_rgba(255,0,0,0.45)] lg:shrink-0",
         ),
     )
 

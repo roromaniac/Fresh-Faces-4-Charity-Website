@@ -88,6 +88,8 @@
 
 .ff-body {
   font-family: var(--ff-font-menu);
+  overflow-x: clip;
+  max-width: 100%;
 }
 
 .ff-title-font {
@@ -290,6 +292,185 @@
   transition: box-shadow 0.5s ease;
 }
 
+/* Home poster: navbar/stream stay put; this pane scrolls if the viewport is short. */
+.ff-poster {
+  min-height: 0;
+  overflow-x: clip;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.ff-poster-inner {
+  box-sizing: border-box;
+  display: flex;
+  width: 100%;
+  max-width: 100%;
+  margin-block: auto;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(0.75rem, 2vh, 1.5rem);
+  padding: clamp(0.5rem, 1.8vh, 1.25rem) clamp(0.5rem, 2vw, 1.25rem);
+}
+
+/*
+  Hero stage: shrine on top with two windows beside each other by default.
+  Wide / landscape viewports switch to the stained-glass triptych.
+*/
+.ff-hero-stage {
+  display: grid;
+  width: 100%;
+  min-width: 0;
+  align-items: center;
+  justify-items: stretch;
+  gap: clamp(0.65rem, 2vw, 1.5rem);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-areas:
+    "center center"
+    "left right";
+}
+
+.ff-hero-left,
+.ff-hero-right {
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  align-items: center;
+  justify-content: center;
+}
+
+.ff-hero-left {
+  grid-area: left;
+}
+
+.ff-hero-right {
+  grid-area: right;
+}
+
+.ff-hero-center {
+  grid-area: center;
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
+  justify-self: stretch;
+  container-type: inline-size;
+}
+
+.ff-hero-shrine {
+  display: flex;
+  min-width: 0;
+  max-width: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(0.5rem, 1.4vh, 0.75rem);
+  text-align: center;
+}
+
+.ff-hero-title-block {
+  display: flex;
+  min-width: 0;
+  max-width: 100%;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.ff-hero-title {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  font-size: clamp(1.45rem, 7.2vw, 3.25rem);
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.ff-hero-tagline {
+  max-width: min(36ch, 100%);
+  font-size: clamp(0.8rem, 2.4vw, 1.125rem);
+  line-height: 1.35;
+  letter-spacing: 0.08em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.ff-hero-logo {
+  width: clamp(5.5rem, min(22vw, 16vh), 11rem);
+  height: clamp(5.5rem, min(22vw, 16vh), 11rem);
+}
+
+.ff-visitor-seal {
+  display: flex;
+  max-width: 100%;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(0.35rem, 1.2vw, 0.75rem);
+  margin-top: 0.35rem;
+  padding: 0.45rem 0.75rem;
+}
+
+.ff-visitor-seal img {
+  width: clamp(1.5rem, 4vw, 2rem);
+  height: clamp(1.5rem, 4vw, 2rem);
+}
+
+.ff-visitor-count {
+  font-size: clamp(1.15rem, 3.2vw, 1.875rem);
+}
+
+/* Square window fills its grid cell, then caps so it never dominates the page. */
+.ff-stained-window {
+  container-type: inline-size;
+  position: relative;
+  box-sizing: border-box;
+  width: min(100%, 23.25rem, 60vmin);
+  max-width: 100%;
+  min-width: 0;
+  aspect-ratio: 1 / 1;
+  padding: 0.08rem;
+}
+
+.ff-pane-in {
+  gap: clamp(0.35rem, 4.2cqi, 0.75rem);
+  padding: clamp(0.4rem, 4cqi, 0.75rem) clamp(0.45rem, 4.5cqi, 0.75rem)
+    clamp(1.45rem, 11cqi, 2rem);
+}
+
+.ff-pane-art-frame {
+  display: flex;
+  width: min(54%, 12.3rem);
+  max-width: 100%;
+  max-height: 58%;
+  aspect-ratio: 1 / 1;
+  flex: 0 1 auto;
+  align-items: center;
+  justify-content: center;
+}
+
+.ff-pane-art {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.ff-pane-bottom {
+  display: -webkit-box;
+  width: 100%;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  line-clamp: 4;
+  font-size: clamp(0.5rem, 4.6cqi, 0.85rem);
+  letter-spacing: 0.08em;
+  line-height: 1.3;
+  text-align: center;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
 /* Title row: one line that shrinks with the square instead of clipping. */
 .ff-pane-fit-slot {
   container-type: inline-size;
@@ -311,6 +492,172 @@
 .ff-glass-window:hover {
   box-shadow: inset 0 0 30px rgba(250, 204, 21, 0.18),
     0 0 44px rgba(56, 189, 248, 0.35);
+}
+
+/* Side-by-side shrine once there is room for two windows plus the title. */
+@media (min-width: 56rem) {
+  .ff-hero-stage {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 34%) minmax(0, 1fr);
+    grid-template-areas: "left center right";
+  }
+
+  .ff-hero-center {
+    justify-self: stretch;
+    width: 100%;
+  }
+
+  .ff-hero-title {
+    font-size: clamp(1.45rem, 11cqi, 3.75rem);
+  }
+
+  .ff-hero-tagline {
+    max-width: none;
+    font-size: clamp(0.75rem, 4.6cqi, 1.125rem);
+  }
+}
+
+/* Phones on their side: keep the triptych, but keep windows inside the short height. */
+@media (min-width: 40rem) and (max-height: 32rem) {
+  .ff-hero-stage {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 38%) minmax(0, 1fr);
+    grid-template-areas: "left center right";
+    gap: clamp(0.4rem, 1.5vw, 0.9rem);
+  }
+
+  .ff-hero-center {
+    justify-self: stretch;
+    width: 100%;
+  }
+
+  .ff-hero-title {
+    font-size: clamp(0.95rem, 6.8cqi, 1.6rem);
+  }
+
+  .ff-hero-tagline {
+    max-width: none;
+    font-size: clamp(0.6rem, 3.4cqi, 0.8rem);
+  }
+
+  .ff-stained-window {
+    width: min(100%, 16rem, 46vmin);
+  }
+
+  .ff-hero-logo {
+    width: clamp(4.25rem, 14vh, 7.5rem);
+    height: clamp(4.25rem, 14vh, 7.5rem);
+  }
+
+  .ff-poster-inner {
+    gap: 0.55rem;
+    padding-block: 0.4rem;
+  }
+
+  .ff-visitor-seal {
+    padding: 0.3rem 0.65rem;
+  }
+}
+
+@media (hover: hover) and (min-width: 64rem) {
+  .ff-stained-window {
+    transition: transform 0.5s ease;
+  }
+
+  .ff-stained-window:hover {
+    transform: scale(1.04);
+  }
+}
+
+.ff-nav-cta {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.375rem;
+  background-image: linear-gradient(to bottom, #3b82f6, #eab308);
+  padding: 0.4rem 0.7rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: #fff;
+  text-align: center;
+  text-decoration: none;
+  text-shadow: 1px 1px 2px black, 0 0 1px black;
+  transition: filter 0.2s ease;
+}
+
+.ff-nav-cta:hover {
+  filter: brightness(1.08);
+}
+
+.ff-nav-bar {
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  height: 4.5rem;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0 0.75rem;
+}
+
+.ff-nav-bar > a {
+  display: flex;
+  height: 100%;
+  min-width: 0;
+  max-width: min(42vw, 9rem);
+  flex-shrink: 1;
+  align-items: center;
+}
+
+.ff-nav-logo {
+  display: flex;
+  height: 100%;
+  max-height: 100%;
+  max-width: 100%;
+  align-items: center;
+  overflow: hidden;
+}
+
+.ff-nav-logo img {
+  height: 100%;
+  width: auto;
+  max-height: 100%;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+@media (min-width: 40rem) {
+  .ff-nav-bar {
+    height: 5rem;
+    gap: 0.75rem;
+    padding: 0 1.25rem;
+  }
+
+  .ff-nav-bar > a {
+    max-width: 12rem;
+  }
+
+  .ff-nav-cta {
+    padding: 0.5rem 1rem;
+    font-size: 0.75rem;
+  }
+}
+
+@media (min-width: 64rem) {
+  .ff-nav-bar {
+    height: 6rem;
+    gap: 1rem;
+    padding: 0 2rem;
+  }
+
+  .ff-nav-bar > a {
+    max-width: 16rem;
+  }
+}
+
+@media (min-width: 80rem) {
+  .ff-nav-bar > a {
+    max-width: 18rem;
+  }
 }
 
 .ff-shimmer::after {
@@ -346,7 +693,47 @@
   );
 }
 
-.ff-portal-chip::before {
+.ff-portal-chip__shine {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 1;
+  clip-path: inset(0 round 0.75rem);
+}
+
+.ff-portal-chip__shine.ff-shimmer::after {
+  inset: 0;
+  width: auto;
+  border-radius: inherit;
+  transform: none;
+  background: linear-gradient(
+    105deg,
+    transparent 35%,
+    rgba(255, 255, 255, 0.22) 50%,
+    transparent 65%
+  );
+  background-size: 220% 100%;
+  background-repeat: no-repeat;
+  background-position: 130% 0;
+}
+
+.ff-portal-chip:hover .ff-portal-chip__shine.ff-shimmer::after {
+  opacity: 1;
+  animation: ff-portal-shimmer 0.9s ease-out;
+}
+
+@keyframes ff-portal-shimmer {
+  from {
+    background-position: 130% 0;
+  }
+  to {
+    background-position: -40% 0;
+  }
+}
+
+.ff-portal-chip__shine::before {
   content: "";
   position: absolute;
   inset: 0;
@@ -361,7 +748,7 @@
   pointer-events: none;
 }
 
-.ff-portal-chip:hover::before {
+.ff-portal-chip:hover .ff-portal-chip__shine::before {
   opacity: 1;
 }
 
