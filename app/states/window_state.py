@@ -19,14 +19,14 @@ LEFT_ITEMS: list[WindowItem] = [
         label="FF4 Partner",
         highlight="OG_Skraxx",
         bottom_text='New Video: "The Worst Trophy in EVERY Kingdom Hearts Game", Releasing 9/30!',
-        href="https://www.youtube.com/@OG_Skraxx",
+        href="https://www.youtube.com/@ogskraxx6678",
     ),
     WindowItem(
         image="/bioroxas.png",
         label="FF4 Partner",
         highlight="Bioroxas",
         bottom_text='New Entry in "The Psychology Of Series" Breaking into FFXIV!',
-        href="https://www.youtube.com/c/BioRoxas",
+        href="https://www.youtube.com/@BioRoxas",
     ),
     WindowItem(
         image="/khguides.png",
@@ -47,7 +47,7 @@ LEFT_ITEMS: list[WindowItem] = [
         label="FF4 Partner",
         highlight="NobodyDaxian",
         bottom_text="NobodyDaxian has supported Fresh Faces from inception. Check him out here!",
-        href="https://www.twitch.tv/nobodydaxian",
+        href="https://www.youtube.com/@NobodyDaxian",
     ),
     WindowItem(
         image="/lanzthemaster.jpg",
