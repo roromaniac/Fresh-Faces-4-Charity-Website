@@ -197,17 +197,10 @@ class LoadlessCheckerState(rx.State):
             if uploaded_text == reference_text:
                 self.loadless_status = "✅ Valid KH2 Randomizer loadless timer file! Your file matches the official template."
             else:
-                # Optionally, be more sophisticated and compare ignoring line endings or excess empty lines
-                from difflib import SequenceMatcher
-                matcher = SequenceMatcher(None, uploaded_text, reference_text)
-                similarity = matcher.ratio()
-                if similarity > 0.98:
-                    self.loadless_status = "✅ Your .asl file closely matches the official template (98%+ similar)."
-                else:
-                    self.loadless_status = (
-                        "❌ Invalid KH2 Randomizer loadless timer file. Your file does not match the official template. "
-                        "Please download the correct, most recent version using the link above."
-                    )
+                self.loadless_status = (
+                    "❌ Invalid KH2 Randomizer loadless timer file. Your file does not match the official template. "
+                    "Please download the correct, most recent version using the link above."
+                )
         except FileNotFoundError:
             self.loadless_status = "❌ Reference file not found. Please ensure your file is valid and of .asl format."
         except Exception as e:
