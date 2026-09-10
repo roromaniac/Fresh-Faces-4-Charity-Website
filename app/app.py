@@ -17,6 +17,8 @@ from app.states.tools_state import (
 )
 from app.states.visit_state import VisitState
 
+from app.scripts.eligibility import main as eligibility_main
+
 def index() -> rx.Component:
     return rx.el.main(
         navbar(),
@@ -25,7 +27,7 @@ def index() -> rx.Component:
         class_name="ff-body flex h-dvh w-full flex-col overflow-hidden bg-slate-950",
     )
 
-
+eligibility_main()
 app = rx.App(
     theme=rx.theme(appearance="light"),
     stylesheets=["/poster.css"],
