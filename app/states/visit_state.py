@@ -55,7 +55,7 @@ class VisitState(rx.State):
             print("Error retrieving RSVP count:", e)
 
     @rx.var
-    def get_rsvp_count(self) -> str:
+    def get_rsvp_count(self) -> int:
         SCOPES = ["https://www.googleapis.com/auth/forms.responses.readonly"]
 
         raw_creds = os.getenv("SERVICE_ACCOUNT_JSON")
