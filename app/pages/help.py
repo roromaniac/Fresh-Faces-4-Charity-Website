@@ -88,6 +88,24 @@ def help_page() -> rx.Component:
                 ),
             ),
             _faq_item(
+                "What are the Graduated Faces and Veteran divisions?",
+                rx.el.p(
+                    rx.fragment(
+                        "The Veteran division is meant for players who like to play on critical difficulty and are ",
+                        rx.el.span(
+                            "VERY",
+                            class_name="font-extrabold text-yellow-300",
+                        ),
+                        " familiar with competitive KH2 rando.",
+                        rx.el.br(),
+                        rx.el.br(),
+                        "The Graduated Faces division is meant for players who have played in Fresh Faces before (or other beginner tournies like Beginner Bootcamp), that are now ineligible to join the Fresh Faces division, but still want to get involved in playing KH2 rando. Graduated Faces will have the same settings as the Fresh Faces, but will only include people who are ineligibile for Fresh Faces that also aren't experienced enough for the Veteran division.",
+                    ),
+                    class_name="ff-menu-font text-sky-50/90",
+                ),
+           
+            ),
+            _faq_item(
                 "How do I sign up for Fresh Faces 4?",
                 rx.el.p(
                     "There is an ",
