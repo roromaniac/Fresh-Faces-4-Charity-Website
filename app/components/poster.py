@@ -179,7 +179,7 @@ def _visitor_seal() -> rx.Component:
                 class_name="ff-visitor-count ff-data-font font-bold leading-none tracking-wide text-sky-200 drop-shadow-[0_0_16px_rgba(56,189,248,0.45)]",
             ),
             rx.el.p(
-                "RSVPs",
+                "hearts collected",
                 class_name="ff-menu-font text-xs tracking-[0.06em] text-sky-100/80 sm:text-sm",
             ),
         ),

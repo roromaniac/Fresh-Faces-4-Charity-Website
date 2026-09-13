@@ -100,6 +100,7 @@ app.add_page(
     title="Tools",
     on_load=[
         VisitState.log_visit,
+        VisitState.get_rsvp_count,
         NavState.mark_active("/tools"),
         CheckboxState.reset_checklist,
         LoadlessCheckerState.reset_status,

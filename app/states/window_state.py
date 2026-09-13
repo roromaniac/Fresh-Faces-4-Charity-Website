@@ -53,8 +53,8 @@ LEFT_ITEMS: list[WindowItem] = [
         image="/lanzthemaster.jpg",
         label="FF4 Partner",
         highlight="LanzTheMaster",
-        bottom_text="Click to check out LanzTheMaster's FULL KH2 Superboss No Damage w/ Restrictions Series!",
-        href="https://www.youtube.com/@lanzthemaster",
+        bottom_text="Check out Lanz's FULL KH2 Superboss No Damage w/ Restrictions Series!",
+        href="https://www.youtube.com/watch?v=m7GfO3_1pik&list=PLaAEZ_SMW7ijiaLck2X2BHY4guH-pJ74B",
     ),
 ]
 
