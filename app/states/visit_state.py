@@ -54,7 +54,6 @@ class VisitState(rx.State):
         except Exception as e:
             print("Error retrieving RSVP count:", e)
 
-    @rx.var
     def get_rsvp_count(self) -> int:
         SCOPES = ["https://www.googleapis.com/auth/forms.responses.readonly"]
 
