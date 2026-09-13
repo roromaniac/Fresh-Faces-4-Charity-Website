@@ -31,7 +31,7 @@ def index() -> rx.Component:
     )
 
 app = rx.App(
-    theme=rx.theme(appearance="light"),
+    # theme=rx.theme(appearance="light"),
     stylesheets=["/poster.css"],
     head_components=[
         rx.el.link(
