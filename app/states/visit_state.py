@@ -56,13 +56,37 @@ class VisitState(rx.State):
 
     def get_rsvp_count(self):
         SCOPES = ["https://www.googleapis.com/auth/forms.responses.readonly"]
-        creds_info = json.loads(os.getenv("SERVICE_ACCOUNT_JSON", "{}"))
-        creds = service_account.Credentials.from_service_account_info(creds_info, scopes=SCOPES)
-        service = build("forms", "v1", credentials=creds)
+
+        raw_creds = os.getenv("SERVICE_ACCOUNT_JSON")
         form_id = os.getenv("RSVP_FORM_ID")
+
+        print("SERVICE_ACCOUNT_JSON present:", bool(raw_creds))
+        print("RSVP_FORM_ID present:", bool(form_id))
+
+        if not raw_creds:
+            raise RuntimeError("Missing SERVICE_ACCOUNT_JSON")
+
         if not form_id:
-            print("Missing RSVP_FORM_ID")
-            return -1
-        result = service.forms().responses().list(formId=form_id).execute()
+            raise RuntimeError("Missing RSVP_FORM_ID")
+
+        creds_info = json.loads(raw_creds)
+
+        print("Service account project:", creds_info.get("project_id"))
+        print("Service account email:", creds_info.get("client_email"))
+
+        creds = service_account.Credentials.from_service_account_info(
+            creds_info,
+            scopes=SCOPES,
+        )
+
+        service = build("forms", "v1", credentials=creds)
+
+        result = (
+            service.forms()
+            .responses()
+            .list(formId=form_id)
+            .execute()
+        )
+
         return len(result.get("responses", []))
  
