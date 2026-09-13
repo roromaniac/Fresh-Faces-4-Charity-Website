@@ -68,7 +68,7 @@ app.add_page(
     index,
     route="/",
     title="Fresh Faces 4 · A Project Hope Production",
-    on_load=[VisitState.log_visit, NavState.mark_active("/")],
+    on_load=[VisitState.log_visit, VisitState.get_rsvp_count, NavState.mark_active("/")],
 )
 app.add_page(
     about,
@@ -100,7 +100,6 @@ app.add_page(
     title="Tools",
     on_load=[
         VisitState.log_visit,
-        VisitState.get_rsvp_count,
         NavState.mark_active("/tools"),
         CheckboxState.reset_checklist,
         LoadlessCheckerState.reset_status,
