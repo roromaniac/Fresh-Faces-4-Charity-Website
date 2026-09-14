@@ -693,6 +693,34 @@
   );
 }
 
+/* Phone layout: always two stream cards per row, even on a narrow screen. */
+.ff-stream-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+  width: 100%;
+  min-width: 0;
+}
+
+.ff-stream-grid > * {
+  min-width: 0;
+}
+
+.ff-stream-grid .ff-portal-chip {
+  width: 100%;
+  min-width: 0;
+}
+
+.ff-stream-grid .ff-menu-bold-font {
+  letter-spacing: 0.04em;
+}
+
+@media (min-width: 64rem) {
+  .ff-stream-grid {
+    display: none;
+  }
+}
+
 .ff-portal-chip__shine {
   position: absolute;
   inset: 0;

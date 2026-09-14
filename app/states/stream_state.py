@@ -81,8 +81,11 @@ class StreamState(rx.State):
         return [link for link in self.links if link["is_live"]]
 
     @rx.var
-    def any_live(self) -> bool:
-        return any(link["is_live"] for link in self.links)
+    def bar_links(self) -> list[StreamLink]:
+        # One list so the mobile grid can pack two cards per row.
+        live = [link for link in self.links if link["is_live"]]
+        rest = [link for link in self.links if not link["is_live"]]
+        return live + rest
 
     @rx.event(background=True)
     async def refresh_live_status(self, _stamp: str = ""):

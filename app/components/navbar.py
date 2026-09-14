@@ -70,7 +70,7 @@ def _mobile_link(link: NavLink) -> rx.Component:
 def brand_mark() -> rx.Component:
     return rx.el.div(
         rx.image(
-            src="/FF4LogoIntegrated2Transparent.png",
+            src="/FF4_legal.png",
             alt="Fresh Faces 4 Logo",
         ),
         class_name="ff-nav-logo",

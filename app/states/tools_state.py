@@ -28,7 +28,7 @@ class CheckboxState(rx.State):
         "Make racetime.gg Account",
         "Link Twitch to racetime.gg",
         "Test Setup by Playing a KH2 Rando Seed",
-        "RSVP to Fresh Faces 3",
+        "RSVP to Fresh Faces 4",
     ]
 
     checked_tasks: dict[str, bool] = {}

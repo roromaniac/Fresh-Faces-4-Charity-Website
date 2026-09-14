@@ -52,23 +52,37 @@ def _checklist() -> rx.Component:
                             on_change=lambda checked: CheckboxState.toggle_task(
                                 task, checked
                             ),
-                        ),
-                        rx.el.span(task, class_name="flex-1 text-sky-50"),
-                        rx.cond(
-                            CheckboxState.checked_tasks.get(task, False),
-                            rx.el.span(
-                                "Completed",
-                                class_name="ff-data-font text-xs uppercase tracking-[0.14em] text-emerald-300",
-                            ),
-                            rx.el.span(
-                                "Incomplete",
-                                class_name="ff-data-font text-xs uppercase tracking-[0.14em] text-rose-300",
+                            class_name=(
+                                "h-5 w-5 min-w-5 min-h-5 rounded border-2 border-sky-400 "
+                                "focus:ring-2 focus:ring-amber-400 transition-all shrink-0"
                             ),
                         ),
-                        class_name="flex items-center gap-3 rounded-xl border border-white/10 bg-slate-950/40 px-3 py-2",
+                        rx.el.span(
+                            task,
+                            class_name="flex-1 text-sky-50 text-sm sm:text-base break-words",
+                        ),
+                        rx.el.div(
+                            rx.cond(
+                                CheckboxState.checked_tasks.get(task, False),
+                                rx.el.span(
+                                    "Completed",
+                                    class_name="ff-data-font text-xs uppercase tracking-[0.14em] text-emerald-300",
+                                ),
+                                rx.el.span(
+                                    "Incomplete",
+                                    class_name="ff-data-font text-xs uppercase tracking-[0.14em] text-rose-300",
+                                ),
+                            ),
+                            class_name="ml-auto pl-2 flex items-center justify-end",
+                        ),
+                        class_name=(
+                            # Mobile first: stack on xs, flex-row on sm+, text wrap, align
+                            "flex flex-col items-start gap-1 rounded-xl border border-white/10 bg-slate-950/40 px-3 py-2 "
+                            "sm:flex-row sm:items-center sm:gap-3"
+                        ),
                     ),
                 ),
-                class_name="flex flex-col gap-3",
+                class_name="flex flex-col gap-3 w-full",
             ),
         ),
         id="ff4-checklist",

@@ -29,8 +29,9 @@ def _brand_badge(link: StreamLink) -> rx.Component:
             link["is_live"],
             rx.el.span(
                 "LIVE NOW",
-                class_name="ff-live-now ff-data-font text-[8px] font-bold uppercase leading-none tracking-[0.14em]",
+                class_name="ff-live-now ff-data-font hidden text-[8px] font-bold uppercase leading-none tracking-[0.14em] lg:inline",
             ),
+            # Hide "Twitch" / "YouTube" on mobile so two cards can fit in one row.
             rx.el.span(
                 link["wordmark"],
                 class_name="ff-menu-bold-font hidden text-[9px] font-bold uppercase leading-none tracking-[0.14em] text-white lg:inline",
@@ -59,18 +60,19 @@ def _chip(link: StreamLink) -> rx.Component:
             rx.el.span(
                 rx.el.span(
                     link["caption"],
-                    class_name="ff-data-font",
+                    class_name="ff-data-font min-w-0 truncate",
                 ),
+                # Platform name is desktop-only so mobile cards stay narrow.
                 rx.el.span(
                     "·",
-                    class_name="opacity-60",
+                    class_name="hidden opacity-60 lg:inline",
                 ),
                 rx.el.span(
                     link["wordmark"],
                     class_name=rx.cond(
                         link["platform"] == "twitch",
-                        "ff-data-font text-[#c4a6ff]",
-                        "ff-data-font text-[#ff9b9b]",
+                        "ff-data-font hidden text-[#c4a6ff] lg:inline",
+                        "ff-data-font hidden text-[#ff9b9b] lg:inline",
                     ),
                 ),
                 class_name="ff-data-font mt-0.5 flex min-w-0 items-center gap-1 truncate text-[9px] uppercase leading-none tracking-[0.22em] text-amber-200/70",
@@ -107,19 +109,12 @@ def stream_bar() -> rx.Component:
                 ),
                 class_name="hidden shrink-0 items-center gap-1.5 border-r border-white/10 pr-3 lg:flex",
             ),
-            # Live cards sit on the left, still in their rest order.
-            rx.cond(
-                StreamState.any_live,
-                rx.el.div(
-                    rx.foreach(StreamState.live_links, _chip),
-                    class_name="flex w-full min-w-0 flex-wrap justify-start gap-2 lg:hidden",
-                ),
-            ),
-            # Offline cards always sit on the right, in their original order.
+            # One 2-column grid on mobile so cards never take a whole row alone.
             rx.el.div(
-                rx.foreach(StreamState.rest_links, _chip),
-                class_name="flex w-full min-w-0 flex-wrap justify-end gap-2 lg:hidden",
+                rx.foreach(StreamState.bar_links, _chip),
+                class_name="ff-stream-grid lg:hidden",
             ),
+            # Desktop keeps live cards on the left and offline cards on the right.
             rx.el.div(
                 rx.el.div(
                     rx.foreach(StreamState.live_links, _chip),
@@ -131,7 +126,7 @@ def stream_bar() -> rx.Component:
                 ),
                 class_name="hidden min-w-0 w-full flex-1 items-center gap-3 lg:flex",
             ),
-            class_name="flex w-full flex-col gap-2 px-5 py-2.5 lg:flex-row lg:items-center lg:gap-3 lg:px-8",
+            class_name="flex w-full min-w-0 flex-col gap-2 px-4 py-2.5 lg:flex-row lg:items-center lg:gap-3 lg:px-8",
         ),
         rx.moment(
             interval=StreamState.poll_ms,
@@ -139,5 +134,5 @@ def stream_bar() -> rx.Component:
             class_name="hidden",
         ),
         on_mount=StreamState.refresh_live_status,
-        class_name="relative z-40 w-full shrink-0 border-b border-white/10 bg-slate-950/60 backdrop-blur-xl",
+        class_name="relative z-40 w-full min-w-0 shrink-0 overflow-x-clip border-b border-white/10 bg-slate-950/60 backdrop-blur-xl",
     )
