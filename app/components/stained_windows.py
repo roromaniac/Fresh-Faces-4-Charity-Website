@@ -158,8 +158,7 @@ def _pane(item: WindowItem, index: int) -> rx.Component:
         ),
         key=index,
         class_name=(
-            "ff-pane-in flex h-full w-full min-w-0 flex-col items-center "
-            "justify-center"
+            "ff-pane-in flex h-full w-full min-h-0 min-w-0 flex-col items-center"
         ),
     )
 
@@ -198,13 +197,18 @@ def stained_window(
             rx.el.div(
                 class_name="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(255,255,255,0.14),transparent_60%)]"
             ),
+            # Caption is in the body; arrows sit in-flow below it so they
+            # cannot cover the text at any window size.
             rx.el.div(
-                _pane_link(item, index),
+                rx.el.div(
+                    _pane_link(item, index),
+                    class_name="ff-pane-body",
+                ),
                 rx.el.div(
                     _card_nav(count, index, on_prev, on_next),
-                    class_name="absolute inset-x-0 bottom-2 z-10 flex justify-center pointer-events-auto",
+                    class_name="ff-pane-nav",
                 ),
-                class_name="relative h-full w-full",
+                class_name="relative flex h-full min-h-0 w-full flex-col",
             ),
             class_name="ff-glass-window relative h-full w-full overflow-hidden rounded-2xl border border-white/15 bg-slate-900/60 backdrop-blur-md",
         ),

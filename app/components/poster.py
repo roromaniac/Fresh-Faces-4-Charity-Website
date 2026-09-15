@@ -158,37 +158,161 @@ def _logo_mark() -> rx.Component:
 
 def _visitor_seal() -> rx.Component:
     return rx.el.div(
+        # Visitors
         rx.image(
             src="/KH-heart.webp",
             alt="",
-            class_name="object-contain drop-shadow-[0_0_12px_rgba(250,204,21,0.55)] invert",
+            class_name=(
+                "ff-visitor-icon ff-visitor-icon-start object-contain "
+                "drop-shadow-[0_0_12px_rgba(250,204,21,0.55)] invert"
+            ),
         ),
         rx.el.div(
             rx.el.p(
                 VisitState.visitor_count_label,
-                class_name="ff-visitor-count ff-data-font font-bold leading-none tracking-wide text-amber-200 drop-shadow-[0_0_16px_rgba(250,204,21,0.45)]",
+                class_name=(
+                    "ff-visitor-count ff-data-font font-bold leading-none "
+                    "tracking-wide text-amber-200 "
+                    "drop-shadow-[0_0_16px_rgba(250,204,21,0.45)]"
+                ),
             ),
             rx.el.p(
                 "lights visited",
-                class_name="ff-menu-font text-xs tracking-[0.06em] text-sky-100/80 sm:text-sm",
+                class_name=(
+                    "ff-menu-font text-xs tracking-[0.06em] "
+                    "text-sky-100/80 sm:text-sm"
+                ),
             ),
+            class_name="ff-visitor-summary",
         ),
+
+        # RSVP section
         rx.el.div(
-            rx.el.p(
-                VisitState.rsvp_responses,
-                class_name="ff-visitor-count ff-data-font font-bold leading-none tracking-wide text-sky-200 drop-shadow-[0_0_16px_rgba(56,189,248,0.45)]",
+            # Main RSVP count
+            rx.el.div(
+                rx.el.p(
+                    VisitState.rsvp_responses,
+                    class_name=(
+                        "ff-visitor-count ff-data-font font-bold leading-none "
+                        "tracking-wide text-sky-200 "
+                        "drop-shadow-[0_0_16px_rgba(56,189,248,0.45)]"
+                    ),
+                ),
+                rx.el.p(
+                    "hearts collected",
+                    class_name=(
+                        "ff-menu-font text-xs tracking-[0.06em] "
+                        "text-sky-100/80 sm:text-sm"
+                    ),
+                ),
+                class_name="ff-rsvp-total",
             ),
-            rx.el.p(
-                "hearts collected",
-                class_name="ff-menu-font text-xs tracking-[0.06em] text-sky-100/80 sm:text-sm",
+
+            rx.el.div(
+                # Pretty SVG curly brace
+                rx.el.svg(
+                    rx.el.path(
+                        d=(
+                            "M18 2 "
+                            "C10 2 10 8 10 14 "
+                            "V22 "
+                            "C10 27 7 30 2 30 "
+                            "C7 30 10 33 10 38 "
+                            "V46 "
+                            "C10 52 10 58 18 58"
+                        ),
+                        fill="none",
+                        stroke="currentColor",
+                        stroke_width="2",
+                        stroke_linecap="round",
+                        stroke_linejoin="round",
+                    ),
+                    view_box="0 0 20 60",
+                    class_name=(
+                        "h-16 w-5 shrink-0 "
+                        "text-sky-200/70 "
+                        "drop-shadow-[0_0_8px_rgba(125,211,252,0.35)]"
+                    ),
+                ),
+                class_name="ff-rsvp-brace",
             ),
+            
+            # Division breakdown
+            rx.el.div(
+                rx.el.div(
+                    rx.el.span(
+                        VisitState.fresh_faces,
+                        class_name=(
+                            "ff-data-font font-bold "
+                            "text-emerald-300 "
+                            "drop-shadow-[0_0_8px_rgba(110,231,183,0.35)]"
+                        ),
+                    ),
+                    rx.el.span(
+                        "fresh faces",
+                        class_name=(
+                            "ff-breakdown-label ff-menu-font text-xs "
+                            "text-emerald-100/80"
+                        ),
+                    ),
+                    class_name="ff-breakdown-row",
+                ),
+
+                rx.el.div(
+                    rx.el.span(
+                        VisitState.graduated_faces,
+                        class_name=(
+                            "ff-data-font font-bold "
+                            "text-violet-300 "
+                            "drop-shadow-[0_0_8px_rgba(196,181,253,0.35)]"
+                        ),
+                    ),
+                    rx.el.span(
+                        "graduated faces",
+                        class_name=(
+                            "ff-breakdown-label ff-menu-font text-xs "
+                            "text-violet-100/80"
+                        ),
+                    ),
+                    class_name="ff-breakdown-row",
+                ),
+
+                rx.el.div(
+                    rx.el.span(
+                        VisitState.veterans,
+                        class_name=(
+                            "ff-data-font font-bold "
+                            "text-amber-300 "
+                            "drop-shadow-[0_0_8px_rgba(252,211,77,0.35)]"
+                        ),
+                    ),
+                    rx.el.span(
+                        "veterans",
+                        class_name=(
+                            "ff-breakdown-label ff-menu-font text-xs "
+                            "text-amber-100/80"
+                        ),
+                    ),
+                    class_name="ff-breakdown-row",
+                ),
+                class_name="ff-rsvp-breakdown",
+            ),
+            class_name="ff-visitor-rsvp",
         ),
+
         rx.image(
             src="/ukraine_heart.webp",
             alt="",
-            class_name="object-contain drop-shadow-[0_0_12px_rgba(56,189,248,0.55)]",
+            class_name=(
+                "ff-visitor-icon ff-visitor-icon-end object-contain "
+                "drop-shadow-[0_0_12px_rgba(56,189,248,0.55)]"
+            ),
         ),
-        class_name="ff-visitor-seal ff-float rounded-2xl border border-white/15 bg-slate-900/50 backdrop-blur-md",
+
+        class_name=(
+            "ff-visitor-seal ff-float rounded-2xl border "
+            "border-white/15 bg-slate-900/50 backdrop-blur-md"
+        ),
     )
 
 

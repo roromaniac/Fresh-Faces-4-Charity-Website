@@ -402,23 +402,85 @@
 }
 
 .ff-visitor-seal {
-  display: flex;
+  box-sizing: border-box;
+  display: grid;
+  width: min(100%, 29rem);
   max-width: 100%;
-  flex-wrap: nowrap;
+  aspect-ratio: 4.4 / 1;
+  grid-template-columns: 7% 20% minmax(0, 1fr) 7%;
   align-items: center;
   justify-content: center;
-  gap: clamp(0.35rem, 1.2vw, 0.75rem);
+  gap: clamp(0.2rem, 1.5cqi, 0.45rem);
   margin-top: 0.35rem;
-  padding: 0.45rem 0.75rem;
+  padding: clamp(0.3rem, 2cqi, 0.6rem);
+  overflow: hidden;
 }
 
-.ff-visitor-seal img {
-  width: clamp(1.5rem, 4vw, 2rem);
-  height: clamp(1.5rem, 4vw, 2rem);
+.ff-visitor-icon {
+  width: 100%;
+  height: auto;
+  max-height: 35%;
+}
+
+.ff-visitor-summary,
+.ff-rsvp-total,
+.ff-visitor-rsvp,
+.ff-rsvp-breakdown {
+  min-width: 0;
+}
+
+.ff-visitor-rsvp {
+  display: grid;
+  grid-template-columns: minmax(0, 30%) auto minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(0.2rem, 1.5cqi, 0.45rem);
+}
+
+.ff-rsvp-brace {
+  display: flex;
+  align-items: center;
+}
+
+.ff-rsvp-brace svg {
+  width: clamp(0.75rem, 4.5cqi, 1.3rem);
+  height: clamp(2.5rem, 16cqi, 4rem);
+}
+
+.ff-rsvp-breakdown {
+  display: grid;
+  gap: clamp(0.1rem, 0.8cqi, 0.25rem);
+}
+
+/* A shared number column keeps the middle value from sticking out. */
+.ff-breakdown-row {
+  display: grid;
+  grid-template-columns: 1.25ch minmax(0, auto);
+  align-items: baseline;
+  column-gap: clamp(0.2rem, 1.5cqi, 0.5rem);
+  text-align: left;
+}
+
+.ff-breakdown-row > :first-child {
+  justify-self: end;
+}
+
+.ff-breakdown-label {
+  white-space: nowrap;
+  font-size: clamp(0.45rem, 2.8cqi, 0.75rem);
 }
 
 .ff-visitor-count {
-  font-size: clamp(1.15rem, 3.2vw, 1.875rem);
+  font-size: clamp(0.9rem, 6cqi, 1.875rem);
+}
+
+.ff-visitor-summary .ff-menu-font,
+.ff-rsvp-total .ff-menu-font {
+  font-size: clamp(0.45rem, 3cqi, 0.875rem);
+  line-height: 1.25;
+}
+
+.ff-breakdown-row > .ff-data-font {
+  font-size: clamp(0.5rem, 3.2cqi, 1rem);
 }
 
 /* Square window fills its grid cell, then caps so it never dominates the page. */
@@ -434,9 +496,38 @@
 }
 
 .ff-pane-in {
+  justify-content: space-between;
+  min-height: 0;
+  overflow: hidden;
   gap: clamp(0.35rem, 4.2cqi, 0.75rem);
   padding: clamp(0.4rem, 4cqi, 0.75rem) clamp(0.45rem, 4.5cqi, 0.75rem)
-    clamp(1.45rem, 11cqi, 2rem);
+    clamp(0.15rem, 1.8cqi, 0.3rem);
+}
+
+/* Caption lives in this column; arrows sit in .ff-pane-nav below it. */
+.ff-pane-body {
+  display: flex;
+  min-height: 0;
+  min-width: 0;
+  flex: 1 1 0%;
+  overflow: hidden;
+}
+
+.ff-pane-body > * {
+  min-height: 0;
+  min-width: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.ff-pane-nav {
+  display: flex;
+  flex: 0 0 auto;
+  justify-content: center;
+  padding: 0.1rem 0.5rem clamp(0.35rem, 3.5cqi, 0.55rem);
+  pointer-events: auto;
+  position: relative;
+  z-index: 10;
 }
 
 .ff-pane-art-frame {
@@ -445,7 +536,8 @@
   max-width: 100%;
   max-height: 58%;
   aspect-ratio: 1 / 1;
-  flex: 0 1 auto;
+  flex: 1 1 0%;
+  min-height: 0;
   align-items: center;
   justify-content: center;
 }
@@ -458,6 +550,7 @@
 
 .ff-pane-bottom {
   display: -webkit-box;
+  flex-shrink: 0;
   width: 100%;
   overflow: hidden;
   -webkit-box-orient: vertical;
@@ -474,6 +567,7 @@
 /* Title row: one line that shrinks with the square instead of clipping. */
 .ff-pane-fit-slot {
   container-type: inline-size;
+  flex-shrink: 0;
   width: 100%;
   min-width: 0;
   overflow: hidden;
@@ -552,9 +646,6 @@
     padding-block: 0.4rem;
   }
 
-  .ff-visitor-seal {
-    padding: 0.3rem 0.65rem;
-  }
 }
 
 @media (hover: hover) and (min-width: 64rem) {

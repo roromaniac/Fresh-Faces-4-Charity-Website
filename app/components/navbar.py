@@ -4,7 +4,7 @@ from app.states.nav_state import NavLink, NavState
 
 _DONATE_HREF = "https://tiltify.com/@roromaniac8/fresh-faces-4"
 _RSVP_HREF = (
-    "https://docs.google.com/forms/d/e/1FAIpQLSeajRfsMMfNPaQdOEPPm7LjlP6Unzic2ehwbokVVxvgho5Yig/viewform?usp=header"
+    "https://forms.gle/D3cUXZwKytQ1NqgV7"
 )
 
 
