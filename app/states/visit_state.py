@@ -4,6 +4,9 @@ import reflex as rx
 
 from app.visits import count_visitors, log_visit as save_visit
 
+from dotenv import load_dotenv
+load_dotenv()
+
 # Turn a URL path like "/about" into a short page name for the log.
 _PAGE_NAMES = {
     "/": "home",
@@ -34,6 +37,7 @@ class VisitState(rx.State):
     """Holds the visitor total shown on the home page."""
 
     total_visitors: int = 0
+    present_views: int = int(os.getenv("PRESENT_VIEWS", "0"))
     rsvp_responses: int = 0
     fresh_faces: int = 0
     graduated_faces: int = 0
@@ -42,7 +46,7 @@ class VisitState(rx.State):
     @rx.var
     def visitor_count_label(self) -> str:
         # 1247 -> "1,247" so the poster number is easy to read
-        return f"{self.total_visitors:,}"
+        return f"{self.total_visitors + self.present_views:,}"
 
     @rx.event
     async def log_visit(self):

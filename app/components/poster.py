@@ -176,6 +176,7 @@ def _visitor_seal() -> rx.Component:
                     "drop-shadow-[0_0_16px_rgba(250,204,21,0.45)]"
                 ),
             ),
+       
             rx.el.p(
                 "lights visited",
                 class_name=(
@@ -185,6 +186,7 @@ def _visitor_seal() -> rx.Component:
             ),
             class_name="ff-visitor-summary",
         ),
+ 
 
         # RSVP section
         rx.el.div(

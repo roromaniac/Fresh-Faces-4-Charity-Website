@@ -25,6 +25,7 @@ class CheckboxState(rx.State):
         "Install KH2FM-Mods-equations19/auto-save in Mods Manager",
         "Install KH2FM-Mods-equations19/soft-reset in Mods Manager",
         "Install KH2FM-Mods-equations19/KH2-Lua-Library in Mods Manager",
+        "Install sonicshadowsilver2/cutscene-skipper-randomizer-edition in Mods Manager",
         "Make racetime.gg Account",
         "Link Twitch to racetime.gg",
         "Test Setup by Playing a KH2 Rando Seed",
