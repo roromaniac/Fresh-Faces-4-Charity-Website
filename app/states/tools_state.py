@@ -7,6 +7,8 @@ import sqlite3
 import requests
 import reflex as rx
 
+from app.scripts.eligibility import eligibility_db_path, main as ensure_eligibility_db
+
 
 class PlayerRecord(TypedDict):
     discord_name: str
@@ -83,7 +85,9 @@ class LookUpState(rx.State):
             return
 
         search_text_lower = search_text.lower()
-        conn = sqlite3.connect("data/eligibility.db")
+        # Rebuild only if startup did not finish the database.
+        ensure_eligibility_db()
+        conn = sqlite3.connect(eligibility_db_path(), timeout=30)
         cursor = conn.cursor()
         cursor.execute(
             """
