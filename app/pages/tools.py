@@ -1,7 +1,7 @@
 import reflex as rx
 
 from app.components.page_shell import page_heading, page_shell
-from app.states.tools_state import CheckboxState, LoadlessCheckerState, LookUpState
+from app.states.tools_state import CheckboxState, LoadlessCheckerState, LookUpState, CutsceneSkipperCheckerState
 
 _TIPS = [
     ("KH2 Rando Setup Video Guide (2025)", "https://www.youtube.com/watch?v=dsrk7hUPDxQ"),
@@ -225,12 +225,10 @@ def _loadless() -> rx.Component:
                         "Drop a .asl file here or click to upload.",
                         class_name="text-sky-100/80",
                     ),
-                    id="upload",
+                    id="loadless-upload",
                     max_files=1,
                     accept={"application/octet-stream": [".asl"]},
-                    on_drop=LoadlessCheckerState.handle_upload(
-                        rx.upload_files(upload_id="upload")
-                    ),
+                    on_drop=LoadlessCheckerState.handle_upload,
                     class_name="flex min-h-32 w-full items-center justify-center rounded-xl border-2 border-dashed border-sky-300/40 bg-slate-950/40 p-6",
                 ),
                 rx.el.button(
@@ -246,6 +244,39 @@ def _loadless() -> rx.Component:
             ),
         ),
         id="ff4-loadless-checker",
+    )
+
+
+def _cutscene_skipper() -> rx.Component:
+    return rx.el.div(
+        tool_card(
+            "Cutscene Skipper Validator",
+            "Upload your Cutscene Skipper .lua file to confirm it matches the official version required for KH2 rando.",
+            rx.el.div(
+                rx.upload(
+                    rx.el.p(
+                        "Drop a .lua file here or click to upload.",
+                        class_name="text-sky-100/80",
+                    ),
+                    id="cutscene-skipper-upload",
+                    max_files=1,
+                    accept={"text/x-lua": [".lua"]},
+                    on_drop=CutsceneSkipperCheckerState.handle_upload,
+                    class_name="flex min-h-32 w-full items-center justify-center rounded-xl border-2 border-dashed border-amber-400/40 bg-yellow-950/40 p-6",
+                ),
+                rx.el.button(
+                    "Clear last result",
+                    on_click=CutsceneSkipperCheckerState.reset_status,
+                    class_name="mt-4 rounded-lg border border-white/15 px-4 py-2 text-sm text-amber-100 hover:bg-white/10",
+                ),
+                rx.el.p(
+                    CutsceneSkipperCheckerState.cutscene_skipper_status,
+                    class_name="mt-4 text-amber-100",
+                ),
+                class_name="flex flex-col items-center",
+            ),
+        ),
+        id="ff4-cutscene-skipper-checker",
     )
 
 
@@ -284,6 +315,7 @@ def tools() -> rx.Component:
             _checklist(),
             _lookup(),
             _loadless(),
+            _cutscene_skipper(),
             _tips(),
             class_name="flex flex-col gap-6",
         ),

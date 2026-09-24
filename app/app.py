@@ -1,3 +1,5 @@
+import asyncio
+
 import reflex as rx
 
 from app.components.navbar import navbar
@@ -20,7 +22,8 @@ from app.states.visit_state import VisitState
 from app.scripts.eligibility import main as eligibility_main
 
 async def initialize_eligibility():
-    eligibility_main()
+    # Rebuild the eligibility database off the event loop so page clicks stay live.
+    await asyncio.to_thread(eligibility_main)
 
 def index() -> rx.Component:
     return rx.el.main(

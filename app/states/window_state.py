@@ -56,6 +56,13 @@ LEFT_ITEMS: list[WindowItem] = [
         bottom_text="Check out Lanz's FULL KH2 Superboss No Damage w/ Restrictions Series!",
         href="https://www.youtube.com/watch?v=m7GfO3_1pik&list=PLaAEZ_SMW7ijiaLck2X2BHY4guH-pJ74B",
     ),
+    WindowItem(
+        image="/chaineh.png",
+        label="FF4 Partner",
+        highlight="Chaineh",
+        bottom_text="Chaineh helped Fresh Faces 4 get into March Caprice VI! Go support March Caprice VII here!",
+        href="https://www.marchcaprice.com/",
+    ),
 ]
 
 RIGHT_ITEMS: list[WindowItem] = [

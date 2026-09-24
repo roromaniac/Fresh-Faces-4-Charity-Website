@@ -2,6 +2,7 @@
 
 from typing import TypedDict
 
+import os
 import sqlite3
 import requests
 import reflex as rx
@@ -153,6 +154,7 @@ class LookUpState(rx.State):
         # Only keep the player records
         self.found_players = [rec for _, rec in result_list]
 
+
 class LoadlessCheckerState(rx.State):
     loadless_status: str = ""
     uploaded_loadless_file: str = ""
@@ -206,3 +208,89 @@ class LoadlessCheckerState(rx.State):
             self.loadless_status = "❌ Reference file not found. Please ensure your file is valid and of .asl format."
         except Exception as e:
             self.loadless_status = f"❌ Error processing file: {str(e)}. Double check your file and try again."
+        finally:
+            # Ensure the file is removed from the folder after checking
+            try:
+                if outfile.exists():
+                    os.remove(outfile)
+            except Exception as remove_error:
+                # Optionally, append information about file remove error
+                self.loadless_status += f"\n⚠️ Warning: Could not delete uploaded file: {remove_error}"
+
+
+class CutsceneSkipperCheckerState(rx.State):
+    cutscene_skipper_status: str = ""
+    uploaded_cutscene_skipper_file: str = ""
+    has_uploaded: bool = False
+
+    @rx.event
+    def reset_status(self):
+        self.cutscene_skipper_status = ""
+        self.has_uploaded = False
+
+    @rx.event
+    async def handle_upload(self, files: list[rx.UploadFile]):
+        self.cutscene_skipper_status = ""
+        self.has_uploaded = False
+
+        if not files:
+            self.cutscene_skipper_status = "No file uploaded."
+            return
+        
+        cutscene_file = files[0]
+        # Save uploaded file to disk
+        upload_data = await cutscene_file.read()
+        outfile = rx.get_upload_dir() / cutscene_file.filename
+        with outfile.open("wb") as file_object:
+            file_object.write(upload_data)
+        
+        self.uploaded_cutscene_skipper_file = str(outfile)
+
+        # Now compare with the official template
+        reference_url = "https://raw.githubusercontent.com/Sonicshadowsilver2/Cutscene-Skipper-Randomizer-Edition/refs/heads/main/Cutscene%20Skipper.lua"
+        try:
+            response = requests.get(reference_url)
+            response.raise_for_status()
+            reference_text = response.text.strip()
+
+            # Read the uploaded file as text (ignore errors)
+            with open(outfile, "r", encoding="utf-8", errors="ignore") as uploaded_file:
+                uploaded_text = uploaded_file.read().strip()
+
+
+            self.has_uploaded = True
+
+            # Actually compare the files: allow minor whitespace differences by stripping
+            if uploaded_text == reference_text:
+                self.cutscene_skipper_status = "✅ Valid Cutscene Skipper file! Your file matches the official template."
+            else:
+                self.cutscene_skipper_status = (
+                    "❌ Invalid Cutscene Skipper file. Your file does not match the official template. "
+                    "Please download the correct, most recent version using the link above."
+                )
+        except FileNotFoundError:
+            self.cutscene_skipper_status = "❌ Reference file not found. Please ensure your file is valid and of .lua format."
+        except Exception as e:
+            self.cutscene_skipper_status = f"❌ Error processing file: {str(e)}. Double check your file and try again."
+        finally:
+            # Ensure the file is removed from the folder after checking
+            # Save the reference and uploaded text to assets before deleting the uploaded files
+            try:
+            #     from pathlib import Path
+
+            #     assets_dir = Path("assets")
+            #     assets_dir.mkdir(exist_ok=True)
+
+            #     # Save the reference text
+            #     reference_path = assets_dir / "cutscene_skipper_official.lua"
+            #     reference_path.write_text(reference_text, encoding="utf-8", errors="ignore")
+
+            #     # Save the uploaded text
+            #     uploaded_path = assets_dir / "uploaded_cutscene_skipper.lua"
+            #     uploaded_path.write_text(uploaded_text, encoding="utf-8", errors="ignore")
+
+                if outfile.exists():
+                    os.remove(outfile)
+            except Exception as remove_error:
+                # Optionally, append information about file remove error
+                self.cutscene_skipper_status += f"\n⚠️ Warning: Could not delete uploaded file: {remove_error}"
