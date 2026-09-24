@@ -50,7 +50,7 @@ RAW_CREDITS_LIST: list[dict] = [
     {"name": "Skraxx", "twitch_name": "OG_Skraxx", "role": "Event Endorser (code: 'skraxx')", "role_class": "Production", "image": "/ukraine_heart.webp"},
     {"name": "KHGuides", "twitch_name": "KHGuides", "role": "Event Endorser (code: 'guides')", "role_class": "Production", "image": "/ukraine_heart.webp"},
     {"name": "Chaineh", "twitch_name": "chaineh", "role": "Event Endorser (code: 'chaineh')", "role_class": "Production", "image": "/ukraine_heart.webp"},
-    {"name": "MarchCaprice", "twitch_name": "marchcaprice", "role": "Event Endorser (code: 'mc')", "role_class": "Production", "image": "/ukraine_heart.webp"},
+    # {"name": "MarchCaprice", "twitch_name": "marchcaprice", "role": "Event Endorser (code: 'mc')", "role_class": "Production", "image": "/ukraine_heart.webp"},
     # {"name": "RegularPat", "twitch_name": "regularpatyt", "role": "Event Endorser (code: 'regularpat')", "role_class": "Production", "image": "/ukraine_heart.webp"},
     {"name": "RadiantGardeners", "twitch_name": "radiantgardeners", "role": "Event Endorser (code: 'rg')", "role_class": "Production", "image": "/ukraine_heart.webp"},
     {"name": "Lindsey", "twitch_name": "projecthopeorg", "role": "Project Hope Fundraising Lead", "role_class": "Charity", "image": "/ukraine_heart.webp"},
