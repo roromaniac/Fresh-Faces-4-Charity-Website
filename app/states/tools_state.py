@@ -19,7 +19,7 @@ class PlayerRecord(TypedDict):
 
 class CheckboxState(rx.State):
     setup_tasks: list[str] = [
-        "Download KH2Tracker",
+        "Download KH2Tracker (version 2.7.3-FF)",
         "Download KH2Randomizer Generator",
         "Download Livesplit",
         "Ensure KH2 RANDO (not speedrun) Loadless Timer is Installed AND Functional",
