@@ -11,6 +11,7 @@ AllRatzGaming,allratzgaming,AllRatzGaming,-1,79,-1,-1,-1
 AmberxAltF4,amberxaltf4,AmberxAltF4,17,17,-1,-1,-1
 Animee_Arcade,animeearcade,AnimeeArcade,-1,-1,-1,5,-1
 Arifrarii,arifrarii,Arifrarii,-1,33,-1,-1,-1
+Artie,,,50,-1,-1,-1,-1
 Ashura,ashura1300,ashuradeus,-1,-1,17,-1,-1
 AuroTheAzure,aurotheazure,AuroTheAzure,17,17,-1,-1,-1
 Aurox44,aurox44,Aurox44,17,9,9,-1,-1
@@ -20,7 +21,7 @@ Bagoms,Bagoms,Bagoms,-1,17,17,33,-1
 bahb,bahb,bahb,-1,17,1,-1,-1
 Banjoforever,banjoforever,Banjoforever,33,33,9,17,-1
 Bass4Zero,bass4zero,Bass4Zero,-1,-1,-1,66,-1
-Bearlynewgaymer,bearlynewgaymer,BearlynewGaymer,-1,79,-1,66,-1
+Bearlynewgaymer,bearlynewgaymer,BearlynewGaymer,50,79,-1,66,-1
 Bee,ayybeebaby,AyyBeeBaby,-1,-1,-1,66,-1
 Belespr1t,belesprit,Belespr1t,33,79,-1,66,-1
 BioRoxas,bioroxas,BioRoxas,-1,79,-1,66,-1
@@ -31,12 +32,12 @@ BrandonGlovich,brandonglovich,brandonglovich,-1,-1,-1,9,-1
 Bravidunno,bravidunno,BraviDunno,50,79,-1,33,-1
 Brisk Apollo,briskapollo,Brisk Apollo,-1,-1,-1,66,-1
 BubblesSirCat,itsjustbubbles,BubblesSircat,-1,-1,-1,66,-1
-c3pown,c3pown,c3pown,-1,33,17,-1,14
+c3pown,c3pown,c3pown,50,33,17,-1,14
 caliburny_tv,caliburny,caliburny_tv,9,-1,-1,-1,-1
 CEPO,._cepo_.,CEPOStreams,33,-1,-1,66,-1
 CesarMartins12,cesarmartins12,CesarMartins12,-1,-1,-1,66,-1
 Chaineh,chaineh,Chaineh,-1,-1,-1,33,-1
-Chaoscontrolchannel,cdrom1019,ChaosControlChannel,-1,33,17,33,-1
+Chaoscontrolchannel,cdrom1019,ChaosControlChannel,50,33,17,33,-1
 cheez,,cheezNoodle,-1,-1,-1,33,-1
 Chfou,chfou,chfou,-1,-1,17,33,-1
 chrisaegrimm,chrisaegrimm,chrisaegrimm,-1,-1,-1,66,-1
@@ -80,7 +81,7 @@ flash_am,flash_am,Flash_am,-1,17,17,-1,9
 Flootena,flootenaa,Flootena,-1,-1,-1,66,-1
 flowleyd,flowleyd,Flowleyd,-1,-1,5,-1,-1
 FrightKnight,FrightKnight0,FrightKnight0,-1,-1,-1,-1,17
-Froppy_VR,.froppy.,Froppy_VR,-1,-1,17,17,4
+Froppy_VR,.froppy.,Froppy_VR,-1,33,17,17,4
 Gabrieljcampos,gabrieljcampos,gabrieljcampos,-1,33,-1,33,-1
 gamefunatic_prime,gamefunatic,gamefunatic_prime,-1,33,-1,66,-1
 Gamer9536,gamer9536,gamer9536,-1,-1,-1,66,-1
@@ -93,8 +94,7 @@ hasrock36,hasrock36,hasrock36,-1,79,-1,66,-1
 Hatu,hatu,Hatu7,-1,-1,-1,17,-1
 Hellfireskyrim,hellfireskyrim,hellfireskyrim,-1,-1,-1,66,-1
 hetaliangemini,hetaliangemini,hetaliangemini,-1,-1,-1,66,-1
-Huha59,"huha8207
-",Huha59,33,-1,-1,-1,-1
+Huha59,"huha8207",Huha59,33,-1,-1,-1,-1
 Illu_sama,illuminati_sama,Illu_sama,33,79,-1,9,17
 ItsKasa,itskasa,itskasa,-1,-1,-1,-1,-1
 ItzQuarkium,itzquarkium,itzQuarkium,-1,-1,-1,1,-1
@@ -118,7 +118,7 @@ Limk44203,limk44203,derLimk,-1,-1,-1,66,-1
 Link_Hylian,link___hylian,link___hylian,-1,33,-1,66,-1
 lolpuffin,lolpuffin,lolpuffin,1,-1,17,-1,-1
 loraloodlelo,loraloodlelo,loraloodlelo,-1,-1,-1,66,-1
-lowkeymatt,lowkeymatt,lowkeymattyt,,,,66,-1
+lowkeymatt,lowkeymatt,lowkeymattyt,-1,-1,-1,66,-1
 Luminous Nagissa,,LuminousNagissa,-1,-1,-1,66,-1
 Lunar Sketch,lunar_sketch,LunarSketch,-1,-1,-1,66,-1
 Maclaque,maclaque,maclaque,-1,-1,-1,66,-1
@@ -196,7 +196,7 @@ sai3rina,sai3rina,SAI3RINA,33,-1,-1,-1,-1
 schwarzehexebw88,schwarzehexebw88,schwarzehexebw8,-1,-1,-1,66,17
 scoutjd,scoutjd,,50,-1,-1,-1,-1
 seraf04,seraf04,Seraf04,-1,-1,-1,66,-1
-sharlobun,sharlobun,Sharlobun,-1,-1,-1,-1,-1
+sharlobun,sharlobun,Sharlobun,50,-1,-1,-1,-1
 shelldude400,shelldude400,Shelldude400,-1,-1,-1,33,-1
 ShikiKairib,shikikairib,ShikiKairib,-1,-1,-1,17,-1
 SilentBrow,silentbrow,SilentBrow,-1,17,9,-1,-1
@@ -260,5 +260,5 @@ Xuio,xuio,Xuio007,-1,-1,-1,66,-1
 Yang,yangerzone,Out_With_A_Yang_,-1,-1,-1,66,-1
 Zatamataz,zatamataz,Zatamataz,-1,33,5,-1,-1
 zero_probability,zero_probability,Zero_Probability,-1,17,-1,-1,-1
-Zojalyx,zojalyx,Zojalyx,-1,33,17,-1,-1
+Zojalyx,zojalyx,Zojalyx,50,33,17,-1,-1
 Zyren,zyren75,zyren_x,-1,-1,-1,66,9
