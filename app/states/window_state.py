@@ -18,14 +18,14 @@ LEFT_ITEMS: list[WindowItem] = [
         image="/og_skraxx.png",
         label="FF4 Partner",
         highlight="OG_Skraxx",
-        bottom_text='New Video: "The Worst Trophy in EVERY Kingdom Hearts Game", Releasing 9/30!',
-        href="https://www.youtube.com/@ogskraxx6678",
+        bottom_text='New Video: "The WORST Trophies in EVERY Kingdom Hearts Game", OUT NOW!',
+        href="https://www.youtube.com/watch?v=5YUa_2evE50",
     ),
     WindowItem(
         image="/bioroxas.png",
         label="FF4 Partner",
         highlight="Bioroxas",
-        bottom_text='New Video: "A closer look at Sora\'s behavior in the KH IV trailers | Pocket Psychology"',
+        bottom_text='New Video: "Sora\'s eyebrows tell us everything | Pocket Psychology of Sora", OUT NOW!',
         href="https://www.youtube.com/@BioRoxas",
     ),
     WindowItem(
@@ -62,6 +62,13 @@ LEFT_ITEMS: list[WindowItem] = [
         highlight="Chaineh",
         bottom_text="Chaineh helped Fresh Faces 4 get into March Caprice VI! Go support March Caprice VII here!",
         href="https://www.marchcaprice.com/",
+    ),
+    WindowItem(
+        image="/keyoftime15.png",
+        label="FF4 Partner",
+        highlight="Key",
+        bottom_text="Key makes tons of amazing content, much of it surrounding 358/2 Days! To get your Days fix, visit his channel here!",
+        href="https://www.youtube.com/@KeyofTime15",
     ),
 ]
 

@@ -70,7 +70,6 @@ def init_db() -> None:
 
 def log_visit(page: str, session_id: str = "") -> None:
     """Save one page visit: which page, which browser session, and when."""
-    init_db()
     visited_at = datetime.now(timezone.utc).isoformat()
     with _LOCK:
         connection = _connect()
@@ -86,7 +85,6 @@ def log_visit(page: str, session_id: str = "") -> None:
 
 def count_visitors() -> int:
     """Count unique browser sessions. That is "how many people came by"."""
-    init_db()
     with _LOCK:
         connection = _connect()
         try:
@@ -101,3 +99,9 @@ def count_visitors() -> int:
             return int(total[0]) if total else 0
         finally:
             connection.close()
+
+
+def record_page_view(page: str, session_id: str = "") -> int:
+    """Save one page view, then return how many people have come by."""
+    log_visit(page, session_id)
+    return count_visitors()

@@ -7,6 +7,7 @@ YouTube checks the channel's /live page.
 from __future__ import annotations
 
 import os
+import threading
 import time
 from typing import Iterable
 from urllib.parse import urlparse
@@ -16,11 +17,13 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# How long we reuse a previous answer so page changes do not spam the APIs.
-_CACHE_SECONDS = 20
+# How long every visitor can share one answer. Matches the stream bar poll.
+_CACHE_SECONDS = 60
 _cache_at = 0.0
 _cache_key: tuple[str, ...] = ()
 _cache_live: list[str] = []
+# Only one Twitch / YouTube check runs at a time. Others wait for that answer.
+_refresh_lock = threading.Lock()
 
 _twitch_token = ""
 _twitch_token_exp = 0.0
@@ -149,20 +152,18 @@ def _youtube_is_live(href: str) -> bool:
     return '"isLiveNow":true' in page or '"isLive":true' in page
 
 
-def fetch_live_hrefs(links: Iterable[dict]) -> list[str]:
-    """Return the href of every stream card that is currently live.
+def _link_key(links: Iterable[dict]) -> tuple[str, ...]:
+    """The stream URLs, in order, so we know when the card list changed."""
+    return tuple(str(link.get("href", "")) for link in links)
 
-    The list keeps the same order as `links` so live cards can stay in
-    their rest order when they move to the right.
-    """
-    global _cache_at, _cache_key, _cache_live
 
-    snapshot = list(links)
-    key = tuple(str(link.get("href", "")) for link in snapshot)
-    now = time.time()
-    if _cache_at and key == _cache_key and now - _cache_at < _CACHE_SECONDS:
-        return list(_cache_live)
+def _cache_is_fresh(key: tuple[str, ...]) -> bool:
+    """True when the saved answer is for these URLs and is still new enough."""
+    return bool(_cache_at) and key == _cache_key and (time.time() - _cache_at) < _CACHE_SECONDS
 
+
+def _query_live_hrefs(snapshot: list[dict]) -> list[str]:
+    """Ask Twitch and YouTube which of these cards are on air right now."""
     twitch_links = [
         link
         for link in snapshot
@@ -190,12 +191,50 @@ def fetch_live_hrefs(links: Iterable[dict]) -> list[str]:
 
     # Keep caller order, not the API's order.
     href_set = set(live_hrefs)
-    ordered = [str(link["href"]) for link in snapshot if link.get("href") in href_set]
+    return [str(link["href"]) for link in snapshot if link.get("href") in href_set]
 
-    _cache_at = now
+
+def _store_cache(key: tuple[str, ...], ordered: list[str]) -> list[str]:
+    """Remember this answer so the next visitor can reuse it."""
+    global _cache_at, _cache_key, _cache_live
+
+    _cache_at = time.time()
     _cache_key = key
     _cache_live = ordered
-    return ordered
+    return list(ordered)
+
+
+def refresh_live_cache(links: Iterable[dict]) -> list[str]:
+    """Ask the APIs again and replace the shared answer.
+
+    The server loop calls this about once a minute. If a check is already
+    running, this waits for that answer instead of starting a second one.
+    """
+    snapshot = list(links)
+    key = _link_key(snapshot)
+    with _refresh_lock:
+        # A visitor's check may have finished while we waited for the lock.
+        if _cache_is_fresh(key):
+            return list(_cache_live)
+        return _store_cache(key, _query_live_hrefs(snapshot))
+
+
+def fetch_live_hrefs(links: Iterable[dict]) -> list[str]:
+    """Return the href of every stream card that is currently live.
+
+    Visitors share one recent answer. A new check starts only when that
+    answer is missing or older than `_CACHE_SECONDS`.
+    """
+    snapshot = list(links)
+    key = _link_key(snapshot)
+    if _cache_is_fresh(key):
+        return list(_cache_live)
+
+    with _refresh_lock:
+        # Another visitor may have finished the check while we waited.
+        if _cache_is_fresh(key):
+            return list(_cache_live)
+        return _store_cache(key, _query_live_hrefs(snapshot))
 
 
 if __name__ == "__main__":

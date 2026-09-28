@@ -19,11 +19,27 @@ from app.states.tools_state import (
 )
 from app.states.visit_state import VisitState
 
+from app.scripts.check_live_streams import refresh_live_cache
 from app.scripts.eligibility import main as eligibility_main
+from app.states.stream_state import STREAM_LINKS
+from app.visits import init_db
 
 async def initialize_eligibility():
     # Rebuild the eligibility database off the event loop so page clicks stay live.
     await asyncio.to_thread(eligibility_main)
+
+async def initialize_visits():
+    # Create the visits table once, instead of on every page view.
+    await asyncio.to_thread(init_db)
+
+async def poll_live_streams():
+    """Ask Twitch and YouTube once a minute for every visitor to share."""
+    while True:
+        try:
+            await asyncio.to_thread(refresh_live_cache, STREAM_LINKS)
+        except Exception as exc:
+            print("Live check failed:", exc)
+        await asyncio.sleep(60)
 
 def index() -> rx.Component:
     return rx.el.main(
@@ -111,3 +127,5 @@ app.add_page(
 )
 
 app.register_lifespan_task(initialize_eligibility)
+app.register_lifespan_task(initialize_visits)
+app.register_lifespan_task(poll_live_streams)

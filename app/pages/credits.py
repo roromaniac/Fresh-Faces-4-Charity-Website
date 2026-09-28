@@ -42,6 +42,7 @@ RAW_CREDITS_LIST: list[dict] = [
     {"name": "CesarMartins", "twitch_name": "cesarmartins12", "role": "Caster (PT)", "role_class": "Caster", "image": "/ukraine_heart.webp"},
     {"name": "S0nzero", "twitch_name": "s0nzero", "role": "Caster (FR)", "role_class": "Caster", "image": "/ukraine_heart.webp"},
     {"name": "c3pown", "twitch_name": "c3pown", "role": "Caster (DE)", "role_class": "Caster", "image": "/ukraine_heart.webp"},
+    {"name": "Plixaz", "twitch_name": "Plixaz", "role": "Caster (DE)", "role_class": "Caster", "image": "/ukraine_heart.webp"},
     {"name": "FluffeySR", "twitch_name": "FluffeySR", "role": "Caster (DE)", "role_class": "Caster", "image": "/ukraine_heart.webp"},
     {"name": "NobodyDaxian", "twitch_name": "nobodydaxian", "role": "Event Endorser (code: 'dax')", "role_class": "Production", "image": "/ukraine_heart.webp"},
     {"name": "LanzTheMaster", "twitch_name": "lanzthemaster", "role": "Event Endorser (code: 'lanz')", "role_class": "Production", "image": "/ukraine_heart.webp"},

@@ -65,7 +65,7 @@ class StreamState(rx.State):
     finalized. Safe, non-broken placeholders are used until then.
     """
 
-    # How often the bar asks Twitch / YouTube "is this channel on air?"
+    # How often each browser copies the shared live/offline answer.
     poll_ms: int = 60000
 
     links: list[StreamLink] = STREAM_LINKS
@@ -89,18 +89,23 @@ class StreamState(rx.State):
 
     @rx.event(background=True)
     async def refresh_live_status(self, _stamp: str = ""):
-        """Run the live-check script and store the result on each card."""
-        async with self:
-            snapshot = [{**link} for link in self.links]
+        """Copy the shared live-check answer onto each card.
 
+        The network call lives in a server loop. This only reads that saved
+        answer, then holds the lock long enough to update the cards.
+        """
         try:
-            live_hrefs = await asyncio.to_thread(fetch_live_hrefs, snapshot)
+            live_hrefs = await asyncio.to_thread(fetch_live_hrefs, STREAM_LINKS)
         except Exception:
             # Keep whatever dots we already showed if the check fails.
             return
 
         live_set = set(live_hrefs)
         async with self:
-            self.links = [
-                {**link, "is_live": link["href"] in live_set} for link in self.links
+            current = [{**link} for link in self.links]
+            updated = [
+                {**link, "is_live": link["href"] in live_set} for link in current
             ]
+            # Skip the save when nothing went live or offline.
+            if updated != current:
+                self.links = updated

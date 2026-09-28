@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
 
-from app.visits import count_visitors, log_visit as save_visit
+from app.visits import record_page_view
 
 load_dotenv()
 
@@ -83,13 +83,24 @@ class VisitState(rx.State):
         # 1247 -> "1,247" so the poster number is easy to read
         return f"{self.total_visitors + self.present_views:,}"
 
-    @rx.event
-    def log_visit(self):
-        """Save this page view, then refresh the form counts without blocking clicks."""
-        path = self.router.url.path or self.router.route_id or "/"
-        session_id = self.router.session.client_token or self.router.session.session_id
-        save_visit(_page_name(path), session_id)
-        self.total_visitors = count_visitors()
+    @rx.event(background=True)
+    async def log_visit(self):
+        """Save this page view off the UI thread, then refresh the form counts."""
+        # Copy the page and session while the lock is held. The database work stays outside it.
+        async with self:
+            path = self.router.url.path or self.router.route_id or "/"
+            session_id = self.router.session.client_token or self.router.session.session_id
+        try:
+            total = await asyncio.to_thread(
+                record_page_view,
+                _page_name(path),
+                str(session_id or ""),
+            )
+        except Exception as e:
+            print("Error saving visit:", e)
+        else:
+            async with self:
+                self.total_visitors = total
         return VisitState.load_form_counts
 
     @rx.event(background=True)
