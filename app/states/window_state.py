@@ -18,14 +18,14 @@ LEFT_ITEMS: list[WindowItem] = [
         image="/og_skraxx.png",
         label="FF4 Partner",
         highlight="OG_Skraxx",
-        bottom_text='New Video: "The WORST Trophies in EVERY Kingdom Hearts Game", OUT NOW!',
+        bottom_text='NEW VIDEO: "The WORST Trophies in EVERY Kingdom Hearts Game", OUT NOW!',
         href="https://www.youtube.com/watch?v=5YUa_2evE50",
     ),
     WindowItem(
         image="/bioroxas.png",
         label="FF4 Partner",
         highlight="Bioroxas",
-        bottom_text='New Video: "Sora\'s eyebrows tell us everything | Pocket Psychology of Sora", OUT NOW!',
+        bottom_text='NEW VIDEO: "Sora\'s eyebrows tell us everything | Pocket Psychology of Sora", OUT NOW!',
         href="https://www.youtube.com/@BioRoxas",
     ),
     WindowItem(
@@ -67,7 +67,7 @@ LEFT_ITEMS: list[WindowItem] = [
         image="/keyoftime15.png",
         label="FF4 Partner",
         highlight="Key",
-        bottom_text="Key makes tons of amazing content, much of it surrounding 358/2 Days! To get your Days fix, visit his channel here!",
+        bottom_text='NEW VIDEO: "All 15 Magic spells in Days RANKED", coming 10/10/2026!',
         href="https://www.youtube.com/@KeyofTime15",
     ),
 ]
