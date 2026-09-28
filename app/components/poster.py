@@ -228,10 +228,13 @@ def _visitor_seal() -> rx.Component:
                         stroke_width="2",
                         stroke_linecap="round",
                         stroke_linejoin="round",
+                        # Keep the line the same thickness when the brace stretches.
+                        vector_effect="non-scaling-stroke",
                     ),
-                    view_box="0 0 20 60",
+                    view_box="0 2 20 56",
+                    # Stretch to the CSS box so the brace grows with the three rows.
+                    preserve_aspect_ratio="none",
                     class_name=(
-                        "h-16 w-5 shrink-0 "
                         "text-sky-200/70 "
                         "drop-shadow-[0_0_8px_rgba(125,211,252,0.35)]"
                     ),
