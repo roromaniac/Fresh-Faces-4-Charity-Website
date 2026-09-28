@@ -26,7 +26,7 @@ LEFT_ITEMS: list[WindowItem] = [
         label="FF4 Partner",
         highlight="Bioroxas",
         bottom_text='NEW VIDEO: "Sora\'s eyebrows tell us everything | Pocket Psychology of Sora", OUT NOW!',
-        href="https://www.youtube.com/@BioRoxas",
+        href="https://www.youtube.com/watch?v=Ul9FgpEUDcA",
     ),
     WindowItem(
         image="/khguides.png",
