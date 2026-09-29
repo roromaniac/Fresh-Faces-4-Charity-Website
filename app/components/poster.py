@@ -174,9 +174,9 @@ def _visitor_seal() -> rx.Component:
                     "ff-visitor-count ff-data-font font-bold leading-none "
                     "tracking-wide text-amber-200 "
                     "drop-shadow-[0_0_16px_rgba(250,204,21,0.45)]"
+                    " min-w-[5.5em] text-center"
                 ),
             ),
-       
             rx.el.p(
                 "lights visited",
                 class_name=(
@@ -186,7 +186,6 @@ def _visitor_seal() -> rx.Component:
             ),
             class_name="ff-visitor-summary",
         ),
- 
 
         # RSVP section
         rx.el.div(
@@ -198,6 +197,7 @@ def _visitor_seal() -> rx.Component:
                         "ff-visitor-count ff-data-font font-bold leading-none "
                         "tracking-wide text-sky-200 "
                         "drop-shadow-[0_0_16px_rgba(56,189,248,0.45)]"
+                        " min-w-[2.9em] text-center"
                     ),
                 ),
                 rx.el.p(
@@ -228,11 +228,9 @@ def _visitor_seal() -> rx.Component:
                         stroke_width="2",
                         stroke_linecap="round",
                         stroke_linejoin="round",
-                        # Keep the line the same thickness when the brace stretches.
                         vector_effect="non-scaling-stroke",
                     ),
                     view_box="0 2 20 56",
-                    # Stretch to the CSS box so the brace grows with the three rows.
                     preserve_aspect_ratio="none",
                     class_name=(
                         "text-sky-200/70 "
@@ -316,8 +314,10 @@ def _visitor_seal() -> rx.Component:
 
         class_name=(
             "ff-visitor-seal ff-float rounded-2xl border "
-            "border-white/15 bg-slate-900/50 backdrop-blur-md"
+            "border-white/15 bg-slate-900/50 backdrop-blur-md "
+            "px-10 py-4 min-w-[33rem] max-w-full"
         ),
+        # px-10 increased (was px-9), py-4 (was py-3), min-w 33rem (was 31rem): “a tiny bit wider”
     )
 
 

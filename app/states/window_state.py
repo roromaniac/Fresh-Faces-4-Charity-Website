@@ -70,6 +70,13 @@ LEFT_ITEMS: list[WindowItem] = [
         bottom_text='NEW VIDEO: "All 15 Magic spells in Days RANKED", coming 10/10/2026!',
         href="https://www.youtube.com/@KeyofTime15",
     ),
+    WindowItem(
+        image="/prodigyxcd.png",
+        label="FF4 Partner",
+        highlight="Prodigy",
+        bottom_text='NEW VIDEO: "All 15 Magic spells in Days RANKED", coming 10/10/2026!',
+        href="https://www.youtube.com/@ProdigyxCD",
+    ),
 ]
 
 RIGHT_ITEMS: list[WindowItem] = [
