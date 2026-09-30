@@ -74,8 +74,8 @@ LEFT_ITEMS: list[WindowItem] = [
         image="/prodigyxcd.png",
         label="FF4 Partner",
         highlight="Prodigy",
-        bottom_text='NEW VIDEO: "All 15 Magic spells in Days RANKED", coming 10/10/2026!',
-        href="https://www.youtube.com/@ProdigyxCD",
+        bottom_text='Watch the Datascape Podcast, OUT NOW!',
+        href="https://www.youtube.com/playlist?list=PLQY6adERJUZX2hVahdyHrk-VJCvnrYrCe",
     ),
 ]
 
