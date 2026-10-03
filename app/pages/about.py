@@ -10,6 +10,24 @@ def about() -> rx.Component:
             "A Mission Statement from Roro(maniac)",
         ),
         rx.el.article(
+            rx.el.div(
+                rx.el.a(
+                    "View Project Hope's Impact HERE",
+                    href="/Fresh Faces 4 - 2026 Ukraine Impact Reporting.pdf",
+                    target="_blank",
+                    class_name=(
+                        "ff-menu-bold-font ff-title-gradient text-2xl "
+                        "mx-auto text-center underline"
+                    ),
+                    style={
+                        "backgroundClip": "text",
+                        "WebkitTextFillColor": "transparent",
+                        "textDecoration": "underline"  # Ensure underline for clarity
+                    },
+                ),
+                class_name="flex justify-center mb-6"
+            ),
+      
             rx.el.p(
                 "Hi there! I'm Roman, but I go by roro or roromaniac on socials. I'm the director of the team that's presenting Fresh Faces 4, the fourth installment of a charity Kingdom Hearts 2 randomizer tournament that uplifts and celebrates the newest entrants of the KH2 randomizer community.",
                 class_name="ff-menu-font mb-6 text-lg leading-relaxed text-sky-50/90",

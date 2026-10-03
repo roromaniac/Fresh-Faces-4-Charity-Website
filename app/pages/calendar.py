@@ -17,13 +17,14 @@ def calendar() -> rx.Component:
             rx.el.iframe(
                 src=(
                     "https://calendar.google.com/calendar/embed"
-                    "?height=900"
+                    "?height=600"
                     "&wkst=1"
                     "&ctz=America%2FDetroit"
                     "&showPrint=0"
                     "&src=cmFuZG80dWtyYWluZUBnbWFpbC5jb20"
-                    "&src=ZW4udXNhI2hvbGlkYXlAZ3JvdXAudi5jYWxlbmRhci5nb29nbGUuY29t"
-                    "&color=%23039be5&color=%230b8043"
+                    "&src=YTY3NTc1MTJhMDU4NWViNGMwYjFmMDFiNDAxYjUwNGFhNTkyYjA0NTViMzM1OWQzZTNhYTA0OWUzMjVkNDIwOUBncm91cC5jYWxlbmRhci5nb29nbGUuY29t"
+                    "&src=NGViMTg4ZGVlNjE4Y2E5OGFlY2IyNGRmMjdiZTU0NWEwZjU2OWViMWQ0MTIyOTM0Y2M1ZWVkNjQzYzBhMjc2M0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t"
+                    "&color=%23039be5&color=%230b8043&color=%23f4511e"
                 ),
                 # Adjust the width to 1.5x the old reference (which was 95vw)
                 width="142.5vw",  # 95vw * 1.5 = 142.5vw
