@@ -11,6 +11,7 @@ from app.pages.calendar import calendar
 from app.pages.credits import credits
 from app.pages.help import help_page
 from app.pages.tools import tools
+from app.pages.window_overlay import left_window_high_res, right_window_high_res
 from app.states.nav_state import NavState
 from app.states.tools_state import (
     CheckboxState,
@@ -124,6 +125,17 @@ app.add_page(
         LoadlessCheckerState.reset_status,
         LookUpState.reset_records,
     ],
+)
+
+app.add_page(
+    left_window_high_res,
+    route="/left-window-high-res",
+    title="Left Window",
+)
+app.add_page(
+    right_window_high_res,
+    route="/right-window-high-res",
+    title="Right Window",
 )
 
 app.register_lifespan_task(initialize_eligibility)
