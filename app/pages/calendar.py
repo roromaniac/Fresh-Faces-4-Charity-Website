@@ -1,7 +1,31 @@
+from urllib.parse import quote
+
 import reflex as rx
 
 from app.components.page_shell import page_heading, page_shell
 
+# Calendar base URL with fixed `ctz` parameter removed.
+CALENDAR_BASE_URL = (
+    "https://calendar.google.com/calendar/embed"
+    "?height=600"
+    "&wkst=1"
+    "&showPrint=0"
+    "&src=cmFuZG80dWtyYWluZUBnbWFpbC5jb20"
+    "&src=YTY3NTc1MTJhMDU4NWViNGMwYjFmMDFiNDAxYjUwNGFhNTkyYjA0NTViMzM1OWQzZTNhYTA0OWUzMjVkNDIwOUBncm91cC5jYWxlbmRhci5nb29nbGUuY29t"
+    "&src=NGViMTg4ZGVlNjE4Y2E5OGFlY2IyNGRmMjdiZTU0NWEwZjU2OWViMWQ0MTIyOTM0Y2M1ZWVkNjQzYzBhMjc2M0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t"
+    "&color=%23039be5&color=%230b8043&color=%23f4511e"
+)
+
+class CalendarState(rx.State):
+    calendar_src: str = "about:blank"
+
+    @rx.event
+    def set_timezone(self, timezone: str):
+        self.calendar_src = (
+            CALENDAR_BASE_URL
+            + "&ctz="
+            + quote(timezone or "UTC", safe="")
+        )
 
 def calendar() -> rx.Component:
     return page_shell(
@@ -15,17 +39,7 @@ def calendar() -> rx.Component:
         ),
         rx.el.div(
             rx.el.iframe(
-                src=(
-                    "https://calendar.google.com/calendar/embed"
-                    "?height=600"
-                    "&wkst=1"
-                    "&ctz=America%2FDetroit"
-                    "&showPrint=0"
-                    "&src=cmFuZG80dWtyYWluZUBnbWFpbC5jb20"
-                    "&src=YTY3NTc1MTJhMDU4NWViNGMwYjFmMDFiNDAxYjUwNGFhNTkyYjA0NTViMzM1OWQzZTNhYTA0OWUzMjVkNDIwOUBncm91cC5jYWxlbmRhci5nb29nbGUuY29t"
-                    "&src=NGViMTg4ZGVlNjE4Y2E5OGFlY2IyNGRmMjdiZTU0NWEwZjU2OWViMWQ0MTIyOTM0Y2M1ZWVkNjQzYzBhMjc2M0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t"
-                    "&color=%23039be5&color=%230b8043&color=%23f4511e"
-                ),
+                src=CalendarState.calendar_src,
                 # Adjust the width to 1.5x the old reference (which was 95vw)
                 width="142.5vw",  # 95vw * 1.5 = 142.5vw
                 height="60vw",
@@ -46,6 +60,10 @@ def calendar() -> rx.Component:
                     "marginRight": "auto",
                     "boxSizing": "border-box",
                 },
+            ),
+            on_mount=rx.call_script(
+                "Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC'",
+                callback=CalendarState.set_timezone,
             ),
             class_name=(
                 "rounded-2xl border border-white/10 "
