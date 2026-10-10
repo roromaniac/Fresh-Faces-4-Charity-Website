@@ -89,6 +89,75 @@ def _checklist() -> rx.Component:
     )
 
 
+def _downloads_panel() -> rx.Component:
+    return rx.el.div(
+        tool_card(
+            "Downloads & Links",
+            "Download the tools and join the platforms needed for Fresh Faces 4. Make sure to grab the exact tracker, generator, and timer versions listed here.",
+            rx.el.ul(
+                rx.el.li(
+                    rx.el.a(
+                        "KH2Tracker v2.7.3-FF",
+                        href="https://github.com/roromaniac/KH2Tracker/releases/tag/v2.7.3-FF",
+                        target="_blank",
+                        class_name="text-sky-400 underline hover:text-amber-400",
+                    )
+                ),
+                rx.el.li(
+                    rx.el.a(
+                        "Generator v3.3.4",
+                        href="https://github.com/tommadness/KH2Randomizer/releases/tag/v3.3.4",
+                        target="_blank",
+                        class_name="text-sky-400 underline hover:text-amber-400",
+                    )
+                ),
+                rx.el.li(
+                    rx.el.a(
+                        "Livesplit",
+                        href="https://livesplit.org/downloads/",
+                        target="_blank",
+                        class_name="text-sky-400 underline hover:text-amber-400",
+                    )
+                ),
+                rx.el.li(
+                    rx.el.a(
+                        "Loadless Timer v2.4",
+                        href="https://github.com/aliosgaming/KH2FM_Load_Remover-FOR-RANDOMIZER/releases/tag/v2.4",
+                        target="_blank",
+                        class_name="text-sky-400 underline hover:text-amber-400",
+                    )
+                ),
+                rx.el.li(
+                    rx.el.span(
+                        [
+                            rx.el.a(
+                                "OpenKH Mods Manager",
+                                href="https://tommadness.github.io/KH2Randomizer/downloads/",
+                                target="_blank",
+                                class_name="text-sky-400 underline hover:text-amber-400"
+                            ),
+                            " (requires .NET)"
+                        ]
+                    )
+                ),
+                rx.el.li(
+                    rx.el.a(
+                        "racetime.gg/kh2fmr lobby",
+                        href="https://racetime.gg/kh2fmr",
+                        target="_blank",
+                        class_name="text-sky-400 underline hover:text-amber-400",
+                    )
+                ),
+                class_name=(
+                    # Responsive 3x2 grid for downloads/links
+                    "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"
+                ),
+            ),
+        ),
+        id="ff4-downloads",
+    )
+
+
 def _lookup() -> rx.Component:
     return rx.el.div(
         tool_card(
@@ -218,7 +287,25 @@ def _loadless() -> rx.Component:
     return rx.el.div(
         tool_card(
             "Loadless Timer Validator",
-            "Upload your .asl file to confirm you have a loadless timer ready for KH2 rando.",
+            rx.fragment(
+                "Upload your .asl file to confirm you have a loadless timer ready for KH2 rando. Need to get setup? Download the release ",
+                rx.link(
+                    "here",
+                    href="https://github.com/aliosgaming/KH2FM_Load_Remover-FOR-RANDOMIZER/releases/tag/v2.4",
+                    is_external=True,
+                    color="sky.300",
+                    underline="always"
+                ),
+                "! The instructions for setup can be found in the repository's ",
+                rx.link(
+                    "README",
+                    href="https://github.com/aliosgaming/KH2FM_Load_Remover-FOR-RANDOMIZER/blob/main/README.md",
+                    is_external=True,
+                    color="sky.300",
+                    underline="always"
+                ),
+                "."
+            ),
             rx.el.div(
                 rx.upload(
                     rx.el.p(
@@ -313,6 +400,7 @@ def tools() -> rx.Component:
         ),
         rx.el.div(
             _checklist(),
+            _downloads_panel(),
             _lookup(),
             _loadless(),
             _cutscene_skipper(),

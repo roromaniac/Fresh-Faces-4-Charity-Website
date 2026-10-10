@@ -15,4 +15,5 @@ dependencies = [
     "reflex-base>=0.9.8",
     "reflex[db]==0.9.8",
     "requests>=2.34.2",
+    "xlsxwriter>=3.2.9",
 ]

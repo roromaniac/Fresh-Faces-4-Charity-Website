@@ -34,7 +34,7 @@ RAW_CREDITS_LIST: list[dict] = [
     {"name": "Codename_Geek", "twitch_name": "codename_geek", "role": "Layout and Tournament Designer", "role_class": "Production", "image": "/ukraine_heart.webp"},
     # {"name": "CoreySG9", "twitch_name": "coreysg9", "role": "Video Editor", "role_class": "Production", "image": "/ukraine_heart.webp"},
     # {"name": "DoubleADewi", "twitch_name": "doubleadewi", "role": "Video Editor", "role_class": "Production", "image": "/ukraine_heart.webp"},
-    # {"name": "RyuuRush", "twitch_name": "ryuurush", "role": "Video Editor", "role_class": "Production", "image": "/ukraine_heart.webp"},
+    {"name": "RyuuRush", "twitch_name": "ryuurush", "role": "Video Editor", "role_class": "Production", "image": "/ukraine_heart.webp"},
     {"name": "dallin", "twitch_name": "dallin1016", "role": "Graphic Designer", "role_class": "Production", "image": "/ukraine_heart.webp"},
     {"name": "Chemigoku", "twitch_name": "chemigoku", "role": "Caster (ES)", "role_class": "Caster", "image": "/ukraine_heart.webp"},
     {"name": "CapitanBublo", "twitch_name": "capitanbublo", "role": "Caster (ES)", "role_class": "Caster", "image": "/ukraine_heart.webp"},
@@ -52,7 +52,7 @@ RAW_CREDITS_LIST: list[dict] = [
     {"name": "KHGuides", "twitch_name": "KHGuides", "role": "Event Endorser (code: 'guides')", "role_class": "Production", "image": "/ukraine_heart.webp"},
     {"name": "Chaineh", "twitch_name": "chaineh", "role": "Event Endorser (code: 'chaineh')", "role_class": "Production", "image": "/ukraine_heart.webp"},
     {"name": "Prodigy", "twitch_name": "ProdigyxCD", "role": "Event Endorser (code: 'prodigy')", "role_class": "Production", "image": "/ukraine_heart.webp"},
-
+    {"name": "PaopuKomi", "twitch_name": "PaopuKomi", "role": "Event Endorser (code: 'komi')", "role_class": "Production", "image": "/ukraine_heart.webp"},
     # {"name": "MarchCaprice", "twitch_name": "marchcaprice", "role": "Event Endorser (code: 'mc')", "role_class": "Production", "image": "/ukraine_heart.webp"},
     # {"name": "RegularPat", "twitch_name": "regularpatyt", "role": "Event Endorser (code: 'regularpat')", "role_class": "Production", "image": "/ukraine_heart.webp"},
     {"name": "RadiantGardeners", "twitch_name": "radiantgardeners", "role": "Event Endorser (code: 'rg')", "role_class": "Production", "image": "/ukraine_heart.webp"},

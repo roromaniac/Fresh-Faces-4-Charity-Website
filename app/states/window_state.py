@@ -67,8 +67,8 @@ LEFT_ITEMS: list[WindowItem] = [
         image="/keyoftime15.png",
         label="FF4 Partner",
         highlight="Key",
-        bottom_text='NEW VIDEO: "All 15 Magic spells in Days RANKED", coming 10/10/2026!',
-        href="https://www.youtube.com/@KeyofTime15",
+        bottom_text='NEW VIDEO: "All 15 Magic Spells in 358/2 Days RANKED!", OUT NOW!',
+        href="https://www.youtube.com/watch?v=kHdKLJdoPMQ",
     ),
     WindowItem(
         image="/prodigyxcd.png",
@@ -76,6 +76,13 @@ LEFT_ITEMS: list[WindowItem] = [
         highlight="Prodigy",
         bottom_text='Watch the Datascape Podcast, OUT NOW!',
         href="https://www.youtube.com/playlist?list=PLQY6adERJUZX2hVahdyHrk-VJCvnrYrCe",
+    ),
+    WindowItem(
+        image="/paopukomi.png",
+        label="FF4 Partner",
+        highlight="PaopuKomi",
+        bottom_text='Variety streamer with $100,000+ raised for charity across Kingdom Hearts events! Check them out here!',
+        href="https://www.twitch.tv/paopukomi",
     ),
 ]
 
