@@ -18,20 +18,21 @@ from app.states.tools_state import (
     LoadlessCheckerState,
     LookUpState,
 )
-from app.states.visit_state import VisitState
+from app.states.visit_state import VisitState, refresh_form_counts
 
 from app.scripts.check_live_streams import refresh_live_cache
 from app.scripts.eligibility import main as eligibility_main
 from app.states.stream_state import STREAM_LINKS
-from app.visits import init_db
+from app.visits import init_db, seed_visitor_total
 
 async def initialize_eligibility():
     # Rebuild the eligibility database off the event loop so page clicks stay live.
     await asyncio.to_thread(eligibility_main)
 
 async def initialize_visits():
-    # Create the visits table once, instead of on every page view.
+    # Create the visits table once, then count past visitors once.
     await asyncio.to_thread(init_db)
+    await asyncio.to_thread(seed_visitor_total)
 
 async def poll_live_streams():
     """Ask Twitch and YouTube once a minute for every visitor to share."""
@@ -40,6 +41,15 @@ async def poll_live_streams():
             await asyncio.to_thread(refresh_live_cache, STREAM_LINKS)
         except Exception as exc:
             print("Live check failed:", exc)
+        await asyncio.sleep(60)
+
+async def poll_form_counts():
+    """Download RSVP totals once a minute for every visitor to share."""
+    while True:
+        try:
+            await asyncio.to_thread(refresh_form_counts)
+        except Exception as exc:
+            print("RSVP count failed:", exc)
         await asyncio.sleep(60)
 
 def index() -> rx.Component:
@@ -141,3 +151,4 @@ app.add_page(
 app.register_lifespan_task(initialize_eligibility)
 app.register_lifespan_task(initialize_visits)
 app.register_lifespan_task(poll_live_streams)
+app.register_lifespan_task(poll_form_counts)
