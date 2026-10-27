@@ -12,7 +12,6 @@ from app.pages.credits import credits
 from app.pages.help import help_page
 from app.pages.tools import tools
 from app.pages.window_overlay import left_window_high_res, right_window_high_res
-from app.states.nav_state import NavState
 from app.states.tools_state import (
     CheckboxState,
     LoadlessCheckerState,
@@ -98,31 +97,31 @@ app.add_page(
     index,
     route="/",
     title="Fresh Faces 4",
-    on_load=[VisitState.log_visit, NavState.mark_active("/")],
+    on_load=VisitState.log_visit,
 )
 app.add_page(
     about,
     route="/about",
     title="About Fresh Faces 4",
-    on_load=[VisitState.log_visit, NavState.mark_active("/about")],
+    on_load=VisitState.log_visit,
 )
 app.add_page(
     calendar,
     route="/calendar",
     title="Calendar",
-    on_load=[VisitState.log_visit, NavState.mark_active("/calendar")],
+    on_load=VisitState.log_visit,
 )
 app.add_page(
     credits,
     route="/credits",
     title="Credits",
-    on_load=[VisitState.log_visit, NavState.mark_active("/credits")],
+    on_load=VisitState.log_visit,
 )
 app.add_page(
     help_page,
     route="/help",
     title="Help",
-    on_load=[VisitState.log_visit, NavState.mark_active("/help")],
+    on_load=VisitState.log_visit,
 )
 app.add_page(
     tools,
@@ -130,7 +129,6 @@ app.add_page(
     title="Tools",
     on_load=[
         VisitState.log_visit,
-        NavState.mark_active("/tools"),
         CheckboxState.reset_checklist,
         LoadlessCheckerState.reset_status,
         LookUpState.reset_records,
