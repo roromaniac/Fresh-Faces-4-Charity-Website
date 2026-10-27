@@ -20,6 +20,20 @@ from app.visits import (
 
 load_dotenv()
 
+
+def _saved_views() -> int:
+    """Visits from before this database existed. Read on each page view.
+
+    The number lives in PRESENT_VIEWS. Reading it here, instead of trusting a
+    saved copy, keeps old browser sessions from dropping the baseline.
+    """
+    raw = os.getenv("PRESENT_VIEWS", "0") or "0"
+    try:
+        return max(int(raw), 0)
+    except ValueError:
+        return 0
+
+
 # Turn a URL path like "/about" into a short page name for the log.
 _PAGE_NAMES = {
     "/": "home",
@@ -236,7 +250,7 @@ class VisitState(rx.State):
     """Holds the visitor total shown on the home page."""
 
     total_visitors: int = _BOOT_VISITORS
-    present_views: int = int(os.getenv("PRESENT_VIEWS", "0"))
+    present_views: int = _saved_views()
     rsvp_responses: int = _BOOT_COUNTS["rsvp_responses"]
     fresh_faces: int = _BOOT_COUNTS["fresh_faces"]
     graduated_faces: int = _BOOT_COUNTS["graduated_faces"]
@@ -269,6 +283,8 @@ class VisitState(rx.State):
         previous_total = cached_visitor_total()
         counts = cached_form_counts() if page == "home" and _form_ready.is_set() else None
         async with self:
+            # Refresh the baseline every time. A saved session may still have 0.
+            self.present_views = _saved_views()
             if previous_total is not None:
                 self.total_visitors = previous_total
             if counts is not None:
@@ -282,6 +298,7 @@ class VisitState(rx.State):
 
         if total is not None:
             async with self:
+                self.present_views = _saved_views()
                 if self.total_visitors != total:
                     self.total_visitors = total
 

@@ -23,7 +23,7 @@ _db_lock = Lock()
 # view is slow on the host's disk.
 _connection: sqlite3.Connection | None = None
 
-# Counted once at startup, then bumped when a new browser session arrives.
+# Counted once at startup, then bumped by 1 on every page view.
 # Page loads read this number instead of counting the whole table again.
 _visitor_total: int | None = None
 _known_sessions: set[str] | None = None
@@ -62,21 +62,18 @@ def _database() -> sqlite3.Connection:
 
 
 def _load_known_sessions() -> None:
-    """Read browser ids once. Caller must hold _count_lock."""
+    """Read the saved visit count once. Caller must hold _count_lock.
+
+    Every row is one visit. Counting only distinct browsers hides later
+    page views, so the number on the poster barely moves.
+    """
     global _visitor_total, _known_sessions
     with _db_lock:
         connection = _database()
-        rows = connection.execute(
-            "SELECT DISTINCT session_id FROM visits WHERE session_id <> ''"
-        )
-        sessions = {row[0] for row in rows}
-        if sessions:
-            total = len(sessions)
-        else:
-            # Older rows may have no session id. Count those rows instead.
-            counted = connection.execute("SELECT COUNT(*) FROM visits").fetchone()
-            total = int(counted[0]) if counted else 0
-    _known_sessions = sessions
+        counted = connection.execute("SELECT COUNT(*) FROM visits").fetchone()
+        total = int(counted[0]) if counted else 0
+    # Empty set means "already loaded", not "no visitors".
+    _known_sessions = set()
     _visitor_total = total
 
 
@@ -100,26 +97,23 @@ def seed_visitor_total() -> int:
 
 
 def count_visitors() -> int:
-    """How many people came by. Uses the saved total after startup."""
+    """How many visits are saved. Uses the saved total after startup."""
     return seed_visitor_total()
 
 
 def remember_visitor(session_id: str = "") -> int:
-    """Count this browser if it is new, and return the shared total.
+    """Add one visit and return the shared total.
 
     This does not write to disk, so the page can show the number immediately.
+    The same browser counts again on a later page view. Callers still pass
+    session_id so the saved row can name that browser.
     """
     global _visitor_total, _known_sessions
     with _count_lock:
         if _known_sessions is None:
             _load_known_sessions()
-        if _known_sessions is None:
-            _known_sessions = set()
-        total = _visitor_total or 0
-        if session_id and session_id not in _known_sessions:
-            _known_sessions.add(session_id)
-            total += 1
-            _visitor_total = total
+        total = (_visitor_total or 0) + 1
+        _visitor_total = total
         return total
 
 
@@ -144,7 +138,7 @@ def log_visit(page: str, session_id: str = "") -> None:
 def record_page_view(page: str, session_id: str = "") -> int:
     """Save one page view and return the shared visitor total.
 
-    A brand-new session adds 1. A return visit keeps the saved total.
+    Each page view adds 1, including a return visit.
     """
     total = remember_visitor(session_id)
     save_page_view(page, session_id)
