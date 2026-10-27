@@ -5,8 +5,10 @@ from app.states.tools_state import CheckboxState, LoadlessCheckerState, LookUpSt
 
 _TIPS = [
     ("KH2 Rando Setup Video Guide (2025)", "https://www.youtube.com/watch?v=dsrk7hUPDxQ"),
+    ("Fresh Faces 4 Crash Course", "https://www.youtube.com/watch?v=1uG2cCB6LEM"),
     ("About KH2 Rando", "https://www.youtube.com/watch?v=AntmkVM0r4s"),
     ("KH2 Rando Shotgunning Tutorial", "https://www.youtube.com/watch?v=7ulNJkPhVSU"),
+    ("Commonly Missed Checks", "https://docs.google.com/document/d/1V5O7kEW4U9kDStdL3kTxmqiUEFSNpOCo9KVxk1Cxt54/edit?usp=sharing"),
     ("Final Xemnas Dome Skip", "https://www.youtube.com/watch?v=3V7Tm7aJjCw"),
     ("The Experiment Tutorial", "https://www.youtube.com/watch?v=jLhjnnODdfk"),
     ("Groundshaker 1 Cycle", "https://youtube.com/shorts/ihIlkkGlFmQ?feature=share"),

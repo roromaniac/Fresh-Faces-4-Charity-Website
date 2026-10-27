@@ -44,7 +44,7 @@ async def poll_live_streams():
         await asyncio.sleep(60)
 
 async def poll_form_counts():
-    """Download RSVP totals once a minute for every visitor to share."""
+    """Download new RSVP totals once a minute for every visitor to share."""
     while True:
         try:
             await asyncio.to_thread(refresh_form_counts)

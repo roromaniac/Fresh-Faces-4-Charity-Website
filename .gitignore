@@ -5,6 +5,8 @@ assets/external/
 *.db-wal
 *.db-shm
 *.db-journal
+data/form_counts.json
+data/form_counts.json.tmp
 *.py[cod]
 __pycache__/
 .web/

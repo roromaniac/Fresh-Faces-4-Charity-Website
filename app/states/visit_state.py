@@ -10,7 +10,13 @@ from dotenv import load_dotenv
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
 
-from app.visits import record_page_view
+from app.visits import (
+    DB_PATH,
+    cached_visitor_total,
+    remember_visitor,
+    save_page_view,
+    seed_visitor_total,
+)
 
 load_dotenv()
 
@@ -26,7 +32,15 @@ _PAGE_NAMES = {
 
 # Google Form question that stores the player's division.
 _DIVISION_QUESTION_ID = "3ff74616"
+_DIVISION_FIELDS = {
+    "Fresh Faces": "fresh_faces",
+    "Graduated Faces": "graduated_faces",
+    "Veterans": "veterans",
+}
 _FORMS_SCOPES = ["https://www.googleapis.com/auth/forms.responses.readonly"]
+
+# Saved RSVP totals. Page loads read this file's numbers while Google catches up.
+_FORM_CACHE_PATH = DB_PATH.parent / "form_counts.json"
 
 # One shared RSVP tally. The startup loop refreshes it; page loads only read it.
 _form_lock = threading.Lock()
@@ -38,6 +52,9 @@ _form_counts = {
     "graduated_faces": 0,
     "veterans": 0,
 }
+# Ids we already counted, and the newest RSVP time we have asked Google for.
+_seen_response_ids: set[str] = set()
+_newest_response_time = ""
 
 
 def _page_name(path: str) -> str:
@@ -71,23 +88,84 @@ def _forms_service():
     return _form_service
 
 
-def fetch_form_counts() -> dict[str, int]:
-    """Download the RSVP form once and count responses plus each division."""
+def _download_responses(since: str) -> list[dict]:
+    """Download RSVPs. After the first time, only RSVPs newer than `since`."""
     form_id = os.getenv("RSVP_FORM_ID")
     if not form_id:
         raise RuntimeError("Missing RSVP_FORM_ID")
 
     service = _forms_service()
-    result = service.forms().responses().list(formId=form_id).execute()
-    responses = result.get("responses", [])
-    divisions = [_division_value(response) for response in responses]
+    found: list[dict] = []
+    page_token = ""
+    # Google returns at most 5000 RSVPs per page.
+    for _ in range(20):
+        options: dict = {"formId": form_id, "pageSize": 5000}
+        if page_token:
+            options["pageToken"] = page_token
+        if since:
+            options["filter"] = f"timestamp > {since}"
+        result = service.forms().responses().list(**options).execute()
+        found.extend(result.get("responses", []))
+        page_token = result.get("nextPageToken") or ""
+        if not page_token:
+            break
+    return found
 
-    return {
-        "rsvp_responses": len(responses),
-        "fresh_faces": sum(value == "Fresh Faces" for value in divisions),
-        "graduated_faces": sum(value == "Graduated Faces" for value in divisions),
-        "veterans": sum(value == "Veterans" for value in divisions),
-    }
+
+def _note_response(response: dict) -> bool:
+    """Add one RSVP to the saved totals. Caller must hold _form_lock.
+
+    Returns True when this RSVP was not counted before.
+    """
+    global _newest_response_time
+    response_id = str(response.get("responseId") or "")
+    submitted = str(response.get("lastSubmittedTime") or response.get("createTime") or "")
+    if submitted > _newest_response_time:
+        _newest_response_time = submitted
+    if not response_id or response_id in _seen_response_ids:
+        return False
+
+    _seen_response_ids.add(response_id)
+    _form_counts["rsvp_responses"] += 1
+    field = _DIVISION_FIELDS.get(_division_value(response))
+    if field:
+        _form_counts[field] += 1
+    return True
+
+
+def _load_saved_counts() -> None:
+    """Put the last saved RSVP totals in memory so the first page is not blank."""
+    global _newest_response_time
+    if not _FORM_CACHE_PATH.exists():
+        return
+    try:
+        saved = json.loads(_FORM_CACHE_PATH.read_text(encoding="utf-8"))
+    except (OSError, ValueError, TypeError):
+        return
+    seen = saved.get("seen")
+    since = str(saved.get("since") or "")
+    # Without the timestamp we would download every RSVP and count them twice.
+    if not since or not isinstance(seen, list):
+        return
+
+    with _form_lock:
+        for key in _form_counts:
+            try:
+                _form_counts[key] = int(saved.get(key, 0))
+            except (TypeError, ValueError):
+                _form_counts[key] = 0
+        _seen_response_ids.clear()
+        _seen_response_ids.update(str(item) for item in seen)
+        _newest_response_time = since
+    _form_ready.set()
+
+
+def _write_form_cache(snapshot: dict) -> None:
+    """Save the RSVP totals so the next startup can show them immediately."""
+    _FORM_CACHE_PATH.parent.mkdir(parents=True, exist_ok=True)
+    temporary = _FORM_CACHE_PATH.with_suffix(".json.tmp")
+    temporary.write_text(json.dumps(snapshot), encoding="utf-8")
+    temporary.replace(_FORM_CACHE_PATH)
 
 
 def cached_form_counts() -> dict[str, int]:
@@ -97,17 +175,37 @@ def cached_form_counts() -> dict[str, int]:
 
 
 def refresh_form_counts() -> dict[str, int]:
-    """Download the RSVP form and save the totals for every visitor to share."""
+    """Download new RSVPs and add them to the totals every visitor shares."""
+    with _form_lock:
+        since = _newest_response_time
     try:
-        counts = fetch_form_counts()
+        responses = _download_responses(since)
     except Exception:
         # Let a page that is waiting on the first download move on.
         _form_ready.set()
         raise
+
+    changed = False
     with _form_lock:
-        _form_counts.update(counts)
+        for response in responses:
+            if _note_response(response):
+                changed = True
+        counts = dict(_form_counts)
+        snapshot = {
+            "rsvp_responses": counts["rsvp_responses"],
+            "fresh_faces": counts["fresh_faces"],
+            "graduated_faces": counts["graduated_faces"],
+            "veterans": counts["veterans"],
+            "since": _newest_response_time,
+            "seen": list(_seen_response_ids),
+        }
     _form_ready.set()
-    return dict(counts)
+    if snapshot["since"] and (changed or not _FORM_CACHE_PATH.exists()):
+        try:
+            _write_form_cache(snapshot)
+        except OSError as exc:
+            print("Error saving RSVP count:", exc)
+    return counts
 
 
 def wait_for_form_counts(timeout: float = 30) -> dict[str, int]:
@@ -116,56 +214,90 @@ def wait_for_form_counts(timeout: float = 30) -> dict[str, int]:
     return cached_form_counts()
 
 
+_load_saved_counts()
+
+
+def _boot_visitor_total() -> int:
+    """Count past visitors before the first page is drawn."""
+    try:
+        return seed_visitor_total()
+    except Exception as exc:
+        print("Error counting past visits:", exc)
+        return 0
+
+
+# These are the numbers a new page shows immediately. The visit event
+# replaces them if this browser is new or Google has newer RSVPs.
+_BOOT_VISITORS = _boot_visitor_total()
+_BOOT_COUNTS = cached_form_counts()
+
+
 class VisitState(rx.State):
     """Holds the visitor total shown on the home page."""
 
-    total_visitors: int = 0
+    total_visitors: int = _BOOT_VISITORS
     present_views: int = int(os.getenv("PRESENT_VIEWS", "0"))
-    rsvp_responses: int = 0
-    fresh_faces: int = 0
-    graduated_faces: int = 0
-    veterans: int = 0
+    rsvp_responses: int = _BOOT_COUNTS["rsvp_responses"]
+    fresh_faces: int = _BOOT_COUNTS["fresh_faces"]
+    graduated_faces: int = _BOOT_COUNTS["graduated_faces"]
+    veterans: int = _BOOT_COUNTS["veterans"]
 
     @rx.var
     def visitor_count_label(self) -> str:
         # 1247 -> "1,247" so the poster number is easy to read
         return f"{self.total_visitors + self.present_views:,}"
 
+    def _show_counts(self, counts: dict[str, int]) -> None:
+        """Copy RSVP totals onto the page. Call this while holding the state."""
+        self.rsvp_responses = counts["rsvp_responses"]
+        self.fresh_faces = counts["fresh_faces"]
+        self.graduated_faces = counts["graduated_faces"]
+        self.veterans = counts["veterans"]
+
     @rx.event(background=True)
     async def log_visit(self):
-        """Save this page view, then copy the shared visitor and RSVP totals."""
-        # Copy the page and session while the lock is held. The database work stays outside it.
+        """Show the last totals right away, then save this visit."""
+        # Copy the page and session while the lock is held.
         async with self:
             path = self.router.url.path or self.router.route_id or "/"
-            session_id = self.router.session.client_token or self.router.session.session_id
+            session_id = str(
+                self.router.session.client_token or self.router.session.session_id or ""
+            )
         page = _page_name(path)
+
+        # Previous numbers go on screen before any slow disk or Google work.
+        previous_total = cached_visitor_total()
+        counts = cached_form_counts() if page == "home" and _form_ready.is_set() else None
+        async with self:
+            if previous_total is not None:
+                self.total_visitors = previous_total
+            if counts is not None:
+                self._show_counts(counts)
+
         total = None
         try:
-            total = await asyncio.to_thread(
-                record_page_view,
-                page,
-                str(session_id or ""),
-            )
+            total = await asyncio.to_thread(remember_visitor, session_id)
+        except Exception as e:
+            print("Error counting visit:", e)
+
+        if total is not None:
+            async with self:
+                if self.total_visitors != total:
+                    self.total_visitors = total
+
+        try:
+            await asyncio.to_thread(save_page_view, page, session_id)
         except Exception as e:
             print("Error saving visit:", e)
 
-        # Division counts are only shown on the home page. Read the saved copy.
-        # The first home visit after startup waits for the one shared download.
-        counts = None
-        if page == "home":
+        # Cold start has no saved RSVP totals yet. Keep showing the old
+        # numbers, then fill in the real ones when Google answers.
+        if page == "home" and not _form_ready.is_set():
             try:
-                if _form_ready.is_set():
-                    counts = cached_form_counts()
-                else:
-                    counts = await asyncio.to_thread(wait_for_form_counts)
+                counts = await asyncio.to_thread(wait_for_form_counts)
             except Exception as e:
                 print("Error retrieving RSVP count:", e)
-
-        async with self:
-            if total is not None:
-                self.total_visitors = total
+                counts = None
             if counts is not None:
-                self.rsvp_responses = counts["rsvp_responses"]
-                self.fresh_faces = counts["fresh_faces"]
-                self.graduated_faces = counts["graduated_faces"]
-                self.veterans = counts["veterans"]
+                async with self:
+                    self._show_counts(counts)
