@@ -23,7 +23,11 @@ class NavState(rx.State):
     @rx.var
     def active_href(self) -> str:
         """Highlight the link for the page that is actually open."""
-        path = (self.router.url.path or "/").rstrip("/")
+        # route_id stays "/calendar" on Reflex Cloud, while url.path may
+        # include the deployment's URL prefix.
+        path = (self.router.route_id or self.router.url.path or "/").rstrip("/")
+        if path and not path.startswith("/"):
+            path = f"/{path}"
         return path or "/"
 
     @rx.event
