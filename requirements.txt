@@ -3,7 +3,7 @@ annotated-types==0.8.0
 anyio==4.14.2
 asttokens==3.0.2
 bidict==0.24.1
-certifi==2026.7.22
+certifi>=2026.10.19
 cffi==2.1.1
 charset-normalizer==3.5.1
 click==8.5.0
@@ -41,7 +41,7 @@ oauthlib==3.3.1
 opentelemetry-api==1.44.0
 packaging==26.3
 parso==0.8.7
-pip==26.2.1
+pip>=26.2.2
 platformdirs==4.11.4
 prompt-toolkit==3.0.53
 proto-plus==1.28.4
