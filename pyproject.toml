@@ -12,8 +12,8 @@ dependencies = [
     "google-auth-oauthlib>=1.4.1",
     "pandas>=3.0.6",
     "python-dotenv>=1.2.3",
-    "reflex-base>=0.9.8",
-    "reflex[db]==0.9.8",
+    "reflex-base>=0.9.12",
+    "reflex[db]==0.9.12",
     "requests>=2.34.2",
     "xlsxwriter>=3.2.9",
 ]
