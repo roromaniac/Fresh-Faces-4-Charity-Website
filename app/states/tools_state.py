@@ -1,9 +1,10 @@
 """In-memory tools state. No Reflex database models."""
 
-from typing import TypedDict
-
+import asyncio
 import os
 import sqlite3
+from typing import TypedDict
+
 import requests
 import reflex as rx
 
@@ -190,7 +191,12 @@ class LoadlessCheckerState(rx.State):
         # Now compare with the official template
         reference_url = "https://github.com/aliosgaming/KH2FM_Load_Remover-FOR-RANDOMIZER/releases/latest/download/LiveSplit.KH2Randomizer.asl"
         try:
-            response = requests.get(reference_url)
+            # A slow GitHub response must not freeze every Reflex event.
+            response = await asyncio.to_thread(
+                requests.get,
+                reference_url,
+                timeout=10,
+            )
             response.raise_for_status()
             reference_text = response.text.strip()
 
@@ -253,7 +259,12 @@ class CutsceneSkipperCheckerState(rx.State):
         # Now compare with the official template
         reference_url = "https://raw.githubusercontent.com/Sonicshadowsilver2/Cutscene-Skipper-Randomizer-Edition/refs/heads/main/Cutscene%20Skipper.lua"
         try:
-            response = requests.get(reference_url)
+            # A slow GitHub response must not freeze every Reflex event.
+            response = await asyncio.to_thread(
+                requests.get,
+                reference_url,
+                timeout=10,
+            )
             response.raise_for_status()
             reference_text = response.text.strip()
 

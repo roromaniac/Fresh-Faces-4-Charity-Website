@@ -1,10 +1,17 @@
 import reflex as rx
 
-from app.states.nav_state import NavLink, NavState
+from app.states.nav_state import NAV_LINKS, NavLink, NavState
 
 _DONATE_HREF = "https://tiltify.com/@roromaniac8/fresh-faces-4"
 _RSVP_HREF = (
     "https://forms.gle/D3cUXZwKytQ1NqgV7"
+)
+
+# Read the browser URL directly so highlighting does not wait for a
+# backend state event after a page opens.
+_CURRENT_PATH = rx.Var(
+    "(globalThis.location.pathname.replace(/\\/+$/, '') || '/')",
+    str,
 )
 
 
@@ -14,7 +21,7 @@ def _desktop_link(link: NavLink) -> rx.Component:
         rx.icon(
             link["icon"],
             class_name=rx.cond(
-                NavState.active_href == link["href"],
+                _CURRENT_PATH == link["href"],
                 "h-3.5 w-3.5 text-amber-200",
                 "h-3.5 w-3.5 text-sky-200/60 group-hover:text-amber-200",
             ),
@@ -22,7 +29,7 @@ def _desktop_link(link: NavLink) -> rx.Component:
         rx.el.span(link["label"]),
         rx.el.span(
             class_name=rx.cond(
-                NavState.active_href == link["href"],
+                _CURRENT_PATH == link["href"],
                 "absolute inset-x-3 -bottom-px h-0.5 rounded-full bg-gradient-to-r from-sky-400 via-amber-200 to-amber-300",
                 "absolute inset-x-3 -bottom-px h-0.5 rounded-full bg-transparent",
             )
@@ -30,7 +37,7 @@ def _desktop_link(link: NavLink) -> rx.Component:
         href=link["href"],
         on_click=lambda: NavState.select_link(link["href"]),
         class_name=rx.cond(
-            NavState.active_href == link["href"],
+            _CURRENT_PATH == link["href"],
             "ff-shimmer ff-menu-bold-font group relative flex items-center gap-1 overflow-hidden rounded-lg bg-white/10 px-1.5 py-1.5 text-[12px] font-semibold uppercase tracking-[0.08em] text-white transition-all duration-300 hover:scale-105 xl:gap-1.5 xl:px-2.5 xl:text-[13px]",
             "ff-shimmer ff-menu-font group relative flex items-center gap-1 overflow-hidden rounded-lg px-1.5 py-1.5 text-[12px] font-medium uppercase tracking-[0.08em] text-sky-50 transition-all duration-300 hover:scale-105 hover:bg-white/10 xl:gap-1.5 xl:px-2.5 xl:text-[13px]",
         ),
@@ -44,13 +51,13 @@ def _mobile_link(link: NavLink) -> rx.Component:
             rx.icon(
                 link["icon"],
                 class_name=rx.cond(
-                    NavState.active_href == link["href"],
+                    _CURRENT_PATH == link["href"],
                     "h-4 w-4 text-slate-900",
                     "h-4 w-4 text-sky-200",
                 ),
             ),
             class_name=rx.cond(
-                NavState.active_href == link["href"],
+                _CURRENT_PATH == link["href"],
                 "flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-amber-200 to-amber-400",
                 "flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/5",
             ),
@@ -60,7 +67,7 @@ def _mobile_link(link: NavLink) -> rx.Component:
         href=link["href"],
         on_click=lambda: NavState.select_link(link["href"]),
         class_name=rx.cond(
-            NavState.active_href == link["href"],
+            _CURRENT_PATH == link["href"],
             "ff-menu-bold-font flex w-full items-center gap-3 rounded-2xl border border-amber-200/30 bg-white/10 px-3 py-3 text-base font-semibold uppercase tracking-[0.06em] text-white transition-colors",
             "ff-shimmer ff-menu-font relative flex w-full items-center gap-3 overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] px-3 py-3 text-base font-medium uppercase tracking-[0.06em] text-sky-50 transition-all duration-300 hover:scale-[1.02] hover:border-sky-300/40 hover:bg-white/10",
         ),
@@ -104,7 +111,7 @@ def _mobile_menu() -> rx.Component:
             ),
             _cta_row("mt-4 flex sm:hidden"),
             rx.el.nav(
-                rx.foreach(NavState.links, _mobile_link),
+                *(_mobile_link(link) for link in NAV_LINKS),
                 class_name="mt-4 flex flex-col gap-2",
             ),
             rx.el.div(
@@ -132,7 +139,7 @@ def navbar() -> rx.Component:
                 class_name="flex h-full min-w-0 items-center rounded-xl transition-transform duration-300 hover:scale-105",
             ),
             rx.el.nav(
-                rx.foreach(NavState.links, _desktop_link),
+                *(_desktop_link(link) for link in NAV_LINKS),
                 class_name="ml-auto hidden min-w-0 items-center justify-end gap-1 lg:flex",
             ),
             rx.el.div(

@@ -12,7 +12,6 @@ from app.pages.credits import credits
 from app.pages.help import help_page
 from app.pages.tools import tools
 from app.pages.window_overlay import left_window_high_res, right_window_high_res
-from app.states.nav_state import NavState
 from app.states.tools_state import (
     CheckboxState,
     LoadlessCheckerState,
@@ -23,16 +22,10 @@ from app.states.visit_state import VisitState, refresh_form_counts
 from app.scripts.check_live_streams import refresh_live_cache
 from app.scripts.eligibility import main as eligibility_main
 from app.states.stream_state import STREAM_LINKS
-from app.visits import init_db, seed_visitor_total
 
 async def initialize_eligibility():
     # Rebuild the eligibility database off the event loop so page clicks stay live.
     await asyncio.to_thread(eligibility_main)
-
-async def initialize_visits():
-    # Create the visits table once, then count past visitors once.
-    await asyncio.to_thread(init_db)
-    await asyncio.to_thread(seed_visitor_total)
 
 async def poll_live_streams():
     """Ask Twitch and YouTube once a minute for every visitor to share."""
@@ -98,38 +91,37 @@ app.add_page(
     index,
     route="/",
     title="Fresh Faces 4",
-    on_load=[NavState.mark_active("/"), VisitState.log_visit],
+    on_load=VisitState.log_visit,
 )
 app.add_page(
     about,
     route="/about",
     title="About Fresh Faces 4",
-    on_load=[NavState.mark_active("/about"), VisitState.log_visit],
+    on_load=VisitState.log_visit,
 )
 app.add_page(
     calendar,
     route="/calendar",
     title="Calendar",
-    on_load=[NavState.mark_active("/calendar"), VisitState.log_visit],
+    on_load=VisitState.log_visit,
 )
 app.add_page(
     credits,
     route="/credits",
     title="Credits",
-    on_load=[NavState.mark_active("/credits"), VisitState.log_visit],
+    on_load=VisitState.log_visit,
 )
 app.add_page(
     help_page,
     route="/help",
     title="Help",
-    on_load=[NavState.mark_active("/help"), VisitState.log_visit],
+    on_load=VisitState.log_visit,
 )
 app.add_page(
     tools,
     route="/tools",
     title="Tools",
     on_load=[
-        NavState.mark_active("/tools"),
         VisitState.log_visit,
         CheckboxState.reset_checklist,
         LoadlessCheckerState.reset_status,
@@ -149,6 +141,5 @@ app.add_page(
 )
 
 app.register_lifespan_task(initialize_eligibility)
-app.register_lifespan_task(initialize_visits)
 app.register_lifespan_task(poll_live_streams)
 app.register_lifespan_task(poll_form_counts)

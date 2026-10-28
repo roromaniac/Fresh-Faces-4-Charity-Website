@@ -15,7 +15,6 @@ from app.visits import (
     cached_visitor_total,
     remember_visitor,
     save_page_view,
-    seed_visitor_total,
 )
 
 load_dotenv()
@@ -231,18 +230,9 @@ def wait_for_form_counts(timeout: float = 30) -> dict[str, int]:
 _load_saved_counts()
 
 
-def _boot_visitor_total() -> int:
-    """Count past visitors before the first page is drawn."""
-    try:
-        return seed_visitor_total()
-    except Exception as exc:
-        print("Error counting past visits:", exc)
-        return 0
-
-
-# These are the numbers a new page shows immediately. The visit event
-# replaces them if this browser is new or Google has newer RSVPs.
-_BOOT_VISITORS = _boot_visitor_total()
+# Do not open SQLite while the backend is importing. Reflex Cloud must finish
+# starting before optional visit logging touches disk.
+_BOOT_VISITORS = 0
 _BOOT_COUNTS = cached_form_counts()
 
 
