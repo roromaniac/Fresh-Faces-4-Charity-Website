@@ -1,6 +1,22 @@
 import asyncio
 
 import reflex as rx
+from reflex.app import EventNamespace
+
+# --- Deployment fix ---------------------------------------------------------
+# On the server, the browser sends an extra "auth" value when it connects to
+# the websocket. Reflex's on_connect only accepts (sid, environ), so it crashed
+# with "takes 3 positional arguments but 4 were given" and the page never
+# became interactive. We wrap it so it quietly accepts (and ignores) "auth".
+_original_on_connect = EventNamespace.on_connect
+
+
+async def _on_connect_accepting_auth(self, sid, environ, auth=None):
+    return await _original_on_connect(self, sid, environ)
+
+
+EventNamespace.on_connect = _on_connect_accepting_auth
+# ----------------------------------------------------------------------------
 
 from app.components.navbar import navbar
 from app.components.poster import poster
