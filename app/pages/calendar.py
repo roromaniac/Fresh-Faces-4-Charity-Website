@@ -1,8 +1,10 @@
+from urllib.parse import quote
+
 import reflex as rx
 
 from app.components.page_shell import page_heading, page_shell
 
-# Google uses the visitor's local timezone when `ctz` is omitted.
+# Calendar base URL with fixed `ctz` parameter removed.
 CALENDAR_BASE_URL = (
     "https://calendar.google.com/calendar/embed"
     "?height=600"
@@ -14,6 +16,16 @@ CALENDAR_BASE_URL = (
     "&color=%23039be5&color=%230b8043&color=%23f4511e"
 )
 
+class CalendarState(rx.State):
+    calendar_src: str = "about:blank"
+
+    @rx.event
+    def set_timezone(self, timezone: str):
+        self.calendar_src = (
+            CALENDAR_BASE_URL
+            + "&ctz="
+            + quote(timezone or "UTC", safe="")
+        )
 
 def calendar() -> rx.Component:
     return page_shell(
@@ -27,18 +39,42 @@ def calendar() -> rx.Component:
         ),
         rx.el.div(
             rx.el.iframe(
-                src=CALENDAR_BASE_URL,
-                title="Fresh Faces 4 event calendar",
+                src=CalendarState.calendar_src,
+                # Adjust the width to 1.5x the old reference (which was 95vw)
+                width="142.5vw",  # 95vw * 1.5 = 142.5vw
+                height="60vw",
                 custom_attrs={"frameborder": "0", "scrolling": "no"},
                 class_name=(
-                    "h-[70vh] min-h-[350px] w-full rounded-2xl "
-                    "border border-white/15 bg-slate-950"
+                    "rounded-2xl border border-white/15 bg-slate-950"
                 ),
+                style={
+                    # Responsive, 1.5x as wide as before but still relative to the window!
+                    "width": "142.5vw",
+                    "height": "60vw",
+                    "maxWidth": "150vw",      # allow up to 150vw as a "max width"
+                    "maxHeight": "900px",
+                    "minWidth": "480px",      # bump up minimum width for larger view
+                    "minHeight": "350px",
+                    "display": "block",
+                    "marginLeft": "auto",
+                    "marginRight": "auto",
+                    "boxSizing": "border-box",
+                },
+            ),
+            on_mount=rx.call_script(
+                "Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC'",
+                callback=CalendarState.set_timezone,
             ),
             class_name=(
                 "rounded-2xl border border-white/10 "
                 "bg-white/[0.04] p-3 shadow-[0_0_40px_rgba(56,189,248,0.12)] "
-                "backdrop-blur-md md:p-7"
+                "backdrop-blur-md md:p-7 xl:p-12 flex justify-center"
             ),
+            style={
+                "width": "100%",
+                "overflowX": "auto",
+                "justifyContent": "center",
+                "display": "flex",
+            },
         ),
     )
