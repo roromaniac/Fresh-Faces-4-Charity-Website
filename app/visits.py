@@ -96,6 +96,31 @@ def seed_visitor_total() -> int:
         return _visitor_total or 0
 
 
+def resync_visitor_total() -> int:
+    """Recount the visits saved in the database and fix the shared number.
+
+    The page number is only "+1 in memory", so it can drift if rows were
+    deleted or a save failed. The slow database count runs WITHOUT the
+    count lock, so page views keep working while it runs.
+    """
+    global _visitor_total, _known_sessions
+    # Startup has not loaded anything yet, so there is nothing to fix.
+    if _known_sessions is None:
+        return seed_visitor_total()
+
+    # Step 1: count rows (slow part). Only the database lock is held.
+    with _db_lock:
+        connection = _database()
+        counted = connection.execute("SELECT COUNT(*) FROM visits").fetchone()
+        total = int(counted[0]) if counted else 0
+
+    # Step 2: swap in the number (instant). A visit counted in the split
+    # second before its row is saved may be off by 1 until the next recount.
+    with _count_lock:
+        _visitor_total = total
+    return total
+
+
 def count_visitors() -> int:
     """How many visits are saved. Uses the saved total after startup."""
     return seed_visitor_total()

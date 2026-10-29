@@ -34,6 +34,7 @@ from app.states.tools_state import (
     LookUpState,
 )
 from app.states.visit_state import VisitState, refresh_form_counts
+from app.visits import resync_visitor_total
 
 from app.scripts.check_live_streams import refresh_live_cache
 from app.scripts.eligibility import main as eligibility_main
@@ -52,13 +53,28 @@ async def poll_live_streams():
             print("Live check failed:", exc)
         await asyncio.sleep(60)
 
+# Every Nth check is a full recount, which also catches deleted RSVPs/visits.
+# 10 checks x 60 seconds = a full recount about every 10 minutes.
+FULL_RECOUNT_EVERY = 10
+
 async def poll_form_counts():
-    """Download new RSVP totals once a minute for every visitor to share."""
+    """Update RSVP totals once a minute for every visitor to share."""
+    run = 0
     while True:
+        # The very first run (run 0) is also full, to fix any drift from downtime.
+        full = run % FULL_RECOUNT_EVERY == 0
         try:
-            await asyncio.to_thread(refresh_form_counts)
+            # to_thread keeps the slow Google call off the main loop.
+            await asyncio.to_thread(refresh_form_counts, full)
         except Exception as exc:
             print("RSVP count failed:", exc)
+        try:
+            # Re-check the visit total against the database on full runs too.
+            if full:
+                await asyncio.to_thread(resync_visitor_total)
+        except Exception as exc:
+            print("Visit recount failed:", exc)
+        run += 1
         await asyncio.sleep(60)
 
 def index() -> rx.Component:

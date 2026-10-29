@@ -187,11 +187,56 @@ def cached_form_counts() -> dict[str, int]:
         return dict(_form_counts)
 
 
-def refresh_form_counts() -> dict[str, int]:
-    """Download new RSVPs and add them to the totals every visitor shares."""
+def _recount_all(responses: list[dict]) -> bool:
+    """Replace the totals with a fresh count of `responses`. Returns True if changed.
+
+    The slow download already happened before this runs. Here we only count
+    in memory and swap the results in, so the lock is held for a split second
+    and the rest of the site never waits on it.
+    """
+    global _newest_response_time
+    # Count into brand new containers first, so nothing is half-updated.
+    fresh_counts = {key: 0 for key in _form_counts}
+    fresh_seen: set[str] = set()
+    fresh_newest = ""
+    for response in responses:
+        response_id = str(response.get("responseId") or "")
+        submitted = str(response.get("lastSubmittedTime") or response.get("createTime") or "")
+        if submitted > fresh_newest:
+            fresh_newest = submitted
+        if not response_id or response_id in fresh_seen:
+            continue
+        fresh_seen.add(response_id)
+        fresh_counts["rsvp_responses"] += 1
+        field = _DIVISION_FIELDS.get(_division_value(response))
+        if field:
+            fresh_counts[field] += 1
+
+    # Caller holds _form_lock. Swap the old numbers for the new ones.
+    changed = fresh_counts != _form_counts
+    _form_counts.update(fresh_counts)
+    _seen_response_ids.clear()
+    _seen_response_ids.update(fresh_seen)
+    # Keep the older "newest time" if Google returned nothing, so we never
+    # go back to re-downloading everything on the quick checks.
+    if fresh_newest:
+        _newest_response_time = fresh_newest
+    return changed
+
+
+def refresh_form_counts(full: bool = False) -> dict[str, int]:
+    """Update the RSVP totals every visitor shares.
+
+    Quick check (full=False): download only RSVPs newer than the last one
+    we saw, and add them. Cheap, but it can never notice a deleted RSVP.
+
+    Full recount (full=True): download every RSVP and count from scratch,
+    so deleted RSVPs disappear from the totals too.
+    """
     with _form_lock:
-        since = _newest_response_time
+        since = "" if full else _newest_response_time
     try:
+        # The slow Google call runs WITHOUT the lock, so pages keep loading.
         responses = _download_responses(since)
     except Exception:
         # Let a page that is waiting on the first download move on.
@@ -200,9 +245,12 @@ def refresh_form_counts() -> dict[str, int]:
 
     changed = False
     with _form_lock:
-        for response in responses:
-            if _note_response(response):
-                changed = True
+        if full:
+            changed = _recount_all(responses)
+        else:
+            for response in responses:
+                if _note_response(response):
+                    changed = True
         counts = dict(_form_counts)
         snapshot = {
             "rsvp_responses": counts["rsvp_responses"],
