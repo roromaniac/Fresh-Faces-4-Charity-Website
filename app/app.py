@@ -53,12 +53,14 @@ async def poll_live_streams():
             print("Live check failed:", exc)
         await asyncio.sleep(60)
 
-# Every Nth check is a full recount, which also catches deleted RSVPs/visits.
-# 10 checks x 60 seconds = a full recount about every 10 minutes.
-FULL_RECOUNT_EVERY = 10
+# How many seconds to wait between checks.
+POLL_SECONDS = 15
+# Every Nth check is a full recount, which also catches deleted RSVPs.
+# 40 checks x 15 seconds = a full recount about every 10 minutes.
+FULL_RECOUNT_EVERY = 40
 
 async def poll_form_counts():
-    """Update RSVP totals once a minute for every visitor to share."""
+    """Update RSVP and visit totals every 15 seconds for every visitor to share."""
     run = 0
     while True:
         # The very first run (run 0) is also full, to fix any drift from downtime.
@@ -69,13 +71,13 @@ async def poll_form_counts():
         except Exception as exc:
             print("RSVP count failed:", exc)
         try:
-            # Re-check the visit total against the database on full runs too.
-            if full:
-                await asyncio.to_thread(resync_visitor_total)
+            # Re-check the visit total against the database every run so
+            # a missed save is corrected within about 15 seconds.
+            await asyncio.to_thread(resync_visitor_total)
         except Exception as exc:
             print("Visit recount failed:", exc)
         run += 1
-        await asyncio.sleep(60)
+        await asyncio.sleep(POLL_SECONDS)
 
 def index() -> rx.Component:
     return rx.el.main(
@@ -123,7 +125,8 @@ app.add_page(
     index,
     route="/",
     title="Fresh Faces 4",
-    on_load=VisitState.log_visit,
+    # watch_counts keeps the numbers live while the page stays open.
+    on_load=[VisitState.log_visit, VisitState.watch_counts],
 )
 app.add_page(
     about,

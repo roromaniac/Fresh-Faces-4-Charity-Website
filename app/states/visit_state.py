@@ -284,6 +284,29 @@ _BOOT_VISITORS = 0
 _BOOT_COUNTS = cached_form_counts()
 
 
+# How often (seconds) an open page copies the shared totals from memory.
+_PUSH_SECONDS = 5
+# Stop watching after this many checks in a row with the browser gone (~60s).
+_MAX_MISSED_CHECKS = 12
+
+
+def _browser_is_connected(token: str) -> bool:
+    """True if this visitor's browser is still connected.
+
+    If we cannot tell, answer True so the numbers keep updating.
+    """
+    try:
+        # Import here so this file can load before app.py finishes starting.
+        from app.app import app as rx_app
+
+        namespace = rx_app.event_namespace
+        if namespace is None:
+            return True
+        return token in namespace.token_to_sid
+    except Exception:
+        return True
+
+
 class VisitState(rx.State):
     """Holds the visitor total shown on the home page."""
 
@@ -293,6 +316,8 @@ class VisitState(rx.State):
     fresh_faces: int = _BOOT_COUNTS["fresh_faces"]
     graduated_faces: int = _BOOT_COUNTS["graduated_faces"]
     veterans: int = _BOOT_COUNTS["veterans"]
+    # True while this visitor's live-update loop is running (one per visitor).
+    watcher_running: bool = False
 
     @rx.var
     def visitor_count_label(self) -> str:
@@ -301,10 +326,67 @@ class VisitState(rx.State):
 
     def _show_counts(self, counts: dict[str, int]) -> None:
         """Copy RSVP totals onto the page. Call this while holding the state."""
-        self.rsvp_responses = counts["rsvp_responses"]
-        self.fresh_faces = counts["fresh_faces"]
-        self.graduated_faces = counts["graduated_faces"]
-        self.veterans = counts["veterans"]
+        rsvp = counts["rsvp_responses"]
+        fresh = counts["fresh_faces"]
+        graduated = counts["graduated_faces"]
+        veterans = counts["veterans"]
+        # Skip the write when nothing changed, so open pages stay quiet.
+        if (
+            self.rsvp_responses == rsvp
+            and self.fresh_faces == fresh
+            and self.graduated_faces == graduated
+            and self.veterans == veterans
+        ):
+            return
+        self.rsvp_responses = rsvp
+        self.fresh_faces = fresh
+        self.graduated_faces = graduated
+        self.veterans = veterans
+
+    @rx.event(background=True)
+    async def watch_counts(self):
+        """Keep an open page up to date.
+
+        Every few seconds, copy the shared totals (kept fresh by the polling
+        loops in app.py) onto this visitor's page. Reading memory is instant.
+        """
+        async with self:
+            # Only one loop per visitor, even if they reload or change pages.
+            if self.watcher_running:
+                return
+            self.watcher_running = True
+            token = str(self.router.session.client_token or "")
+
+        missed = 0
+        try:
+            while True:
+                await asyncio.sleep(_PUSH_SECONDS)
+
+                # Quit if the browser has been gone for a while.
+                if token and not _browser_is_connected(token):
+                    missed += 1
+                    if missed >= _MAX_MISSED_CHECKS:
+                        break
+                    continue
+                missed = 0
+
+                total = cached_visitor_total()
+                counts = cached_form_counts() if _form_ready.is_set() else None
+                async with self:
+                    # Reflex only sends a value to the browser if it changed.
+                    if total is not None and total != self.total_visitors:
+                        self.total_visitors = total
+                    if counts is not None:
+                        self._show_counts(counts)
+        except Exception as e:
+            print("Live count watcher stopped:", e)
+        finally:
+            # Let a later page load start a fresh loop.
+            try:
+                async with self:
+                    self.watcher_running = False
+            except Exception:
+                pass
 
     @rx.event(background=True)
     async def log_visit(self):
