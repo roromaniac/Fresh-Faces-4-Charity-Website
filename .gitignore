@@ -7,6 +7,8 @@ assets/external/
 *.db-journal
 data/form_counts.json
 data/form_counts.json.tmp
+data/visit_total.json
+data/visit_total.json.tmp
 *.py[cod]
 __pycache__/
 .web/

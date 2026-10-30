@@ -311,7 +311,12 @@ def _visitor_seal() -> rx.Component:
                 "drop-shadow-[0_0_12px_rgba(56,189,248,0.55)]"
             ),
         ),
-
+        rx.moment(
+            interval=VisitState.pull_ms,
+            on_change=VisitState.pull_counts,
+            class_name="hidden",
+        ),
+        on_mount=VisitState.pull_counts,
         class_name=(
             "ff-visitor-seal ff-float rounded-2xl border "
             "border-white/15 bg-slate-900/50 backdrop-blur-md"

@@ -33,8 +33,8 @@ from app.states.tools_state import (
     LoadlessCheckerState,
     LookUpState,
 )
-from app.states.visit_state import VisitState, refresh_form_counts
-from app.visits import resync_visitor_total
+from app.states.visit_state import VisitState, form_counts_ready, refresh_form_counts
+from app.visits import resync_visitor_total, seed_visitor_total
 
 from app.scripts.check_live_streams import refresh_live_cache
 from app.scripts.eligibility import main as eligibility_main
@@ -53,26 +53,38 @@ async def poll_live_streams():
             print("Live check failed:", exc)
         await asyncio.sleep(60)
 
-# How many seconds to wait between checks.
-POLL_SECONDS = 15
+# How many seconds to wait between checks for new RSVPs.
+POLL_SECONDS = 3
 # Every Nth check is a full recount, which also catches deleted RSVPs.
-# 40 checks x 15 seconds = a full recount about every 10 minutes.
-FULL_RECOUNT_EVERY = 40
+# 200 checks x 3 seconds = a full recount about every 10 minutes.
+FULL_RECOUNT_EVERY = 200
+
+
+async def seed_visit_counts():
+    """Load the visit total from disk as soon as the server starts."""
+    try:
+        await asyncio.to_thread(seed_visitor_total)
+    except Exception as exc:
+        print("Visit seed failed:", exc)
+
 
 async def poll_form_counts():
-    """Update RSVP and visit totals every 15 seconds for every visitor to share."""
+    """Update RSVP and visit totals every few seconds for every visitor to share."""
     run = 0
     while True:
-        # The very first run (run 0) is also full, to fix any drift from downtime.
-        full = run % FULL_RECOUNT_EVERY == 0
+        # First run: full only when we have no saved RSVP cache. Otherwise
+        # just ask Google for new RSVPs so the first answer is fast.
+        if run == 0:
+            full = not form_counts_ready()
+        else:
+            full = run % FULL_RECOUNT_EVERY == 0
         try:
             # to_thread keeps the slow Google call off the main loop.
             await asyncio.to_thread(refresh_form_counts, full)
         except Exception as exc:
             print("RSVP count failed:", exc)
         try:
-            # Re-check the visit total against the database every run so
-            # a missed save is corrected within about 15 seconds.
+            # Re-check the visit total against the database every run.
             await asyncio.to_thread(resync_visitor_total)
         except Exception as exc:
             print("Visit recount failed:", exc)
@@ -125,8 +137,7 @@ app.add_page(
     index,
     route="/",
     title="Fresh Faces 4",
-    # watch_counts keeps the numbers live while the page stays open.
-    on_load=[VisitState.log_visit, VisitState.watch_counts],
+    on_load=VisitState.log_visit,
 )
 app.add_page(
     about,
@@ -175,6 +186,7 @@ app.add_page(
     title="Right Window",
 )
 
+app.register_lifespan_task(seed_visit_counts)
 app.register_lifespan_task(initialize_eligibility)
 app.register_lifespan_task(poll_live_streams)
 app.register_lifespan_task(poll_form_counts)

@@ -12,9 +12,11 @@ from googleapiclient.discovery import build
 
 from app.visits import (
     DB_PATH,
+    boot_visitor_total,
     cached_visitor_total,
     remember_visitor,
     save_page_view,
+    seed_visitor_total,
 )
 
 load_dotenv()
@@ -187,6 +189,11 @@ def cached_form_counts() -> dict[str, int]:
         return dict(_form_counts)
 
 
+def form_counts_ready() -> bool:
+    """True when a saved or downloaded RSVP total is ready to show."""
+    return _form_ready.is_set()
+
+
 def _recount_all(responses: list[dict]) -> bool:
     """Replace the totals with a fresh count of `responses`. Returns True if changed.
 
@@ -279,32 +286,9 @@ _load_saved_counts()
 
 
 # Do not open SQLite while the backend is importing. Reflex Cloud must finish
-# starting before optional visit logging touches disk.
-_BOOT_VISITORS = 0
+# starting before optional visit logging touches disk. JSON is safe to read.
+_BOOT_VISITORS = boot_visitor_total()
 _BOOT_COUNTS = cached_form_counts()
-
-
-# How often (seconds) an open page copies the shared totals from memory.
-_PUSH_SECONDS = 5
-# Stop watching after this many checks in a row with the browser gone (~60s).
-_MAX_MISSED_CHECKS = 12
-
-
-def _browser_is_connected(token: str) -> bool:
-    """True if this visitor's browser is still connected.
-
-    If we cannot tell, answer True so the numbers keep updating.
-    """
-    try:
-        # Import here so this file can load before app.py finishes starting.
-        from app.app import app as rx_app
-
-        namespace = rx_app.event_namespace
-        if namespace is None:
-            return True
-        return token in namespace.token_to_sid
-    except Exception:
-        return True
 
 
 class VisitState(rx.State):
@@ -316,8 +300,8 @@ class VisitState(rx.State):
     fresh_faces: int = _BOOT_COUNTS["fresh_faces"]
     graduated_faces: int = _BOOT_COUNTS["graduated_faces"]
     veterans: int = _BOOT_COUNTS["veterans"]
-    # True while this visitor's live-update loop is running (one per visitor).
-    watcher_running: bool = False
+    # How often (ms) the home page copies the shared totals from memory.
+    pull_ms: int = 1000
 
     @rx.var
     def visitor_count_label(self) -> str:
@@ -344,49 +328,26 @@ class VisitState(rx.State):
         self.veterans = veterans
 
     @rx.event(background=True)
-    async def watch_counts(self):
-        """Keep an open page up to date.
+    async def pull_counts(self, _stamp: str = ""):
+        """Copy the shared totals onto this page.
 
-        Every few seconds, copy the shared totals (kept fresh by the polling
-        loops in app.py) onto this visitor's page. Reading memory is instant.
+        Memory reads are instant. If startup has not counted visits yet,
+        load that number in a thread so the rest of the page stays live.
         """
-        async with self:
-            # Only one loop per visitor, even if they reload or change pages.
-            if self.watcher_running:
-                return
-            self.watcher_running = True
-            token = str(self.router.session.client_token or "")
-
-        missed = 0
-        try:
-            while True:
-                await asyncio.sleep(_PUSH_SECONDS)
-
-                # Quit if the browser has been gone for a while.
-                if token and not _browser_is_connected(token):
-                    missed += 1
-                    if missed >= _MAX_MISSED_CHECKS:
-                        break
-                    continue
-                missed = 0
-
-                total = cached_visitor_total()
-                counts = cached_form_counts() if _form_ready.is_set() else None
-                async with self:
-                    # Reflex only sends a value to the browser if it changed.
-                    if total is not None and total != self.total_visitors:
-                        self.total_visitors = total
-                    if counts is not None:
-                        self._show_counts(counts)
-        except Exception as e:
-            print("Live count watcher stopped:", e)
-        finally:
-            # Let a later page load start a fresh loop.
+        total = cached_visitor_total()
+        if total is None:
             try:
-                async with self:
-                    self.watcher_running = False
-            except Exception:
-                pass
+                total = await asyncio.to_thread(seed_visitor_total)
+            except Exception as e:
+                print("Error loading visit total:", e)
+                total = None
+        counts = cached_form_counts() if _form_ready.is_set() else None
+        async with self:
+            self.present_views = _saved_views()
+            if total is not None and total != self.total_visitors:
+                self.total_visitors = total
+            if counts is not None:
+                self._show_counts(counts)
 
     @rx.event(background=True)
     async def log_visit(self):
@@ -401,6 +362,10 @@ class VisitState(rx.State):
 
         # Previous numbers go on screen before any slow disk or Google work.
         previous_total = cached_visitor_total()
+        if previous_total is None:
+            # JSON boot value, so a saved session is not stuck on PRESENT_VIEWS.
+            boot = boot_visitor_total()
+            previous_total = boot if boot else None
         counts = cached_form_counts() if page == "home" and _form_ready.is_set() else None
         async with self:
             # Refresh the baseline every time. A saved session may still have 0.
@@ -426,15 +391,3 @@ class VisitState(rx.State):
             await asyncio.to_thread(save_page_view, page, session_id)
         except Exception as e:
             print("Error saving visit:", e)
-
-        # Cold start has no saved RSVP totals yet. Keep showing the old
-        # numbers, then fill in the real ones when Google answers.
-        if page == "home" and not _form_ready.is_set():
-            try:
-                counts = await asyncio.to_thread(wait_for_form_counts)
-            except Exception as e:
-                print("Error retrieving RSVP count:", e)
-                counts = None
-            if counts is not None:
-                async with self:
-                    self._show_counts(counts)

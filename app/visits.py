@@ -6,6 +6,7 @@ database models (rx.Model / sqlmodel).
 
 from __future__ import annotations
 
+import json
 import sqlite3
 from datetime import datetime, timezone
 from pathlib import Path
@@ -13,6 +14,8 @@ from threading import Lock
 
 # visits.db lives in the project folder. *.db is already gitignored.
 DB_PATH = Path(__file__).resolve().parent.parent / "data" / "visits.db"
+# Tiny JSON so the first page can show the last visit total without opening SQLite.
+_TOTAL_CACHE_PATH = DB_PATH.parent / "visit_total.json"
 
 # Two locks so a slow disk write never blocks the number we show.
 # Take _count_lock first if you ever need both, so they cannot deadlock.
@@ -61,6 +64,33 @@ def _database() -> sqlite3.Connection:
     return connection
 
 
+def _read_saved_total() -> int | None:
+    """Last visit total saved to JSON, or None if that file is missing."""
+    if not _TOTAL_CACHE_PATH.exists():
+        return None
+    try:
+        saved = json.loads(_TOTAL_CACHE_PATH.read_text(encoding="utf-8"))
+        return max(int(saved.get("total", 0)), 0)
+    except (OSError, TypeError, ValueError):
+        return None
+
+
+def _write_saved_total(total: int) -> None:
+    """Remember the visit total so the next startup can show it immediately."""
+    try:
+        _TOTAL_CACHE_PATH.parent.mkdir(parents=True, exist_ok=True)
+        temporary = _TOTAL_CACHE_PATH.with_suffix(".json.tmp")
+        temporary.write_text(json.dumps({"total": int(total)}), encoding="utf-8")
+        temporary.replace(_TOTAL_CACHE_PATH)
+    except OSError as exc:
+        print("Error saving visit total:", exc)
+
+
+def boot_visitor_total() -> int:
+    """Visit total from the JSON cache. Does not open SQLite."""
+    return _read_saved_total() or 0
+
+
 def _load_known_sessions() -> None:
     """Read the saved visit count once. Caller must hold _count_lock.
 
@@ -93,7 +123,9 @@ def seed_visitor_total() -> int:
     with _count_lock:
         if _known_sessions is None:
             _load_known_sessions()
-        return _visitor_total or 0
+        total = _visitor_total or 0
+    _write_saved_total(total)
+    return total
 
 
 def resync_visitor_total() -> int:
@@ -118,6 +150,7 @@ def resync_visitor_total() -> int:
     # second before its row is saved may be off by 1 until the next recount.
     with _count_lock:
         _visitor_total = total
+    _write_saved_total(total)
     return total
 
 
@@ -129,7 +162,7 @@ def count_visitors() -> int:
 def remember_visitor(session_id: str = "") -> int:
     """Add one visit and return the shared total.
 
-    This does not write to disk, so the page can show the number immediately.
+    This does not write SQLite, so the page can show the number immediately.
     The same browser counts again on a later page view. Callers still pass
     session_id so the saved row can name that browser.
     """
@@ -139,7 +172,8 @@ def remember_visitor(session_id: str = "") -> int:
             _load_known_sessions()
         total = (_visitor_total or 0) + 1
         _visitor_total = total
-        return total
+    _write_saved_total(total)
+    return total
 
 
 def save_page_view(page: str, session_id: str = "") -> None:
